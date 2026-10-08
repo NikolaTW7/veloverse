@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${type.name})}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('bicycle-types')}"></header>
+
+<main>
+    <!-- Introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <a th:href="@{/bicycle-types}">Bicycle Types</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page" th:text="${type.name}">Road Bike</span>
+                </nav>
+                <p class="eyebrow eyebrow-accent">Bicycle type</p>
+                <h1 th:text="${type.name}">Road Bike</h1>
+                <p class="lead" th:text="${type.description}">Description</p>
+
+                <div class="info-chip" th:if="${type.bestUse}">
+                    <span class="eyebrow">Typical use</span>
+                    <strong th:text="${type.bestUse}">Best use</strong>
+                </div>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- Advantages and disadvantages -->
+    <section class="section section-dark"
+             th:if="${!type.advantageList.isEmpty() or !type.disadvantageList.isEmpty()}">
+        <div class="container">
+            <h2 class="section-title text-center">Pros &amp; Cons</h2>
+            <p class="section-subtitle text-center"
+               th:text="'The main trade-offs of the ' + ${type.name} + ' design.'">The main trade-offs.</p>
+
+            <div class="pros-cons">
+                <div class="pros-cons-panel">
+                    <h3><span class="pc-icon pc-icon-pro" aria-hidden="true">&#10003;</span> Advantages</h3>
+                    <ul class="pc-list pc-list-pro" th:if="${!type.advantageList.isEmpty()}">
+                        <li th:each="item : ${type.advantageList}" th:text="${item}">Advantage</li>
+                    </ul>
+                    <p th:if="${type.advantageList.isEmpty()}">No advantages recorded yet.</p>
+                </div>
+                <div class="pros-cons-panel">
+                    <h3><span class="pc-icon pc-icon-con" aria-hidden="true">&#10005;</span> Disadvantages</h3>
+                    <ul class="pc-list pc-list-con" th:if="${!type.disadvantageList.isEmpty()}">
+                        <li th:each="item : ${type.disadvantageList}" th:text="${item}">Disadvantage</li>
+                    </ul>
+                    <p th:if="${type.disadvantageList.isEmpty()}">No disadvantages recorded yet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Example models: filled in once the bicycles table is built -->
+    <section class="section">
+        <div class="container">
+            <h2 class="section-title" th:text="'Example ' + ${type.name} + ' Models'">Example Models</h2>
+            <p class="empty-state">Example models of this type will appear here once verified bicycle
+                data has been added.</p>
+        </div>
+    </section>
+
+    <!-- Other types from the database -->
+    <section class="section section-light" th:if="${!relatedTypes.isEmpty()}">
+        <div class="container related-grid">
+            <div>
+                <h2 class="section-title">Other Types</h2>
+                <p class="section-subtitle">Compare with other bicycle categories.</p>
+            </div>
+            <div class="related-list">
+                <a class="related-card" th:each="other : ${relatedTypes}"
+                   th:href="@{/bicycle-types/{id}(id=${other.id})}">
+                    <strong th:text="${other.name}">Gravel Bike</strong>
+                    <span th:text="${other.bestUse}">Best use</span>
+                </a>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

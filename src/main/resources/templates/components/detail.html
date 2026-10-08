@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${component.name})}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('components')}"></header>
+
+<main th:with="system=${component.system}">
+    <!-- Introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <a th:href="@{/components}">Components &amp; Anatomy</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page" th:text="${component.name}">Cassette</span>
+                </nav>
+                <p class="eyebrow eyebrow-accent">
+                    <span class="tag" th:text="${system.name}">Drivetrain</span> Component study
+                </p>
+                <h1 th:text="${component.name}">Cassette</h1>
+                <p class="lead" th:text="${component.description}">Description</p>
+                <a class="text-link" th:href="@{'/components#system-' + ${system.id}}">
+                    View all <span th:text="${system.name}">Drivetrain</span> components <span aria-hidden="true">&rarr;</span>
+                </a>
+            </div>
+
+            <!-- Shows the stored image when there is one, otherwise a labelled placeholder -->
+            <figure class="placeholder-image page-hero-image" th:if="${component.imageUrl == null}">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+            <figure class="page-hero-image photo" th:if="${component.imageUrl != null}">
+                <img th:src="@{${component.imageUrl}}" th:alt="${component.name}">
+            </figure>
+        </div>
+    </section>
+
+    <!-- Purpose and operation -->
+    <section class="section">
+        <div class="container info-columns">
+            <article class="info-block" th:if="${component.purpose}">
+                <h2 th:text="'What does the ' + ${component.name} + ' do?'">What does it do?</h2>
+                <p th:text="${component.purpose}">Purpose</p>
+            </article>
+            <article class="info-block" th:if="${component.operation}">
+                <h2>How does it work?</h2>
+                <p th:text="${component.operation}">Operation</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- Common materials (many-to-many through component_materials) -->
+    <section class="section section-light">
+        <div class="container">
+            <h2 class="section-title text-center">Materials &amp; Construction</h2>
+            <p class="section-subtitle text-center"
+               th:text="'Materials commonly used to make the ' + ${component.name} + '.'">Common materials.</p>
+
+            <div class="card-grid card-grid-3" th:if="${!component.materials.isEmpty()}">
+                <article class="card" th:each="material : ${component.materials}">
+                    <h3 th:text="${material.name}">Steel</h3>
+                    <p th:text="${material.description}">Material description</p>
+                    <span class="pending-link">Material page coming soon</span>
+                </article>
+            </div>
+            <p class="empty-state" th:if="${component.materials.isEmpty()}">No materials have been recorded for this component yet.</p>
+        </div>
+    </section>
+
+    <!-- Other parts of the same system -->
+    <section class="section">
+        <div class="container related-system">
+            <div>
+                <h2 class="section-title">Related Components</h2>
+                <div class="related-parts" th:if="${!relatedComponents.isEmpty()}">
+                    <a class="related-part" th:each="other : ${relatedComponents}"
+                       th:href="@{/components/{id}(id=${other.id})}">
+                        <strong th:text="${other.name}">Chain</strong>
+                        <span>Learn more <span aria-hidden="true">&rarr;</span></span>
+                    </a>
+                </div>
+                <p class="empty-state" th:if="${relatedComponents.isEmpty()}">This is the only component recorded in its system.</p>
+            </div>
+
+            <aside class="system-panel" aria-label="Component system">
+                <p class="eyebrow">Part of the</p>
+                <h2 th:text="${system.name}">Drivetrain</h2>
+                <p th:text="${system.description}">System description</p>
+                <p class="eyebrow">System components</p>
+                <ul class="chip-list">
+                    <li th:each="part : ${systemComponents}">
+                        <span class="chip chip-current" th:if="${part.id == component.id}" th:text="${part.name}" aria-current="page">Cassette</span>
+                        <a class="chip" th:unless="${part.id == component.id}"
+                           th:href="@{/components/{id}(id=${part.id})}" th:text="${part.name}">Chain</a>
+                    </li>
+                </ul>
+            </aside>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

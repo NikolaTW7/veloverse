@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bicycle Types')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('bicycle-types')}"></header>
+
+<main>
+    <!-- Page introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page">Bicycle Types</span>
+                </nav>
+                <h1>Bicycle Types</h1>
+                <p class="lead">Explore different types of bicycles and learn what each one is designed for,
+                    from fast road riding to rough off-road trails.</p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- All bicycle types from the database -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="card-grid card-grid-4" th:if="${!types.isEmpty()}">
+                <article class="type-tile" th:each="type : ${types}">
+                    <figure class="placeholder-image">
+                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                        <figcaption>Placeholder image</figcaption>
+                    </figure>
+                    <div class="type-tile-body">
+                        <h2 th:text="${type.name}">Road Bike</h2>
+                        <p class="clamp-3" th:text="${type.description}">Description</p>
+                        <th:block th:if="${type.bestUse}">
+                            <p class="eyebrow">Best for</p>
+                            <p class="best-use" th:text="${type.bestUse}">Best use</p>
+                        </th:block>
+                        <a class="btn btn-light" th:href="@{/bicycle-types/{id}(id=${type.id})}">
+                            Learn more<span class="visually-hidden" th:text="' about ' + ${type.name}"></span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <p class="empty-state" th:if="${types.isEmpty()}">No bicycle types have been added yet.</p>
+        </div>
+    </section>
+
+    <!-- General guidance on how bicycle types differ -->
+    <section class="section">
+        <div class="container narrow">
+            <h2 class="section-title text-center">Understanding the Differences</h2>
+            <p class="section-subtitle text-center">Choosing the right bicycle type depends on several factors
+                that shape the riding experience.</p>
+
+            <div class="factor-grid">
+                <div class="factor">
+                    <h3>Terrain</h3>
+                    <p>Smooth tarmac and rough dirt trails need very different tyres and frames.</p>
+                </div>
+                <div class="factor">
+                    <h3>Riding Position</h3>
+                    <p>Low, forward positions favour speed, while upright positions favour comfort and visibility.</p>
+                </div>
+                <div class="factor">
+                    <h3>Speed</h3>
+                    <p>Weight, tyre width and rolling resistance affect how much effort it takes to keep moving.</p>
+                </div>
+                <div class="factor">
+                    <h3>Comfort</h3>
+                    <p>Wider tyres and suspension help absorb road vibration and trail impacts.</p>
+                </div>
+                <div class="factor">
+                    <h3>Durability</h3>
+                    <p>Frames and parts are built differently depending on how hard the bike will be used.</p>
+                </div>
+                <div class="factor">
+                    <h3>Intended Use</h3>
+                    <p>Commuting, racing, touring or casual riding: every type is designed with a purpose.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

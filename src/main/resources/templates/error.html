@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!-- Spring Boot shows this page for any error without a more specific page (e.g. error/404.html) -->
+<head th:replace="~{fragments/layout :: head('Something Went Wrong')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('')}"></header>
+
+<main class="section">
+    <div class="container narrow text-center">
+        <p class="eyebrow eyebrow-accent" th:text="'Error ' + ${status}">Error</p>
+        <h1 class="section-title">Something went wrong</h1>
+        <p class="lead centred">Sorry, the page could not be displayed. Please try again later.</p>
+        <div class="button-row centred-row">
+            <a class="btn btn-dark" th:href="@{/}">Back to Home</a>
+        </div>
+    </div>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Components & Anatomy')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('components')}"></header>
+
+<main>
+    <!-- Page introduction -->
+    <section class="page-hero page-hero-compact">
+        <div class="container">
+            <nav class="breadcrumb" aria-label="Breadcrumb">
+                <a th:href="@{/}">Home</a>
+                <span aria-hidden="true">&rsaquo;</span>
+                <span aria-current="page">Components &amp; Anatomy</span>
+            </nav>
+            <h1>Bicycle Components &amp; Anatomy</h1>
+            <p class="lead">Explore the parts that make up a bicycle and learn what each component does
+                and how it works.</p>
+        </div>
+    </section>
+
+    <!-- Labelled bicycle diagram. Each label links to that component's page. -->
+    <section class="section section-tight">
+        <div class="container">
+            <div class="anatomy-panel">
+                <h2 class="section-title text-center">Bicycle Anatomy</h2>
+                <p class="section-subtitle text-center">Explore the main parts of a bicycle. Click any labelled component
+                    to learn what it does and how it works.</p>
+                <p class="anatomy-hint">Scroll sideways to see the whole diagram.</p>
+                <div class="anatomy-scroll">
+                    <svg class="anatomy-svg" viewBox="0 0 900 520" role="img" aria-labelledby="anatomy-title">
+        <title id="anatomy-title">Diagram of a bicycle with its main components labelled</title>
+        <g class="anatomy-bike" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Wheels: tyre, rim, spokes and hub -->
+            <g class="spokes"><line x1="270" y1="340" x2="373" y2="340"/><line x1="270" y1="340" x2="365" y2="379"/><line x1="270" y1="340" x2="343" y2="413"/><line x1="270" y1="340" x2="309" y2="435"/><line x1="270" y1="340" x2="270" y2="443"/><line x1="270" y1="340" x2="231" y2="435"/><line x1="270" y1="340" x2="197" y2="413"/><line x1="270" y1="340" x2="175" y2="379"/><line x1="270" y1="340" x2="167" y2="340"/><line x1="270" y1="340" x2="175" y2="301"/><line x1="270" y1="340" x2="197" y2="267"/><line x1="270" y1="340" x2="231" y2="245"/><line x1="270" y1="340" x2="270" y2="237"/><line x1="270" y1="340" x2="309" y2="245"/><line x1="270" y1="340" x2="343" y2="267"/><line x1="270" y1="340" x2="365" y2="301"/><line x1="650" y1="340" x2="753" y2="340"/><line x1="650" y1="340" x2="745" y2="379"/><line x1="650" y1="340" x2="723" y2="413"/><line x1="650" y1="340" x2="689" y2="435"/><line x1="650" y1="340" x2="650" y2="443"/><line x1="650" y1="340" x2="611" y2="435"/><line x1="650" y1="340" x2="577" y2="413"/><line x1="650" y1="340" x2="555" y2="379"/><line x1="650" y1="340" x2="547" y2="340"/><line x1="650" y1="340" x2="555" y2="301"/><line x1="650" y1="340" x2="577" y2="267"/><line x1="650" y1="340" x2="611" y2="245"/><line x1="650" y1="340" x2="650" y2="237"/><line x1="650" y1="340" x2="689" y2="245"/><line x1="650" y1="340" x2="723" y2="267"/><line x1="650" y1="340" x2="745" y2="301"/></g>
+            <circle class="tyre" cx="270" cy="340" r="112"/><circle class="tyre" cx="650" cy="340" r="112"/>
+            <circle class="rim" cx="270" cy="340" r="103"/><circle class="rim" cx="650" cy="340" r="103"/>
+            <circle class="part" cx="270" cy="340" r="20"/><circle class="part" cx="270" cy="340" r="12"/>
+            <circle class="thin" cx="650" cy="340" r="30"/>
+            <circle class="hub" cx="650" cy="340" r="7"/><circle class="hub" cx="270" cy="340" r="6"/>
+            <!-- Frame and fork -->
+            <path class="frame" d="M270 340 L430 350 L380 185 L590 180 L605 225 L430 350 M270 340 L380 185"/>
+            <path class="frame" d="M605 225 L640 328 Q645 340 650 340"/>
+            <!-- Seatpost and saddle -->
+            <path class="part" d="M380 185 L372 140"/>
+            <path class="part thick" d="M335 136 Q372 126 408 134"/>
+            <!-- Stem, handlebar and brake lever -->
+            <path class="part" d="M590 180 L625 168"/>
+            <path class="part" d="M625 168 Q656 160 664 186 Q670 216 646 222"/>
+            <path class="part thick" d="M652 166 L662 196"/>
+            <!-- Chain, crankset and pedal -->
+            <path class="thin" d="M430 316 L270 320 M430 384 L292 400 M270 360 L282 372"/>
+            <circle class="part" cx="430" cy="350" r="34"/>
+            <path class="part thick" d="M430 350 L452 402 M438 404 L468 404"/>
+            <!-- Rear derailleur -->
+            <path class="part" d="M276 356 L292 386 L284 406"/><circle class="part" cx="292" cy="386" r="5"/><circle class="part" cx="284" cy="406" r="5"/>
+            <!-- Brake caliper -->
+            <rect class="part filled" x="612" y="300" width="22" height="16" rx="3" transform="rotate(-45 623 308)"/>
+        </g>
+        <g class="anatomy-labels">
+            <g class="anatomy-label" th:with="partId=${componentIds['Saddle']}">
+                <line x1="372" y1="131" x2="365" y2="75"/><circle cx="372" cy="131" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="290" y="60" width="75" height="30" rx="8"/><text x="303" y="80">Saddle</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Frame']}">
+                <line x1="485" y1="183" x2="494" y2="125"/><circle cx="485" cy="183" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="460" y="95" width="67" height="30" rx="8"/><text x="473" y="115">Frame</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Stem']}">
+                <line x1="612" y1="174" x2="604" y2="90"/><circle cx="612" cy="174" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="575" y="60" width="58" height="30" rx="8"/><text x="588" y="80">Stem</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Brake Lever']}">
+                <line x1="658" y1="182" x2="730" y2="125"/><circle cx="658" cy="182" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="730" y="110" width="116" height="30" rx="8"/><text x="743" y="130">Brake Lever</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Handlebar']}">
+                <line x1="666" y1="200" x2="730" y2="185"/><circle cx="666" cy="200" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="730" y="170" width="99" height="30" rx="8"/><text x="743" y="190">Handlebar</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Fork']}">
+                <line x1="625" y1="280" x2="730" y2="255"/><circle cx="625" cy="280" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="730" y="240" width="58" height="30" rx="8"/><text x="743" y="260">Fork</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Brake Caliper']}">
+                <line x1="623" y1="308" x2="730" y2="315"/><circle cx="623" cy="308" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="730" y="300" width="132" height="30" rx="8"/><text x="743" y="320">Brake Caliper</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Brake Rotor']}">
+                <line x1="650" y1="370" x2="730" y2="375"/><circle cx="650" cy="370" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="730" y="360" width="116" height="30" rx="8"/><text x="743" y="380">Brake Rotor</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Tyre']}">
+                <line x1="731" y1="421" x2="759" y2="430"/><circle cx="731" cy="421" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="730" y="430" width="58" height="30" rx="8"/><text x="743" y="450">Tyre</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Seatpost']}">
+                <line x1="376" y1="160" x2="151" y2="155"/><circle cx="376" cy="160" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="60" y="140" width="91" height="30" rx="8"/><text x="73" y="160">Seatpost</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Hub &amp; Spokes']}">
+                <line x1="235" y1="300" x2="184" y2="220"/><circle cx="235" cy="300" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="60" y="205" width="124" height="30" rx="8"/><text x="73" y="225">Hub &amp; Spokes</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Cassette']}">
+                <line x1="258" y1="330" x2="151" y2="285"/><circle cx="258" cy="330" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="60" y="270" width="91" height="30" rx="8"/><text x="73" y="290">Cassette</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Rim']}">
+                <line x1="167" y1="345" x2="110" y2="350"/><circle cx="167" cy="345" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="60" y="335" width="50" height="30" rx="8"/><text x="73" y="355">Rim</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Rear Derailleur']}">
+                <line x1="288" y1="400" x2="209" y2="425"/><circle cx="288" cy="400" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="60" y="410" width="149" height="30" rx="8"/><text x="73" y="430">Rear Derailleur</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Chain']}">
+                <line x1="360" y1="392" x2="334" y2="470"/><circle cx="360" cy="392" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="300" y="470" width="67" height="30" rx="8"/><text x="313" y="490">Chain</text>
+                </a>
+            </g>
+            <g class="anatomy-label" th:with="partId=${componentIds['Crankset']}">
+                <line x1="454" y1="374" x2="470" y2="485"/><circle cx="454" cy="374" r="5"/>
+                <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
+                    <rect x="470" y="470" width="91" height="30" rx="8"/><text x="483" y="490">Crankset</text>
+                </a>
+            </g>
+        </g>
+    </svg>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Component systems from the database -->
+    <section class="section section-light">
+        <div class="container">
+            <h2 class="section-title">Component Systems</h2>
+            <p class="section-subtitle">Bicycle parts grouped by the job they do together.</p>
+
+            <div class="card-grid card-grid-3" th:if="${!systems.isEmpty()}">
+                <article class="card system-card" th:each="system : ${systems}" th:id="'system-' + ${system.id}">
+                    <h3 th:text="${system.name}">Drivetrain</h3>
+                    <p th:text="${system.description}">Description</p>
+                    <ul class="part-list" th:if="${!system.components.isEmpty()}">
+                        <li th:each="part : ${system.components}">
+                            <a th:href="@{/components/{id}(id=${part.id})}">
+                                <span th:text="${part.name}">Chain</span>
+                                <span class="part-list-more">Learn more <span aria-hidden="true">&rarr;</span></span>
+                            </a>
+                        </li>
+                    </ul>
+                    <p class="muted-note" th:if="${system.components.isEmpty()}">No components added yet.</p>
+                </article>
+            </div>
+
+            <p class="empty-state" th:if="${systems.isEmpty()}">No components have been added yet.</p>
+        </div>
+    </section>
+
+    <!-- How power flows through the drivetrain -->
+    <section class="section">
+        <div class="container narrow text-center">
+            <h2 class="section-title">How It Works Together</h2>
+            <p class="section-subtitle">Bicycle components work as connected systems. In the drivetrain, the
+                rider's effort passes through several parts before it moves the bicycle forward.</p>
+
+            <ol class="flow-steps">
+                <li><span class="flow-step-number">1</span><strong>Pedalling</strong><span>The rider pushes the pedals</span></li>
+                <li><span class="flow-step-number">2</span><strong>Crankset</strong><span>The cranks turn the chainring</span></li>
+                <li><span class="flow-step-number">3</span><strong>Chain</strong><span>The chain carries the power backwards</span></li>
+                <li><span class="flow-step-number">4</span><strong>Cassette</strong><span>The chosen sprocket sets the gear</span></li>
+                <li class="flow-step-final"><span class="flow-step-number">5</span><strong>Rear Wheel</strong><span>The wheel turns and the bicycle moves</span></li>
+            </ol>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

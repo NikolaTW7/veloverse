@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<!--
+  Shared page parts reused by every VeloVerse page.
+
+  Temporary navigation rule: only pages that exist are real links.
+  Sections that are not built yet are shown as greyed-out text marked
+  "coming soon" instead of links, so nobody lands on a 404.
+  When a page is built, change its <span class="... is-pending"> into a link.
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+
+<!-- Common <head>: pass the page title, e.g. ~{fragments/layout :: head('Home')} -->
+<head th:fragment="head(pageTitle)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${pageTitle} + ' | VeloVerse'">VeloVerse</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+
+<!-- Site logo: a simple bicycle icon followed by the site name -->
+<a th:fragment="logo" th:href="@{/}" class="logo" aria-label="VeloVerse home">
+    <svg class="logo-icon" viewBox="0 0 32 24" aria-hidden="true">
+        <g fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="7" cy="16" r="5.5"/>
+            <circle cx="25" cy="16" r="5.5"/>
+            <path d="M7 16 L12 7 L21 7 L25 16 M12 7 L16 16 L21 7 M10 4 H14"/>
+        </g>
+    </svg>
+    <span class="logo-text">Velo<span class="text-accent">Verse</span></span>
+</a>
+
+<!-- Header with main navigation. activePage marks the current page (e.g. 'home'). -->
+<header th:fragment="header(activePage)" class="site-header">
+    <div class="container header-inner">
+        <a th:replace="~{fragments/layout :: logo}"></a>
+
+        <nav class="site-nav" aria-label="Main navigation">
+            <ul>
+                <li>
+                    <a th:href="@{/}" class="nav-link"
+                       th:classappend="${activePage == 'home'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'home'} ? 'page'">Home</a>
+                </li>
+                <li>
+                    <a th:href="@{/bicycle-types}" class="nav-link"
+                       th:classappend="${activePage == 'bicycle-types'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'bicycle-types'} ? 'page'">Bicycle Types</a>
+                </li>
+                <li>
+                    <a th:href="@{/components}" class="nav-link"
+                       th:classappend="${activePage == 'components'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'components'} ? 'page'">Components</a>
+                </li>
+                <li><span class="nav-link is-pending" title="Coming soon">Bicycles<span class="visually-hidden"> (coming soon)</span></span></li>
+                <li><span class="nav-link is-pending" title="Coming soon">Materials<span class="visually-hidden"> (coming soon)</span></span></li>
+                <li><span class="nav-link is-pending" title="Coming soon">Brands<span class="visually-hidden"> (coming soon)</span></span></li>
+                <li><span class="nav-link is-pending" title="Coming soon">Compare<span class="visually-hidden"> (coming soon)</span></span></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<!-- Dark site footer -->
+<footer th:fragment="footer" class="site-footer">
+    <div class="container">
+        <div class="footer-grid">
+            <div class="footer-about">
+                <a th:replace="~{fragments/layout :: logo}"></a>
+                <p>An independent educational resource about bicycles, their components,
+                    and the brands that make them.</p>
+            </div>
+
+            <div>
+                <h2 class="footer-heading">Navigation</h2>
+                <ul class="footer-links">
+                    <li><a th:href="@{/}">Home</a></li>
+                    <li><a th:href="@{/bicycle-types}">Bicycle Types</a></li>
+                    <li><a th:href="@{/components}">Components</a></li>
+                    <li><span class="is-pending">Bicycles <small>Coming soon</small></span></li>
+                </ul>
+            </div>
+
+            <div>
+                <h2 class="footer-heading">Resources</h2>
+                <ul class="footer-links">
+                    <li><span class="is-pending">Materials <small>Coming soon</small></span></li>
+                    <li><span class="is-pending">Brands <small>Coming soon</small></span></li>
+                    <li><span class="is-pending">Compare <small>Coming soon</small></span></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> VeloVerse. All rights reserved.</p>
+            <p>Educational project &mdash; not affiliated with any brand.</p>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
