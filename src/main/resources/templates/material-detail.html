@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${material.name})}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('materials')}"></header>
+
+<main>
+    <!-- Introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <a th:href="@{/materials}">Materials</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page" th:text="${material.name}">Aluminium</span>
+                </nav>
+                <p class="eyebrow eyebrow-accent">Bicycle material</p>
+                <h1 th:text="${material.name}">Aluminium</h1>
+                <p class="lead" th:text="${material.description}">Description</p>
+                <a class="text-link" th:href="@{/materials}">
+                    <span aria-hidden="true">&larr;</span> Back to all materials
+                </a>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- Advantages and disadvantages (stored one point per line) -->
+    <section class="section section-dark">
+        <div class="container">
+            <h2 class="section-title text-center">Advantages &amp; Disadvantages</h2>
+            <p class="section-subtitle text-center"
+               th:text="'The main strengths and weaknesses of ' + ${material.name} + '.'">The main trade-offs.</p>
+
+            <div class="pros-cons">
+                <div class="pros-cons-panel">
+                    <h3><span class="pc-icon pc-icon-pro" aria-hidden="true">&#10003;</span> Advantages</h3>
+                    <ul class="pc-list pc-list-pro" th:if="${!material.advantageList.isEmpty()}">
+                        <li th:each="item : ${material.advantageList}" th:text="${item}">Advantage</li>
+                    </ul>
+                    <p th:if="${material.advantageList.isEmpty()}">No advantages recorded yet.</p>
+                </div>
+                <div class="pros-cons-panel">
+                    <h3><span class="pc-icon pc-icon-con" aria-hidden="true">&#10005;</span> Disadvantages</h3>
+                    <ul class="pc-list pc-list-con" th:if="${!material.disadvantageList.isEmpty()}">
+                        <li th:each="item : ${material.disadvantageList}" th:text="${item}">Disadvantage</li>
+                    </ul>
+                    <p th:if="${material.disadvantageList.isEmpty()}">No disadvantages recorded yet.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Return to the list -->
+    <section class="section">
+        <div class="container text-center">
+            <a class="btn btn-outline" th:href="@{/materials}">Back to Materials</a>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

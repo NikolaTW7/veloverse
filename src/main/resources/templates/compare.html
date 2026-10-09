@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Compare Bicycles')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('compare')}"></header>
+
+<main>
+    <!-- Page introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page">Compare</span>
+                </nav>
+                <h1>Compare Bicycles</h1>
+                <p class="lead">Choose two bicycles to see their specifications side by side. Comparing them
+                    helps you understand how design choices differ between bikes built for different kinds of riding.</p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <section class="section section-light">
+        <div class="container">
+            <!-- A plain GET form, so a comparison is just /compare?a=1&b=6 and can be bookmarked -->
+            <form class="search-form" method="get" th:action="@{/compare}">
+                <div class="filter-grid compare-grid">
+                    <div class="filter-field">
+                        <label for="compare-a">First bicycle</label>
+                        <select id="compare-a" name="a">
+                            <option value="">Choose a bicycle</option>
+                            <option th:each="bike : ${bicycles}" th:value="${bike.id}"
+                                    th:text="${bike.brand.name + ' ' + bike.name + (bike.year != null ? ' (' + bike.year + ')' : '')}"
+                                    th:selected="${bike.id == selectedA}">Trek 520 Disc (2023)</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="compare-b">Second bicycle</label>
+                        <select id="compare-b" name="b">
+                            <option value="">Choose a bicycle</option>
+                            <option th:each="bike : ${bicycles}" th:value="${bike.id}"
+                                    th:text="${bike.brand.name + ' ' + bike.name + (bike.year != null ? ' (' + bike.year + ')' : '')}"
+                                    th:selected="${bike.id == selectedB}">Trek Domane SL 5 Gen 4 (2024)</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-dark" type="submit">Compare</button>
+                    </div>
+                </div>
+            </form>
+
+            <!-- Validation message (missing choice, same bicycle twice, or an ID that does not exist) -->
+            <p class="form-message" role="alert" th:if="${message}" th:text="${message}">Please choose two bicycles to compare.</p>
+
+            <p class="empty-state" th:if="${bikeA == null and message == null}">Choose two different bicycles above,
+                then select <strong>Compare</strong> to see their specifications side by side.</p>
+
+            <!-- The comparison itself, shown only when two different bicycles were found -->
+            <th:block th:if="${bikeA != null}">
+                <div class="compare-cards">
+                    <article class="type-tile" th:each="bike, stat : ${comparedBicycles}">
+                        <div class="type-tile-body">
+                            <p class="eyebrow eyebrow-accent" th:text="${stat.first} ? 'Bicycle A' : 'Bicycle B'">Bicycle A</p>
+                            <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
+                            <h2 th:text="${bike.name}">Model</h2>
+                            <p th:text="${bike.type.name}">Type</p>
+                            <a class="text-link" th:href="@{/bicycles/{id}(id=${bike.id})}">
+                                View bicycle details<span class="visually-hidden" th:text="' for the ' + ${bike.brand.name} + ' ' + ${bike.name}"></span>
+                                <span aria-hidden="true">&rarr;</span>
+                            </a>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="compare-table-wrap">
+                    <table class="compare-table">
+                        <caption class="visually-hidden">Specifications of the two selected bicycles</caption>
+                        <thead>
+                            <tr>
+                                <th scope="col">Specification</th>
+                                <th scope="col" th:text="${bikeA.brand.name + ' ' + bikeA.name}">Bicycle A</th>
+                                <th scope="col" th:text="${bikeB.brand.name + ' ' + bikeB.name}">Bicycle B</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">Brand</th>
+                                <td th:text="${bikeA.brand.name}">Trek</td>
+                                <td th:text="${bikeB.brand.name}">Trek</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Model</th>
+                                <td th:text="${bikeA.name}">520 Disc</td>
+                                <td th:text="${bikeB.name}">Domane SL 5 Gen 4</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Year</th>
+                                <td th:text="${bikeA.year} ?: 'Not specified'">2023</td>
+                                <td th:text="${bikeB.year} ?: 'Not specified'">2024</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Bicycle type</th>
+                                <td th:text="${bikeA.type.name}">Touring Bike</td>
+                                <td th:text="${bikeB.type.name}">Road Bike</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Frame material</th>
+                                <td th:text="${bikeA.frameMaterial.name}">Steel</td>
+                                <td th:text="${bikeB.frameMaterial.name}">Carbon Fibre</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Weight</th>
+                                <td th:text="${bikeA.weightKg != null} ? ${bikeA.weightKg} + ' kg' : 'Not specified'">Not specified</td>
+                                <td th:text="${bikeB.weightKg != null} ? ${bikeB.weightKg} + ' kg' : 'Not specified'">8.93 kg</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Wheel size</th>
+                                <td th:text="${bikeA.wheelSize} ?: 'Not specified'">700c</td>
+                                <td th:text="${bikeB.wheelSize} ?: 'Not specified'">700c</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Brake system</th>
+                                <td th:text="${bikeA.brakeSystem} ?: 'Not specified'">Mechanical disc</td>
+                                <td th:text="${bikeB.brakeSystem} ?: 'Not specified'">Hydraulic disc</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Drivetrain</th>
+                                <td th:text="${bikeA.drivetrain} ?: 'Not specified'">Drivetrain</td>
+                                <td th:text="${bikeB.drivetrain} ?: 'Not specified'">Drivetrain</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Number of gears</th>
+                                <td th:text="${bikeA.gears} ?: 'Not specified'">27</td>
+                                <td th:text="${bikeB.gears} ?: 'Not specified'">24</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <p class="muted-note compare-note">This page lists the specifications stored for each bicycle, without
+                    scores or rankings. Neither bicycle is simply &ldquo;better&rdquo;: each is designed for a different kind
+                    of riding. &ldquo;Not specified&rdquo; means that detail has not been added yet.</p>
+            </th:block>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

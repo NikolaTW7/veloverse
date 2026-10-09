@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bicycle Brands')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('brands')}"></header>
+
+<main>
+    <!-- Page introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page">Brands</span>
+                </nav>
+                <h1>Bicycle Brands</h1>
+                <p class="lead">Meet some of the manufacturers behind the bicycles we ride. Each brand has its own
+                    history, home country and range of bikes, from racing machines to folding city bikes.</p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- All brands from the database -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="card-grid card-grid-3" th:if="${!brands.isEmpty()}">
+                <article class="type-tile" th:each="brand : ${brands}">
+                    <figure class="placeholder-image">
+                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                        <figcaption>Placeholder image</figcaption>
+                    </figure>
+                    <div class="type-tile-body">
+                        <p class="eyebrow" th:if="${brand.country}" th:text="${brand.country}">Country</p>
+                        <h2 th:text="${brand.name}">Brand</h2>
+                        <p class="clamp-3" th:if="${brand.description}" th:text="${brand.description}">Description</p>
+                        <a class="btn btn-light" th:href="@{/brands/{id}(id=${brand.id})}">
+                            Learn more<span class="visually-hidden" th:text="' about ' + ${brand.name}"></span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <p class="empty-state" th:if="${brands.isEmpty()}">No brands have been added yet.
+                Please check back soon.</p>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

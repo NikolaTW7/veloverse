@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bicycle Materials')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('materials')}"></header>
+
+<main>
+    <!-- Page introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page">Materials</span>
+                </nav>
+                <h1>Bicycle Materials</h1>
+                <p class="lead">Bicycles and their parts are made from different materials. Each one affects
+                    how light, strong, comfortable and long-lasting a bike is. Choose a material below to
+                    learn what it is, where it is used, and its main advantages and disadvantages.</p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- All materials from the database -->
+    <section class="section section-light">
+        <div class="container">
+            <div class="card-grid card-grid-3" th:if="${!materials.isEmpty()}">
+                <article class="type-tile" th:each="material : ${materials}">
+                    <figure class="placeholder-image">
+                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                        <figcaption>Placeholder image</figcaption>
+                    </figure>
+                    <div class="type-tile-body">
+                        <h2 th:text="${material.name}">Aluminium</h2>
+                        <p class="clamp-3" th:text="${material.description}">Description</p>
+                        <a class="btn btn-light" th:href="@{/materials/{id}(id=${material.id})}">
+                            Learn more<span class="visually-hidden" th:text="' about ' + ${material.name}"></span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <p class="empty-state" th:if="${materials.isEmpty()}">No materials have been added yet.
+                Please check back soon.</p>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

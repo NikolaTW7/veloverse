@@ -1,6 +1,7 @@
 package com.veloverse.controller;
 
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
@@ -16,7 +17,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 
+import com.veloverse.model.Bicycle;
 import com.veloverse.model.BicycleType;
+import com.veloverse.model.Brand;
+import com.veloverse.model.Material;
+import com.veloverse.service.BicycleService;
 import com.veloverse.service.BicycleTypeService;
 
 /**
@@ -31,6 +36,9 @@ class HomeControllerTest {
 
     @MockitoBean
     private BicycleTypeService bicycleTypeService;
+
+    @MockitoBean
+    private BicycleService bicycleService;
 
     @Test
     void homePageReturnsOkAndRendersHomeTemplate() throws Exception {
@@ -60,5 +68,38 @@ class HomeControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("No bicycle types have been added yet.")));
+    }
+
+    @Test
+    void bicyclesLinksAreEnabledAndFeaturedModelsComeFromTheDatabase() throws Exception {
+        BicycleType gravel = new BicycleType("Gravel Bike", "Mixed surfaces.", null, null, null);
+        Material aluminium = new Material("Aluminium", "Light and affordable.");
+        Bicycle topstone = new Bicycle(new Brand("Cannondale", null, null), gravel, aluminium, "Topstone 3", 2024);
+        ReflectionTestUtils.setField(topstone, "id", 4);
+        when(bicycleTypeService.findAll()).thenReturn(List.of());
+        when(bicycleService.findAll()).thenReturn(List.of(topstone));
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                // Header, footer, Explore Bicycles button and View all link all point to /bicycles
+                .andExpect(content().string(containsString("href=\"/bicycles\"")))
+                .andExpect(content().string(not(containsString("Explore Bicycles <small>Coming soon</small>"))))
+                .andExpect(content().string(not(containsString("All bicycles coming soon"))))
+                // Featured Models shows the real bicycle with a link to its detail page
+                .andExpect(content().string(containsString("Cannondale")))
+                .andExpect(content().string(containsString("Topstone 3")))
+                .andExpect(content().string(containsString("Gravel Bike · Aluminium · 2024")))
+                .andExpect(content().string(containsString("href=\"/bicycles/4\"")))
+                .andExpect(content().string(not(containsString("Model to be added"))));
+    }
+
+    @Test
+    void featuredModelsShowsEmptyStateWhenThereAreNoBicycles() throws Exception {
+        when(bicycleTypeService.findAll()).thenReturn(List.of());
+        when(bicycleService.findAll()).thenReturn(List.of());
+
+        mockMvc.perform(get("/"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("No bicycles have been added yet.")));
     }
 }

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bicycles')}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('bicycles')}"></header>
+
+<main>
+    <!-- Page introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page">Bicycles</span>
+                </nav>
+                <h1>Bicycles</h1>
+                <p class="lead">Browse real bicycle models from well-known brands. Each one shows its bicycle type
+                    and frame material, so you can see how the ideas from the rest of VeloVerse come together in an
+                    actual bike.</p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- All bicycle models from the database, or only those matching the search and filters -->
+    <section class="section section-light">
+        <div class="container">
+            <!-- A plain GET form, so a search is just /bicycles?q=...&type=... and can be bookmarked -->
+            <form class="search-form" role="search" method="get" th:action="@{/bicycles}">
+                <label for="bicycle-search">Search bicycles</label>
+                <div class="search-row">
+                    <input id="bicycle-search" type="search" name="q" th:value="${query}" maxlength="100"
+                           placeholder="Model, brand or type, e.g. Trek or Gravel">
+                    <button class="btn btn-dark" type="submit">Search</button>
+                </div>
+
+                <!-- Filters: each dropdown starts with "All", which sends an empty value -->
+                <div class="filter-grid">
+                    <div class="filter-field">
+                        <label for="filter-type">Bicycle type</label>
+                        <select id="filter-type" name="type">
+                            <option value="">All types</option>
+                            <option th:each="t : ${types}" th:value="${t.id}" th:text="${t.name}"
+                                    th:selected="${t.id == selectedType}">Road Bike</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-brand">Brand</label>
+                        <select id="filter-brand" name="brand">
+                            <option value="">All brands</option>
+                            <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"
+                                    th:selected="${b.id == selectedBrand}">Trek</option>
+                        </select>
+                    </div>
+                    <div class="filter-field">
+                        <label for="filter-material">Frame material</label>
+                        <select id="filter-material" name="material">
+                            <option value="">All materials</option>
+                            <option th:each="m : ${materials}" th:value="${m.id}" th:text="${m.name}"
+                                    th:selected="${m.id == selectedMaterial}">Steel</option>
+                        </select>
+                    </div>
+                    <div class="filter-actions">
+                        <button class="btn btn-outline" type="submit">Apply filters</button>
+                        <!-- Clears the dropdowns but keeps any search text -->
+                        <a class="text-link" th:if="${filtersActive}"
+                           th:href="${query.isEmpty()} ? @{/bicycles} : @{/bicycles(q=${query})}">Clear filters</a>
+                    </div>
+                </div>
+            </form>
+
+            <p class="search-summary" th:if="${(!query.isEmpty() or filtersActive) and !bicycles.isEmpty()}">
+                <span th:text="${bicycles.size()} + (${bicycles.size() == 1} ? ' bicycle' : ' bicycles') + ' found'
+                               + (${query.isEmpty()} ? '' : ' for “' + ${query} + '”')
+                               + (${filtersActive} ? ' with the selected filters' : '')">2 bicycles found</span>
+                <a class="text-link" th:href="@{/bicycles}" th:text="${filtersActive} ? 'Clear search and filters' : 'Clear search'">Clear search</a>
+            </p>
+
+            <div class="card-grid card-grid-3" th:if="${!bicycles.isEmpty()}">
+                <article class="type-tile" th:each="bike : ${bicycles}">
+                    <figure class="placeholder-image">
+                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                        <figcaption>Placeholder image</figcaption>
+                    </figure>
+                    <div class="type-tile-body">
+                        <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
+                        <h2 th:text="${bike.name}">Model name</h2>
+                        <dl class="bike-facts">
+                            <div th:if="${bike.year}">
+                                <dt>Year</dt>
+                                <dd th:text="${bike.year}">2024</dd>
+                            </div>
+                            <div>
+                                <dt>Type</dt>
+                                <dd th:text="${bike.type.name}">Type</dd>
+                            </div>
+                            <div>
+                                <dt>Frame</dt>
+                                <dd th:text="${bike.frameMaterial.name}">Material</dd>
+                            </div>
+                        </dl>
+                        <p class="clamp-3" th:if="${bike.description}" th:text="${bike.description}">Description</p>
+                        <a class="btn btn-light" th:href="@{/bicycles/{id}(id=${bike.id})}">
+                            Learn more<span class="visually-hidden" th:text="' about the ' + ${bike.brand.name} + ' ' + ${bike.name}"></span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <p class="empty-state" th:if="${bicycles.isEmpty() and query.isEmpty() and !filtersActive}">No bicycles have been added yet.
+                Please check back soon.</p>
+
+            <p class="empty-state" th:if="${bicycles.isEmpty() and (!query.isEmpty() or filtersActive)}">
+                <strong>No bicycles found.</strong>
+                <span th:if="${filtersActive}">No bicycle matches all of the selected filters. Try choosing
+                    &ldquo;All&rdquo; in one of the dropdowns, use a different search, or</span>
+                <span th:unless="${filtersActive}">Try a different model name, brand or bicycle type, or</span>
+                <a class="text-link" th:href="@{/bicycles}">view all bicycles</a>.
+            </p>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

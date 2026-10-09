@@ -14,7 +14,7 @@
                 <p class="lead">A knowledge base of bicycle types, components, materials,
                     and the brands that build them.</p>
                 <div class="button-row">
-                    <span class="btn btn-dark is-pending" aria-disabled="true">Explore Bicycles <small>Coming soon</small></span>
+                    <a class="btn btn-dark" th:href="@{/bicycles}">Explore Bicycles</a>
                     <a class="btn btn-outline" th:href="@{/components}">Explore Components</a>
                 </div>
             </div>
@@ -48,20 +48,22 @@
                     <p>Drivetrains, brakes, wheels and frames explained part by part.</p>
                     <span class="text-link">Explore components <span aria-hidden="true">&rarr;</span></span>
                 </a>
-                <article class="card">
+                <a class="card card-link" th:href="@{/materials}">
                     <div class="card-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg>
                     </div>
                     <h3>Materials</h3>
                     <p>Aluminium, carbon fibre, steel and titanium, and how each affects the ride.</p>
-                </article>
-                <article class="card">
+                    <span class="text-link">Explore materials <span aria-hidden="true">&rarr;</span></span>
+                </a>
+                <a class="card card-link" th:href="@{/brands}">
                     <div class="card-icon" aria-hidden="true">
                         <svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>
                     </div>
                     <h3>Brands</h3>
                     <p>Selected manufacturers and the representative models they make.</p>
-                </article>
+                    <span class="text-link">Explore brands <span aria-hidden="true">&rarr;</span></span>
+                </a>
             </div>
         </div>
     </section>
@@ -126,28 +128,34 @@
         </div>
     </section>
 
-    <!-- Featured Models: kept as placeholders until verified bicycle data is in the database -->
+    <!-- Featured Models: the first bicycles stored in the database -->
     <section class="section">
         <div class="container">
             <div class="section-header-row">
                 <div>
                     <h2 class="section-title">Featured Models</h2>
-                    <p class="section-subtitle">Selected models will appear here once verified bicycle data has been added.</p>
+                    <p class="section-subtitle">A selection of real bicycle models and what they are built for.</p>
                 </div>
-                <span class="pending-link">All bicycles coming soon</span>
+                <a class="text-link section-header-link" th:href="@{/bicycles}">View all bicycles <span aria-hidden="true">&rarr;</span></a>
             </div>
 
-            <div class="card-grid card-grid-3">
-                <article class="model-card" th:each="slot : ${#numbers.sequence(1, 3)}">
+            <div class="card-grid card-grid-3" th:if="${!featuredBicycles.isEmpty()}">
+                <article class="model-card" th:each="bike : ${featuredBicycles}">
                     <figure class="placeholder-image">
                         <img th:src="@{/images/placeholder-bike.svg}" alt="">
                         <figcaption>Placeholder image</figcaption>
                     </figure>
-                    <p class="eyebrow">Placeholder</p>
-                    <h3>Model to be added</h3>
-                    <p>Name, category and specifications will come from verified data in a later milestone.</p>
+                    <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
+                    <h3 th:text="${bike.name}">Model</h3>
+                    <p th:text="${bike.type.name} + ' · ' + ${bike.frameMaterial.name} + (${bike.year} != null ? ' · ' + ${bike.year} : '')">Type &middot; Frame &middot; Year</p>
+                    <a class="text-link" th:href="@{/bicycles/{id}(id=${bike.id})}">
+                        Learn more<span class="visually-hidden" th:text="' about the ' + ${bike.brand.name} + ' ' + ${bike.name}"></span>
+                        <span aria-hidden="true">&rarr;</span>
+                    </a>
                 </article>
             </div>
+            <p class="empty-state" th:if="${featuredBicycles.isEmpty()}">No bicycles have been added yet.
+                Please check back soon.</p>
         </div>
     </section>
 </main>

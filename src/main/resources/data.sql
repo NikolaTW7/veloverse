@@ -192,3 +192,66 @@ FROM (VALUES
 JOIN components c ON c.name = v.component_name
 JOIN materials m ON m.name = v.material_name
 ON CONFLICT DO NOTHING;
+
+-- ---------------------------------------------------------------
+-- Brands (a small selection of well-known manufacturers, with general facts only)
+-- ---------------------------------------------------------------
+INSERT INTO brands (name, country, description) VALUES
+('Trek', 'United States',
+ 'An American bicycle company founded in 1976 in Wisconsin. Trek makes road, mountain, hybrid and electric bikes.'),
+('Specialized', 'United States',
+ 'An American bicycle company founded in 1974 in California. Specialized makes road, mountain and electric bikes, as well as cycling equipment.'),
+('Giant', 'Taiwan',
+ 'A Taiwanese bicycle company founded in 1972 and one of the largest bicycle manufacturers in the world. Giant makes road, mountain, hybrid and electric bikes.'),
+('Cannondale', 'United States',
+ 'An American bicycle brand founded in 1971, known for its early work with aluminium frames. Cannondale makes road, mountain and electric bikes.'),
+('Brompton', 'United Kingdom',
+ 'A British company known for its compact folding bikes, which have been designed and built in London since the 1970s.')
+ON CONFLICT (name) DO NOTHING;
+
+-- ---------------------------------------------------------------
+-- Ninth bicycle type, needed for the Brompton
+-- ---------------------------------------------------------------
+INSERT INTO bicycle_types (name, description, best_use, advantages, disadvantages) VALUES
+('Folding Bike',
+ 'Compact bikes, usually with small wheels, whose frame folds so the bike can be carried onto public transport or stored in a small space.',
+ 'Commuting combined with trains or buses, and storage in small homes',
+ E'Folds small enough to carry onto trains and buses\nEasy to store indoors at home or at work\nPractical for journeys that combine cycling with public transport',
+ E'Small wheels feel less smooth on rough surfaces\nOften heavier and more expensive than a non-folding bike of similar quality\nLess suited to long distances or high speeds')
+ON CONFLICT (name) DO NOTHING;
+
+-- ---------------------------------------------------------------
+-- Bicycle models (specifications for the stated model year only).
+-- Uncertain values are left NULL rather than guessed.
+-- Brand, type and material are looked up by name, so no ID numbers are hard-coded.
+-- ---------------------------------------------------------------
+INSERT INTO bicycles (brand_id, type_id, frame_material_id, name, year, weight_kg,
+                      wheel_size, brake_system, drivetrain, gears, description)
+SELECT b.brand_id, t.type_id, m.material_id, v.name, v.year, v.weight_kg,
+       v.wheel_size, v.brake_system, v.drivetrain, v.gears, v.description
+FROM (VALUES
+ (1, 'Trek', 'Touring Bike', 'Steel', '520 Disc', 2023, NULL::NUMERIC,
+  '700c', 'Mechanical disc', '3 × 9-speed Shimano', 27,
+  'A steel touring bike designed for carrying luggage on long journeys, with mounts for racks and mudguards, disc brakes and a wide range of gears for loaded climbs.'),
+ (2, 'Specialized', 'Mountain Bike', 'Aluminium', 'Rockhopper Sport 29', 2023, NULL,
+  '29"', 'Hydraulic disc', '2 × 9-speed', 18,
+  'An aluminium hardtail mountain bike with 29-inch wheels, a front suspension fork and hydraulic disc brakes.'),
+ (3, 'Giant', 'Hybrid Bike', 'Aluminium', 'Escape 3', 2022, NULL,
+  '700c', 'Rim (linear-pull)', '3 × 7-speed Shimano Tourney', 21,
+  'An aluminium hybrid bike for commuting and fitness riding, with 700c wheels, 38 mm tyres and a wide 21-speed gear range.'),
+ (4, 'Cannondale', 'Gravel Bike', 'Aluminium', 'Topstone 3', 2024, NULL,
+  '700c', 'Mechanical disc', '2 × 9-speed Shimano Sora', 18,
+  'An aluminium gravel bike with a carbon fork, 37 mm tyres and mechanical disc brakes, built for both paved and unpaved roads.'),
+ (5, 'Brompton', 'Folding Bike', 'Steel', 'C Line Explore', 2024, NULL,
+  '16" (349 mm)', 'Rim (dual-pivot caliper)', '2 × 3-speed Brompton (3-speed internal hub)', 6,
+  'A steel folding bike with 16-inch wheels and six gears, made by combining a 3-speed internal hub with a 2-speed derailleur. It folds into a compact package for carrying and storage.'),
+ (6, 'Trek', 'Road Bike', 'Carbon Fibre', 'Domane SL 5 Gen 4', 2024, 8.93,
+  '700c', 'Hydraulic disc', '2 × 12-speed Shimano 105', 24,
+  'A carbon-fibre endurance road bike with 32 mm tubeless-ready tyres, a 12-speed Shimano 105 drivetrain and hydraulic disc brakes. The listed weight of 8.93 kg is for a size 56 frame.')
+) AS v(sort_order, brand_name, type_name, material_name, name, year, weight_kg,
+       wheel_size, brake_system, drivetrain, gears, description)
+JOIN brands b ON b.name = v.brand_name
+JOIN bicycle_types t ON t.name = v.type_name
+JOIN materials m ON m.name = v.material_name
+ORDER BY v.sort_order
+ON CONFLICT (brand_id, name, year) DO NOTHING;

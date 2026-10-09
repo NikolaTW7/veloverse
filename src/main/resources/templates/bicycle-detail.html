@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${bicycle.brand.name + ' ' + bicycle.name})}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('bicycles')}"></header>
+
+<main>
+    <!-- Introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <a th:href="@{/bicycles}">Bicycles</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page" th:text="${bicycle.brand.name + ' ' + bicycle.name}">Trek 520 Disc</span>
+                </nav>
+                <p class="eyebrow eyebrow-accent" th:text="${bicycle.brand.name}">Brand</p>
+                <h1 th:text="${bicycle.name}">520 Disc</h1>
+                <p class="lead" th:if="${bicycle.description}" th:text="${bicycle.description}">Description</p>
+                <p class="lead" th:unless="${bicycle.description}">No description has been added for this bicycle yet.</p>
+
+                <p class="section-more">
+                    <a class="text-link" th:href="@{/bicycles}">
+                        <span aria-hidden="true">&larr;</span> Back to all bicycles
+                    </a>
+                </p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- Specifications. Values missing from the database get a placeholder label instead of a guess. -->
+    <section class="section section-light">
+        <div class="container">
+            <h2 class="section-title">Specifications</h2>
+
+            <dl class="spec-table">
+                <div>
+                    <dt>Brand</dt>
+                    <dd><a th:href="@{/brands/{id}(id=${bicycle.brand.id})}" th:text="${bicycle.brand.name}">Trek</a></dd>
+                </div>
+                <div>
+                    <dt>Model</dt>
+                    <dd th:text="${bicycle.name}">520 Disc</dd>
+                </div>
+                <div>
+                    <dt>Year</dt>
+                    <dd th:text="${bicycle.year} ?: 'Not specified'">2023</dd>
+                </div>
+                <div>
+                    <dt>Bicycle type</dt>
+                    <dd><a th:href="@{/bicycle-types/{id}(id=${bicycle.type.id})}" th:text="${bicycle.type.name}">Touring Bike</a></dd>
+                </div>
+                <div>
+                    <dt>Frame material</dt>
+                    <dd><a th:href="@{/materials/{id}(id=${bicycle.frameMaterial.id})}" th:text="${bicycle.frameMaterial.name}">Steel</a></dd>
+                </div>
+                <div>
+                    <dt>Weight</dt>
+                    <dd th:text="${bicycle.weightKg != null} ? ${bicycle.weightKg} + ' kg' : 'Not specified'">8.93 kg</dd>
+                </div>
+                <div>
+                    <dt>Wheel size</dt>
+                    <dd th:text="${bicycle.wheelSize} ?: 'Not specified'">700c</dd>
+                </div>
+                <div>
+                    <dt>Brake system</dt>
+                    <dd th:text="${bicycle.brakeSystem} ?: 'Not specified'">Mechanical disc</dd>
+                </div>
+                <div>
+                    <dt>Drivetrain</dt>
+                    <dd th:text="${bicycle.drivetrain} ?: 'Not specified'">Drivetrain</dd>
+                </div>
+                <div>
+                    <dt>Number of gears</dt>
+                    <dd th:text="${bicycle.gears} ?: 'Not specified'">27</dd>
+                </div>
+            </dl>
+        </div>
+    </section>
+
+    <!-- Return to the list -->
+    <section class="section">
+        <div class="container text-center">
+            <a class="btn btn-outline" th:href="@{/bicycles}">Back to all bicycles</a>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

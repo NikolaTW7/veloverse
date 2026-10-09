@@ -678,7 +678,8 @@ a.nav-link:focus-visible {
     padding: 20px;
 }
 
-.type-tile h2 {
+.type-tile h2,
+.type-tile h3 {
     font-size: 1.2rem;
 }
 
@@ -1221,5 +1222,297 @@ a.chip:focus-visible {
 @media (max-width: 720px) {
     .anatomy-hint {
         display: block;
+    }
+}
+
+/* =========================================================
+   Bicycles list page
+   ========================================================= */
+
+/* Small year / type / frame summary on each bicycle card */
+.bike-facts {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 20px;
+    margin: 0 0 12px;
+    font-size: 0.85rem;
+}
+
+.bike-facts dt {
+    color: var(--color-muted);
+}
+
+.bike-facts dd {
+    margin: 0;
+    font-weight: 600;
+}
+
+/* =========================================================
+   Bicycle detail page
+   ========================================================= */
+
+/* Two-column list of specifications: label on the left, value on the right */
+.spec-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 40px;
+    margin: 0;
+}
+
+.spec-table div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.spec-table dt {
+    color: var(--color-muted);
+}
+
+.spec-table dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+}
+
+.spec-table a {
+    color: var(--color-accent);
+}
+
+@media (max-width: 720px) {
+    .spec-table {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   Navigation update: "View all" link beside a section title
+   ========================================================= */
+.section-header-link {
+    margin-bottom: 40px;
+}
+
+/* =========================================================
+   Bicycle search (Bicycles list page)
+   ========================================================= */
+.search-form {
+    margin-bottom: 24px;
+}
+
+.search-row {
+    max-width: 640px;
+}
+
+.search-form label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.search-row {
+    display: flex;
+    gap: 12px;
+}
+
+.search-row input {
+    flex: 1;
+    min-width: 0;
+    padding: 12px 16px;
+    font: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg);
+}
+
+.search-row input:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+}
+
+.search-row .btn {
+    padding: 12px 24px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.search-summary {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    color: var(--color-muted);
+    margin-bottom: 24px;
+}
+
+/* ---------- Bicycle filters (same form as the search box) ---------- */
+.filter-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr) auto;
+    gap: 16px;
+    align-items: end;
+    margin-top: 20px;
+}
+
+.filter-field select {
+    width: 100%;
+    padding: 12px 16px;
+    font: inherit;
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    background: var(--color-bg);
+    color: var(--color-text);
+}
+
+.filter-field select:focus {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 1px;
+}
+
+.filter-actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px 16px;
+}
+
+.filter-actions .btn {
+    padding: 12px 24px;
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+@media (max-width: 1024px) {
+    .filter-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .filter-actions {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 720px) {
+    .search-row {
+        flex-direction: column;
+    }
+
+    .filter-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* =========================================================
+   Compare Bicycles page
+   (the two dropdowns reuse the filter styles from the Bicycles page)
+   ========================================================= */
+.compare-grid {
+    grid-template-columns: 1fr 1fr auto;
+    margin-top: 0;
+}
+
+/* Validation message above the comparison */
+.form-message {
+    padding: 16px 20px;
+    margin-bottom: 24px;
+    border: 1px solid #f3c7c2;
+    border-left: 4px solid #c2410c;
+    border-radius: var(--radius);
+    background: #fff7f5;
+    color: var(--color-text);
+}
+
+/* Bicycle A and Bicycle B summary cards */
+.compare-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    margin-bottom: 32px;
+}
+
+.compare-cards .eyebrow {
+    margin-top: 0;
+}
+
+.compare-cards .eyebrow-accent {
+    color: var(--color-accent);
+}
+
+/* Side-by-side specification table */
+.compare-table-wrap {
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    background: var(--color-bg);
+    box-shadow: 0 8px 24px rgba(20, 30, 50, 0.06);
+}
+
+.compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.compare-table th,
+.compare-table td {
+    padding: 14px 20px;
+    text-align: left;
+    vertical-align: top;
+    overflow-wrap: anywhere;
+}
+
+.compare-table thead th {
+    background: #111827;
+    color: #fff;
+    font-weight: 600;
+}
+
+.compare-table thead th:first-child {
+    width: 28%;
+}
+
+.compare-table tbody th {
+    color: var(--color-muted);
+    font-weight: 500;
+}
+
+.compare-table tbody td {
+    font-weight: 600;
+}
+
+.compare-table tbody tr + tr {
+    border-top: 1px solid var(--color-border);
+}
+
+.compare-table tbody tr:nth-child(even) {
+    background: var(--color-bg-light);
+}
+
+.compare-note {
+    margin-top: 24px;
+}
+
+@media (max-width: 1024px) {
+    .compare-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .compare-grid,
+    .compare-cards {
+        grid-template-columns: 1fr;
+    }
+
+    .compare-table th,
+    .compare-table td {
+        padding: 12px 10px;
+        font-size: 0.85rem;
+    }
+
+    .compare-table thead th:first-child {
+        width: 30%;
     }
 }

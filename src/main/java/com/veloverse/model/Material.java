@@ -1,5 +1,8 @@
 package com.veloverse.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -22,12 +25,15 @@ public class Material {
 
     private String name;
 
+    @Column(columnDefinition = "TEXT")
     private String description;
 
     // Stored as one point per line
+    @Column(columnDefinition = "TEXT")
     private String advantages;
 
     // Stored as one point per line
+    @Column(columnDefinition = "TEXT")
     private String disadvantages;
 
     protected Material() {
@@ -57,5 +63,24 @@ public class Material {
 
     public String getDisadvantages() {
         return disadvantages;
+    }
+
+    public List<String> getAdvantageList() {
+        return toLines(advantages);
+    }
+
+    public List<String> getDisadvantageList() {
+        return toLines(disadvantages);
+    }
+
+    // Same approach as BicycleType: split the stored text into one item per line
+    private static List<String> toLines(String text) {
+        if (text == null || text.isBlank()) {
+            return List.of();
+        }
+        return Arrays.stream(text.split("\\R"))
+                .map(String::strip)
+                .filter(line -> !line.isEmpty())
+                .toList();
     }
 }

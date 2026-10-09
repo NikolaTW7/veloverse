@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head(${brand.name})}"></head>
+<body>
+
+<header th:replace="~{fragments/layout :: header('brands')}"></header>
+
+<main>
+    <!-- Introduction -->
+    <section class="page-hero">
+        <div class="container hero-grid">
+            <div>
+                <nav class="breadcrumb" aria-label="Breadcrumb">
+                    <a th:href="@{/}">Home</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <a th:href="@{/brands}">Brands</a>
+                    <span aria-hidden="true">&rsaquo;</span>
+                    <span aria-current="page" th:text="${brand.name}">Trek</span>
+                </nav>
+                <p class="eyebrow eyebrow-accent">Bicycle brand</p>
+                <h1 th:text="${brand.name}">Trek</h1>
+                <p class="lead" th:if="${brand.description}" th:text="${brand.description}">Description</p>
+                <p class="lead" th:unless="${brand.description}">No description has been added for this brand yet.</p>
+
+                <div class="info-chip" th:if="${brand.country}">
+                    <span class="eyebrow">Country</span>
+                    <strong th:text="${brand.country}">United States</strong>
+                </div>
+
+                <p class="section-more">
+                    <a class="text-link" th:href="@{/brands}">
+                        <span aria-hidden="true">&larr;</span> Back to all brands
+                    </a>
+                </p>
+            </div>
+            <figure class="placeholder-image page-hero-image">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image: photo to be added</figcaption>
+            </figure>
+        </div>
+    </section>
+
+    <!-- Bicycle models made by this brand -->
+    <section class="section section-light">
+        <div class="container">
+            <h2 class="section-title" th:text="${brand.name} + ' Models'">Models</h2>
+
+            <div class="card-grid card-grid-3" th:if="${!bicycles.isEmpty()}">
+                <article class="type-tile" th:each="bike : ${bicycles}">
+                    <figure class="placeholder-image">
+                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                        <figcaption>Placeholder image</figcaption>
+                    </figure>
+                    <div class="type-tile-body">
+                        <p class="eyebrow" th:text="${bike.type.name}">Type</p>
+                        <h3 th:text="${bike.name}">Model name</h3>
+                        <dl class="bike-facts">
+                            <div th:if="${bike.year}">
+                                <dt>Year</dt>
+                                <dd th:text="${bike.year}">2024</dd>
+                            </div>
+                            <div>
+                                <dt>Frame</dt>
+                                <dd th:text="${bike.frameMaterial.name}">Material</dd>
+                            </div>
+                        </dl>
+                        <p class="clamp-3" th:if="${bike.description}" th:text="${bike.description}">Description</p>
+                        <a class="btn btn-light" th:href="@{/bicycles/{id}(id=${bike.id})}">
+                            Learn more<span class="visually-hidden" th:text="' about the ' + ${brand.name} + ' ' + ${bike.name}"></span>
+                        </a>
+                    </div>
+                </article>
+            </div>
+
+            <p class="empty-state" th:if="${bicycles.isEmpty()}"
+               th:text="'No ' + ${brand.name} + ' bicycle models have been added yet. Please check back soon.'">
+                No bicycle models from this brand have been added yet.</p>
+        </div>
+    </section>
+
+    <!-- Return to the list -->
+    <section class="section">
+        <div class="container text-center">
+            <a class="btn btn-outline" th:href="@{/brands}">Back to Brands</a>
+        </div>
+    </section>
+</main>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+
+</body>
+</html>

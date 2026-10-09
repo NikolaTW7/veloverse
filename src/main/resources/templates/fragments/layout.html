@@ -53,10 +53,26 @@
                        th:classappend="${activePage == 'components'} ? 'is-active'"
                        th:attr="aria-current=${activePage == 'components'} ? 'page'">Components</a>
                 </li>
-                <li><span class="nav-link is-pending" title="Coming soon">Bicycles<span class="visually-hidden"> (coming soon)</span></span></li>
-                <li><span class="nav-link is-pending" title="Coming soon">Materials<span class="visually-hidden"> (coming soon)</span></span></li>
-                <li><span class="nav-link is-pending" title="Coming soon">Brands<span class="visually-hidden"> (coming soon)</span></span></li>
-                <li><span class="nav-link is-pending" title="Coming soon">Compare<span class="visually-hidden"> (coming soon)</span></span></li>
+                <li>
+                    <a th:href="@{/bicycles}" class="nav-link"
+                       th:classappend="${activePage == 'bicycles'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'bicycles'} ? 'page'">Bicycles</a>
+                </li>
+                <li>
+                    <a th:href="@{/materials}" class="nav-link"
+                       th:classappend="${activePage == 'materials'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'materials'} ? 'page'">Materials</a>
+                </li>
+                <li>
+                    <a th:href="@{/brands}" class="nav-link"
+                       th:classappend="${activePage == 'brands'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'brands'} ? 'page'">Brands</a>
+                </li>
+                <li>
+                    <a th:href="@{/compare}" class="nav-link"
+                       th:classappend="${activePage == 'compare'} ? 'is-active'"
+                       th:attr="aria-current=${activePage == 'compare'} ? 'page'">Compare</a>
+                </li>
             </ul>
         </nav>
     </div>
@@ -78,16 +94,16 @@
                     <li><a th:href="@{/}">Home</a></li>
                     <li><a th:href="@{/bicycle-types}">Bicycle Types</a></li>
                     <li><a th:href="@{/components}">Components</a></li>
-                    <li><span class="is-pending">Bicycles <small>Coming soon</small></span></li>
+                    <li><a th:href="@{/bicycles}">Bicycles</a></li>
                 </ul>
             </div>
 
             <div>
                 <h2 class="footer-heading">Resources</h2>
                 <ul class="footer-links">
-                    <li><span class="is-pending">Materials <small>Coming soon</small></span></li>
-                    <li><span class="is-pending">Brands <small>Coming soon</small></span></li>
-                    <li><span class="is-pending">Compare <small>Coming soon</small></span></li>
+                    <li><a th:href="@{/materials}">Materials</a></li>
+                    <li><a th:href="@{/brands}">Brands</a></li>
+                    <li><a th:href="@{/compare}">Compare</a></li>
                 </ul>
             </div>
         </div>
