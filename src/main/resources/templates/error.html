@@ -6,7 +6,7 @@
 
 <header th:replace="~{fragments/layout :: header('')}"></header>
 
-<main class="section">
+<main id="main" class="section error-page">
     <div class="container narrow text-center">
         <p class="eyebrow eyebrow-accent" th:text="'Error ' + ${status}">Error</p>
         <h1 class="section-title">Something went wrong</h1>

@@ -5,12 +5,18 @@
 
 <header th:replace="~{fragments/layout :: header('home')}"></header>
 
-<main>
-    <!-- Hero -->
-    <section class="hero">
-        <div class="container hero-grid">
-            <div class="hero-text">
-                <h1>Understand <span class="text-accent">Your Bike</span></h1>
+<main id="main">
+    <!-- Cinematic hero: headline on the left, large bicycle illustration on the right -->
+    <section class="home-hero" aria-labelledby="hero-title">
+        <figure class="home-hero-art">
+            <!-- Original illustration; can be swapped for a licensed photograph later (see IMAGE-CREDITS.md) -->
+            <img th:src="@{/images/bike-hero.svg}" alt="" width="1600" height="1000">
+        </figure>
+
+        <div class="container">
+            <div class="home-hero-content">
+                <p class="eyebrow eyebrow-accent">An independent bicycle knowledge base</p>
+                <h1 id="hero-title">Understand <span class="text-accent">Your Bike</span></h1>
                 <p class="lead">A knowledge base of bicycle types, components, materials,
                     and the brands that build them.</p>
                 <div class="button-row">
@@ -18,61 +24,72 @@
                     <a class="btn btn-outline" th:href="@{/components}">Explore Components</a>
                 </div>
             </div>
-            <figure class="placeholder-image hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
         </div>
+
+        <nav class="hero-quicklinks" aria-label="Quick links">
+            <div class="container">
+            <ul>
+                <li><a th:href="@{/bicycle-types}">Types <span class="arrow" aria-hidden="true">&rarr;</span></a></li>
+                <li><a th:href="@{/components}">Components <span class="arrow" aria-hidden="true">&rarr;</span></a></li>
+                <li><a th:href="@{/materials}">Materials <span class="arrow" aria-hidden="true">&rarr;</span></a></li>
+                <li><a th:href="@{/brands}">Brands <span class="arrow" aria-hidden="true">&rarr;</span></a></li>
+                <li><a th:href="@{/compare}">Compare <span class="arrow" aria-hidden="true">&rarr;</span></a></li>
+            </ul>
+            </div>
+        </nav>
     </section>
 
     <!-- What to Explore: one card per main area of the site -->
-    <section class="section section-light">
+    <section class="section">
         <div class="container">
-            <h2 class="section-title">What to Explore</h2>
-            <p class="section-subtitle">Navigate the world of bicycles through organised categories.</p>
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow eyebrow-accent">Start here</p>
+                    <h2 class="section-title">What to Explore</h2>
+                </div>
+                <p class="section-subtitle">Navigate the world of bicycles through organised categories.</p>
+            </div>
 
-            <div class="card-grid card-grid-4">
-                <a class="card card-link" th:href="@{/bicycle-types}">
-                    <div class="card-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><circle cx="6" cy="16" r="4"/><circle cx="18" cy="16" r="4"/><path d="M6 16 9 9h7l2 7M9 9l3 7 4-7"/></svg>
-                    </div>
+            <div class="explore-grid">
+                <a class="explore-card" th:href="@{/bicycle-types}">
+                    <span class="explore-number" aria-hidden="true">01</span>
                     <h3>Bicycle Types</h3>
                     <p>Road, mountain, gravel, fixed-gear and more: understand what each category is built for.</p>
-                    <span class="text-link">Explore types <span aria-hidden="true">&rarr;</span></span>
+                    <span class="text-link">Explore types <span class="arrow" aria-hidden="true">&rarr;</span></span>
                 </a>
-                <a class="card card-link" th:href="@{/components}">
-                    <div class="card-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>
-                    </div>
+                <a class="explore-card" th:href="@{/components}">
+                    <span class="explore-number" aria-hidden="true">02</span>
                     <h3>Components &amp; Anatomy</h3>
                     <p>Drivetrains, brakes, wheels and frames explained part by part.</p>
-                    <span class="text-link">Explore components <span aria-hidden="true">&rarr;</span></span>
+                    <span class="text-link">Explore components <span class="arrow" aria-hidden="true">&rarr;</span></span>
                 </a>
-                <a class="card card-link" th:href="@{/materials}">
-                    <div class="card-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M12 3 20 7.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5 12 12l8-4.5M12 12v9"/></svg>
-                    </div>
+                <a class="explore-card" th:href="@{/materials}">
+                    <span class="explore-number" aria-hidden="true">03</span>
                     <h3>Materials</h3>
                     <p>Aluminium, carbon fibre, steel and titanium, and how each affects the ride.</p>
-                    <span class="text-link">Explore materials <span aria-hidden="true">&rarr;</span></span>
+                    <span class="text-link">Explore materials <span class="arrow" aria-hidden="true">&rarr;</span></span>
                 </a>
-                <a class="card card-link" th:href="@{/brands}">
-                    <div class="card-icon" aria-hidden="true">
-                        <svg viewBox="0 0 24 24"><path d="M3 12V4h8l10 10-8 8z"/><circle cx="7.5" cy="8.5" r="1.5"/></svg>
-                    </div>
+                <a class="explore-card" th:href="@{/brands}">
+                    <span class="explore-number" aria-hidden="true">04</span>
                     <h3>Brands</h3>
                     <p>Selected manufacturers and the representative models they make.</p>
-                    <span class="text-link">Explore brands <span aria-hidden="true">&rarr;</span></span>
+                    <span class="text-link">Explore brands <span class="arrow" aria-hidden="true">&rarr;</span></span>
                 </a>
             </div>
         </div>
     </section>
 
     <!-- Bicycle Types preview -->
-    <section class="section">
+    <section class="section section-light">
         <div class="container">
-            <h2 class="section-title">Bicycle Types</h2>
-            <p class="section-subtitle">Different designs serve different purposes. Find your category.</p>
+            <div class="section-head">
+                <div>
+                    <p class="eyebrow eyebrow-accent">Categories</p>
+                    <h2 class="section-title">Bicycle Types</h2>
+                    <p class="section-subtitle">Different designs serve different purposes. Find your category.</p>
+                </div>
+                <a class="text-link" th:href="@{/bicycle-types}">View all bicycle types <span class="arrow" aria-hidden="true">&rarr;</span></a>
+            </div>
 
             <div class="card-grid card-grid-4" th:if="${!featuredTypes.isEmpty()}">
                 <article class="type-card" th:each="type : ${featuredTypes}">
@@ -82,43 +99,42 @@
                     </figure>
                     <h3 th:text="${type.name}">Road Bike</h3>
                     <p class="clamp-3" th:text="${type.description}">Description</p>
-                    <a class="text-link" th:href="@{/bicycle-types/{id}(id=${type.id})}">Learn more <span aria-hidden="true">&rarr;</span></a>
+                    <a class="text-link" th:href="@{/bicycle-types/{id}(id=${type.id})}">Learn more<span class="visually-hidden" th:text="' about ' + ${type.name}"></span> <span class="arrow" aria-hidden="true">&rarr;</span></a>
                 </article>
             </div>
             <p class="empty-state" th:if="${featuredTypes.isEmpty()}">No bicycle types have been added yet.</p>
-
-            <p class="section-more"><a class="text-link" th:href="@{/bicycle-types}">View all bicycle types <span aria-hidden="true">&rarr;</span></a></p>
         </div>
     </section>
 
     <!-- Anatomy of a Bicycle: the main component systems -->
-    <section class="section section-light">
+    <section class="section">
         <div class="container split-grid">
             <figure class="placeholder-image anatomy-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: drivetrain photo to be added</figcaption>
+                <img th:src="@{/images/bike-hero.svg}" alt="" width="1600" height="1000">
+                <figcaption>Illustration</figcaption>
             </figure>
 
             <div>
+                <p class="eyebrow eyebrow-accent">How a bike works</p>
                 <h2 class="section-title">Anatomy of a <span class="text-accent">Bicycle</span></h2>
                 <p class="lead">Every bicycle is an assembly of systems working together.
                     Understanding the components helps you maintain, upgrade and choose the right bike.</p>
 
                 <ul class="system-list">
                     <li>
-                        <span class="system-dot" aria-hidden="true"></span>
+                        <span class="system-number" aria-hidden="true">01</span>
                         <div><strong>Drivetrain</strong><p>Chain, cassette and crankset transfer power to the wheel.</p></div>
                     </li>
                     <li>
-                        <span class="system-dot" aria-hidden="true"></span>
+                        <span class="system-number" aria-hidden="true">02</span>
                         <div><strong>Brakes</strong><p>Rim and disc systems for controlled stopping.</p></div>
                     </li>
                     <li>
-                        <span class="system-dot" aria-hidden="true"></span>
+                        <span class="system-number" aria-hidden="true">03</span>
                         <div><strong>Wheels &amp; Tyres</strong><p>Rims, hubs and tyres affect grip and rolling resistance.</p></div>
                     </li>
                     <li>
-                        <span class="system-dot" aria-hidden="true"></span>
+                        <span class="system-number" aria-hidden="true">04</span>
                         <div><strong>Frame &amp; Cockpit</strong><p>The frame and steering parts shape handling and fit.</p></div>
                     </li>
                 </ul>
@@ -128,34 +144,55 @@
         </div>
     </section>
 
-    <!-- Featured Models: the first bicycles stored in the database -->
-    <section class="section">
+    <!-- Featured Models: the first bicycles stored in the database.
+         Neutral placeholders only, so no photo can be mistaken for the real model. -->
+    <section class="section section-light">
         <div class="container">
-            <div class="section-header-row">
+            <div class="section-head">
                 <div>
+                    <p class="eyebrow eyebrow-accent">Real bicycles</p>
                     <h2 class="section-title">Featured Models</h2>
                     <p class="section-subtitle">A selection of real bicycle models and what they are built for.</p>
                 </div>
-                <a class="text-link section-header-link" th:href="@{/bicycles}">View all bicycles <span aria-hidden="true">&rarr;</span></a>
+                <a class="text-link" th:href="@{/bicycles}">View all bicycles <span class="arrow" aria-hidden="true">&rarr;</span></a>
             </div>
 
             <div class="card-grid card-grid-3" th:if="${!featuredBicycles.isEmpty()}">
                 <article class="model-card" th:each="bike : ${featuredBicycles}">
                     <figure class="placeholder-image">
                         <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
+                        <figcaption>Photo to be added</figcaption>
                     </figure>
                     <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
                     <h3 th:text="${bike.name}">Model</h3>
                     <p th:text="${bike.type.name} + ' · ' + ${bike.frameMaterial.name} + (${bike.year} != null ? ' · ' + ${bike.year} : '')">Type &middot; Frame &middot; Year</p>
                     <a class="text-link" th:href="@{/bicycles/{id}(id=${bike.id})}">
                         Learn more<span class="visually-hidden" th:text="' about the ' + ${bike.brand.name} + ' ' + ${bike.name}"></span>
-                        <span aria-hidden="true">&rarr;</span>
+                        <span class="arrow" aria-hidden="true">&rarr;</span>
                     </a>
                 </article>
             </div>
             <p class="empty-state" th:if="${featuredBicycles.isEmpty()}">No bicycles have been added yet.
                 Please check back soon.</p>
+        </div>
+    </section>
+
+    <!-- Compare promotion -->
+    <section class="section">
+        <div class="container">
+            <div class="promo-band">
+                <div>
+                    <p class="eyebrow eyebrow-accent">Side by side</p>
+                    <h2>Compare two bicycles side by side</h2>
+                    <p>Choose any two bicycles and see their type, frame material, weight, wheels, brakes,
+                        drivetrain and gears in one table. A neutral comparison: no scores and no winner.</p>
+                    <a class="btn btn-dark" th:href="@{/compare}">Compare Bicycles</a>
+                </div>
+                <div class="promo-visual" aria-hidden="true">
+                    <div><span></span><span></span><span></span><span></span></div>
+                    <div><span></span><span></span><span></span><span></span></div>
+                </div>
+            </div>
         </div>
     </section>
 </main>

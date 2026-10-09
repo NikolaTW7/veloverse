@@ -5,7 +5,7 @@
 
 <header th:replace="~{fragments/layout :: header('bicycle-types')}"></header>
 
-<main>
+<main id="main">
     <!-- Introduction -->
     <section class="page-hero">
         <div class="container hero-grid">
@@ -43,14 +43,14 @@
 
             <div class="pros-cons">
                 <div class="pros-cons-panel">
-                    <h3><span class="pc-icon pc-icon-pro" aria-hidden="true">&#10003;</span> Advantages</h3>
+                    <h3>Advantages</h3>
                     <ul class="pc-list pc-list-pro" th:if="${!type.advantageList.isEmpty()}">
                         <li th:each="item : ${type.advantageList}" th:text="${item}">Advantage</li>
                     </ul>
                     <p th:if="${type.advantageList.isEmpty()}">No advantages recorded yet.</p>
                 </div>
                 <div class="pros-cons-panel">
-                    <h3><span class="pc-icon pc-icon-con" aria-hidden="true">&#10005;</span> Disadvantages</h3>
+                    <h3>Disadvantages</h3>
                     <ul class="pc-list pc-list-con" th:if="${!type.disadvantageList.isEmpty()}">
                         <li th:each="item : ${type.disadvantageList}" th:text="${item}">Disadvantage</li>
                     </ul>

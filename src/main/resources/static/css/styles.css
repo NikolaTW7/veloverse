@@ -1,24 +1,34 @@
 /* =========================================================
    VeloVerse - main stylesheet
-   Layout follows the Home wireframe (01-home.png):
-   white header, light-grey sections, white cards, blue accents
-   and a dark footer.
+   Dark cinematic design system: near-black page, charcoal
+   surfaces, bold white type and a restrained lime accent.
+   All colours come from the tokens below, so a page only
+   needs the shared classes to match the rest of the site.
    ========================================================= */
 
 /* ---------- Design tokens ---------- */
 :root {
-    --color-accent: #3b7cf4;
-    --color-accent-soft: #eaf1fe;
-    --color-text: #1a1a1a;
-    --color-muted: #5f6b7a;
-    --color-border: #e6e9ef;
-    --color-bg: #ffffff;
-    --color-bg-light: #f8f9fb;
-    --color-footer: #1c1c1e;
-    --color-footer-text: #a8adb7;
+    color-scheme: dark; /* native form controls and scrollbars follow the dark theme */
 
-    --radius: 12px;
-    --shadow: 0 18px 40px rgba(20, 30, 50, 0.12);
+    --color-accent: #c8f031;          /* lime: buttons, active states, small highlights only */
+    --color-accent-hover: #d9ff5a;
+    --color-accent-soft: rgba(200, 240, 49, 0.12);
+    --color-on-accent: #0a0a0b;       /* text placed on lime */
+    --color-text: #f5f5f4;
+    --color-muted: #a1a1aa;           /* about 7.5:1 on the page background */
+    --color-border: #26262b;
+    --color-border-strong: #3a3a41;
+    --color-bg: #0a0a0b;              /* page background */
+    --color-bg-light: #111113;        /* alternate section background */
+    --color-surface: #161618;         /* cards and panels */
+    --color-surface-2: #1d1d20;       /* raised elements inside cards */
+    --color-panel: #18181b;           /* side panels, e.g. "Part of the … system" */
+    --color-footer: #050506;
+    --color-footer-text: #a1a1aa;
+    --color-danger: #f87171;
+
+    --radius: 14px;
+    --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
     --container: 1232px;
     --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
@@ -78,7 +88,9 @@ a {
 
 /* ---------- Header and navigation ---------- */
 .site-header {
-    background: var(--color-bg);
+    position: relative;
+    z-index: 50;
+    background: rgba(10, 10, 11, 0.92);
     border-bottom: 1px solid var(--color-border);
 }
 
@@ -100,8 +112,9 @@ a {
 }
 
 .logo-icon {
-    width: 32px;
-    height: 24px;
+    flex: 0 0 auto;
+    width: 44px;
+    height: 27.5px;     /* keeps the 48 x 30 drawing in proportion */
     color: var(--color-accent);
 }
 
@@ -127,12 +140,24 @@ a {
 a.nav-link:hover,
 a.nav-link:focus-visible {
     color: var(--color-text);
-    background: var(--color-bg-light);
+    background: var(--color-surface);
 }
 
+/* The current page: white text with a thin lime underline */
 .nav-link.is-active {
     color: var(--color-text);
     font-weight: 600;
+}
+
+.nav-link.is-active::after {
+    content: "";
+    position: absolute;
+    left: 12px;
+    right: 12px;
+    bottom: 2px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--color-accent);
 }
 
 /* Sections that are not built yet: visibly inactive, never clickable */
@@ -165,14 +190,25 @@ a.nav-link:focus-visible {
     font-size: 0.75rem;
 }
 
+/* Primary call to action (class name kept from the light design) */
 .btn-dark {
-    background: var(--color-text);
-    color: #fff;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+}
+
+.btn-dark:hover {
+    background: var(--color-accent-hover);
 }
 
 .btn-outline {
-    background: var(--color-bg);
-    border-color: var(--color-border);
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.35);
+    color: var(--color-text);
+}
+
+.btn-outline:hover {
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
 /* ---------- Placeholder images ---------- */
@@ -181,7 +217,9 @@ a.nav-link:focus-visible {
     margin: 0;
     border-radius: var(--radius);
     overflow: hidden;
-    background: #eef2f7;
+    background:
+        radial-gradient(120% 90% at 70% 20%, rgba(200, 240, 49, 0.07), transparent 60%),
+        var(--color-surface-2);
 }
 
 .placeholder-image img {
@@ -197,7 +235,8 @@ a.nav-link:focus-visible {
     padding: 4px 10px;
     font-size: 0.75rem;
     color: var(--color-muted);
-    background: rgba(255, 255, 255, 0.9);
+    background: rgba(10, 10, 11, 0.75);
+    border: 1px solid var(--color-border);
     border-radius: 999px;
 }
 
@@ -297,7 +336,7 @@ a.nav-link:focus-visible {
 }
 
 .card {
-    background: var(--color-bg);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     padding: 32px;
@@ -433,7 +472,7 @@ a.nav-link:focus-visible {
 
 .footer-links a:hover,
 .footer-links a:focus-visible {
-    color: #fff;
+    color: var(--color-accent);
 }
 
 .footer-links small {
@@ -448,7 +487,7 @@ a.nav-link:focus-visible {
     gap: 8px 24px;
     margin-top: 48px;
     padding-top: 24px;
-    border-top: 1px solid #2f3a4f;
+    border-top: 1px solid var(--color-border);
     font-size: 0.85rem;
 }
 
@@ -588,7 +627,7 @@ a.nav-link:focus-visible {
 .card-link:hover,
 .card-link:focus-visible {
     border-color: var(--color-accent);
-    box-shadow: 0 8px 24px rgba(20, 30, 50, 0.08);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
 
 .btn-light {
@@ -648,8 +687,8 @@ a.nav-link:focus-visible {
     padding: 12px 20px;
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
-    background: var(--color-bg);
-    box-shadow: 0 4px 12px rgba(20, 30, 50, 0.06);
+    background: var(--color-surface);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
 }
 
 .info-chip .eyebrow {
@@ -660,7 +699,7 @@ a.nav-link:focus-visible {
 .type-tile {
     display: flex;
     flex-direction: column;
-    background: var(--color-bg);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     overflow: hidden;
@@ -718,12 +757,14 @@ a.nav-link:focus-visible {
 
 /* ---------- Pros & Cons (dark section) ---------- */
 .section-dark {
-    background: #111827;
-    color: #e5e7eb;
+    background: var(--color-footer);
+    color: var(--color-text);
+    border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .section-dark .section-subtitle {
-    color: #9ca3af;
+    color: var(--color-muted);
 }
 
 .pros-cons {
@@ -734,38 +775,18 @@ a.nav-link:focus-visible {
 
 .pros-cons-panel {
     padding: 32px;
-    border: 1px solid #2c3546;
+    border: 1px solid var(--color-border);
     border-radius: 20px;
-    background: #1a2232;
+    background: var(--color-surface);
 }
 
 .pros-cons-panel h3 {
-    display: flex;
-    align-items: center;
-    gap: 12px;
     font-size: 1.25rem;
     color: #fff;
+    margin-bottom: 8px;
 }
 
-.pc-icon {
-    display: grid;
-    place-items: center;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    font-size: 0.9rem;
-}
-
-.pc-icon-pro {
-    background: rgba(34, 197, 94, 0.18);
-    color: #4ade80;
-}
-
-.pc-icon-con {
-    background: rgba(239, 68, 68, 0.18);
-    color: #f87171;
-}
-
+/* Plain text list: no ticks or crosses, items separated by thin lines */
 .pc-list {
     list-style: none;
     padding: 0;
@@ -773,25 +794,12 @@ a.nav-link:focus-visible {
 }
 
 .pc-list li {
-    position: relative;
-    padding-left: 28px;
-    margin-bottom: 14px;
+    padding: 14px 0;
+    border-top: 1px solid var(--color-border);
 }
 
-.pc-list li::before {
-    position: absolute;
-    left: 0;
-    font-weight: 700;
-}
-
-.pc-list-pro li::before {
-    content: "\2713";
-    color: #4ade80;
-}
-
-.pc-list-con li::before {
-    content: "\2715";
-    color: #f87171;
+.pc-list li:last-child {
+    padding-bottom: 0;
 }
 
 /* ---------- Related types ---------- */
@@ -815,7 +823,7 @@ a.nav-link:focus-visible {
     padding: 24px;
     text-align: center;
     text-decoration: none;
-    background: var(--color-bg);
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 16px;
 }
@@ -911,7 +919,7 @@ a.nav-link:focus-visible {
 }
 
 .anatomy-bike .part {
-    stroke: #475569;
+    stroke: #8a8a93;
     stroke-width: 5;
 }
 
@@ -920,16 +928,16 @@ a.nav-link:focus-visible {
 }
 
 .anatomy-bike .filled {
-    fill: #475569;
+    fill: #8a8a93;
 }
 
 .anatomy-bike .thin {
-    stroke: #64748b;
+    stroke: #71717a;
     stroke-width: 3;
 }
 
 .anatomy-bike .tyre {
-    stroke: #1f2937;
+    stroke: #3f3f46;
     stroke-width: 12;
 }
 
@@ -939,12 +947,12 @@ a.nav-link:focus-visible {
 }
 
 .anatomy-bike .spokes line {
-    stroke: #cbd5e1;
+    stroke: #3a3a41;
     stroke-width: 1.5;
 }
 
 .anatomy-bike .hub {
-    fill: #475569;
+    fill: #8a8a93;
     stroke: none;
 }
 
@@ -958,7 +966,7 @@ a.nav-link:focus-visible {
 }
 
 .anatomy-label rect {
-    fill: #fff;
+    fill: var(--color-surface);
     stroke: var(--color-border);
     stroke-width: 1.5;
 }
@@ -978,7 +986,7 @@ a.nav-link:focus-visible {
 
 .anatomy-label a:hover text,
 .anatomy-label a:focus-visible text {
-    fill: #fff;
+    fill: var(--color-on-accent);
 }
 
 /* ---------- System cards ---------- */
@@ -1060,7 +1068,7 @@ a.nav-link:focus-visible {
 .flow-step-final .flow-step-number {
     background: var(--color-accent);
     border-color: var(--color-accent);
-    color: #fff;
+    color: var(--color-on-accent);
 }
 
 /* ---------- Component detail ---------- */
@@ -1132,19 +1140,36 @@ a.nav-link:focus-visible {
     border-color: var(--color-accent);
 }
 
+/* "Part of the … system" panel on component detail pages: a dark card,
+   with lime used only for the small labels, the top accent line and the current component */
 .system-panel {
     padding: 32px;
+    border: 1px solid var(--color-border);
+    border-top: 3px solid var(--color-accent);
     border-radius: 24px;
-    background: var(--color-accent);
-    color: #fff;
+    background: var(--color-panel);
+    color: var(--color-text);
 }
 
 .system-panel h2 {
     font-size: 1.5rem;
+    color: var(--color-text);
+}
+
+.system-panel p {
+    color: #c4c4cc;
 }
 
 .system-panel .eyebrow {
-    color: rgba(255, 255, 255, 0.8);
+    color: var(--color-accent);
+}
+
+.system-panel .eyebrow + h2 {
+    margin-top: 4px;
+}
+
+.system-panel .chip-list {
+    margin-top: 12px;
 }
 
 .chip-list {
@@ -1156,23 +1181,29 @@ a.nav-link:focus-visible {
     margin: 0;
 }
 
+/* Component pills: other components are quiet outlined links,
+   the component being viewed is highlighted in lime */
 .chip {
     display: inline-block;
-    padding: 4px 12px;
+    padding: 6px 14px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.5);
-    color: #fff;
+    border: 1px solid var(--color-border-strong);
+    background: var(--color-surface-2);
+    color: #d4d4d8;
     font-size: 0.85rem;
     text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background-color 0.2s;
 }
 
 a.chip:hover,
 a.chip:focus-visible {
-    background: rgba(255, 255, 255, 0.2);
+    border-color: var(--color-accent);
+    color: var(--color-accent);
 }
 
 .chip-current {
-    background: #fff;
+    border-color: var(--color-accent);
+    background: var(--color-accent-soft);
     color: var(--color-accent);
     font-weight: 600;
 }
@@ -1321,9 +1352,10 @@ a.chip:focus-visible {
     min-width: 0;
     padding: 12px 16px;
     font: inherit;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-strong);
     border-radius: 8px;
-    background: var(--color-bg);
+    background: var(--color-surface);
+    color: var(--color-text);
 }
 
 .search-row input:focus {
@@ -1359,9 +1391,9 @@ a.chip:focus-visible {
     width: 100%;
     padding: 12px 16px;
     font: inherit;
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-border-strong);
     border-radius: 8px;
-    background: var(--color-bg);
+    background: var(--color-surface);
     color: var(--color-text);
 }
 
@@ -1417,10 +1449,10 @@ a.chip:focus-visible {
 .form-message {
     padding: 16px 20px;
     margin-bottom: 24px;
-    border: 1px solid #f3c7c2;
-    border-left: 4px solid #c2410c;
+    border: 1px solid rgba(248, 113, 113, 0.35);
+    border-left: 4px solid var(--color-danger);
     border-radius: var(--radius);
-    background: #fff7f5;
+    background: rgba(248, 113, 113, 0.08);
     color: var(--color-text);
 }
 
@@ -1445,8 +1477,8 @@ a.chip:focus-visible {
     border: 1px solid var(--color-border);
     border-radius: var(--radius);
     overflow: hidden;
-    background: var(--color-bg);
-    box-shadow: 0 8px 24px rgba(20, 30, 50, 0.06);
+    background: var(--color-surface);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
 }
 
 .compare-table {
@@ -1464,8 +1496,9 @@ a.chip:focus-visible {
 }
 
 .compare-table thead th {
-    background: #111827;
-    color: #fff;
+    background: var(--color-surface-2);
+    color: var(--color-text);
+    border-bottom: 2px solid var(--color-accent);
     font-weight: 600;
 }
 
@@ -1515,4 +1548,639 @@ a.chip:focus-visible {
     .compare-table thead th:first-child {
         width: 30%;
     }
+}
+
+/* =========================================================
+   Dark cinematic layer (UI redesign)
+   Shared typography, focus, page headers and the new
+   homepage sections. Everything uses the tokens at the top.
+   ========================================================= */
+
+/* ---------- Typography ---------- */
+body {
+    -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--color-text);
+}
+
+h1 {
+    letter-spacing: -0.035em;
+}
+
+.section-title {
+    font-size: clamp(2rem, 3.6vw, 3rem);
+}
+
+.eyebrow {
+    letter-spacing: 0.14em;
+}
+
+::selection {
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+}
+
+/* ---------- Keyboard focus: always visible, never removed ---------- */
+:focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+}
+
+/* Links that jump to a section stop below the sticky header */
+[id] {
+    scroll-margin-top: 96px;
+}
+
+/* ---------- Skip link (first thing keyboard users reach) ---------- */
+.skip-link {
+    position: absolute;
+    left: 16px;
+    top: -60px;
+    z-index: 100;
+    padding: 10px 16px;
+    border-radius: 8px;
+    background: var(--color-accent);
+    color: var(--color-on-accent);
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.skip-link:focus {
+    top: 12px;
+}
+
+/* ---------- Header: sticky on larger screens ---------- */
+@media (min-width: 1025px) {
+    .site-header {
+        position: sticky;
+        top: 0;
+        background: rgba(10, 10, 11, 0.8);
+        -webkit-backdrop-filter: blur(14px);
+        backdrop-filter: blur(14px);
+    }
+}
+
+.logo {
+    color: var(--color-text);
+    letter-spacing: -0.02em;
+}
+
+.site-nav a.nav-link {
+    font-weight: 500;
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+    letter-spacing: 0.01em;
+    transition: background-color 0.2s, border-color 0.2s, color 0.2s, transform 0.2s;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
+}
+
+.btn-light {
+    background: var(--color-surface-2);
+    border-color: var(--color-border-strong);
+}
+
+/* Arrow used after text links */
+.arrow {
+    display: inline-block;
+    transition: transform 0.2s;
+}
+
+a:hover .arrow,
+a:focus-visible .arrow {
+    transform: translateX(4px);
+}
+
+/* ---------- Inner page header: dark stage with a soft lime glow ---------- */
+.page-hero {
+    position: relative;
+    padding: 72px 0 88px;
+    background:
+        radial-gradient(60% 80% at 85% 10%, rgba(200, 240, 49, 0.08), transparent 60%),
+        linear-gradient(180deg, #0f0f11 0%, var(--color-bg) 100%);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.page-hero h1 {
+    font-size: clamp(2.6rem, 6vw, 4.75rem);
+    line-height: 1.02;
+}
+
+.page-hero-image {
+    box-shadow: var(--shadow);
+    border: 1px solid var(--color-border);
+}
+
+.lead {
+    color: #c4c4cc;
+}
+
+/* ---------- Sections and cards ---------- */
+.section-light {
+    background: var(--color-bg-light);
+}
+
+.card,
+.type-tile,
+.related-card,
+.info-chip,
+.pros-cons-panel,
+.anatomy-panel {
+    border-color: var(--color-border);
+}
+
+.card-link,
+.type-tile,
+.related-card,
+.related-part {
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+
+.type-tile:hover,
+.card-link:hover,
+.related-card:hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+}
+
+.type-tile .placeholder-image {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.empty-state {
+    background: var(--color-surface);
+    border-color: var(--color-border-strong);
+}
+
+.info-block {
+    background: var(--color-surface);
+}
+
+.factor h3 {
+    color: var(--color-text);
+}
+
+/* ---------- Specification and comparison tables ---------- */
+.spec-table dd {
+    color: var(--color-text);
+}
+
+.compare-table tbody td {
+    color: var(--color-text);
+}
+
+/* Very narrow phones: the table keeps its three columns but may scroll sideways
+   inside its own box instead of squeezing the text */
+@media (max-width: 380px) {
+    .compare-table-wrap {
+        overflow-x: auto;
+    }
+
+    .compare-table {
+        min-width: 340px;
+    }
+}
+
+/* ---------- Footer ---------- */
+.site-footer {
+    border-top: 1px solid var(--color-border);
+}
+
+.footer-note {
+    margin-top: 16px;
+    font-size: 0.85rem;
+    color: #8b8b93;
+}
+
+/* =========================================================
+   Homepage
+   ========================================================= */
+
+/* ---------- Cinematic hero ---------- */
+.home-hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: min(88vh, 820px);
+    padding: 96px 0 0;
+    overflow: hidden;
+    isolation: isolate;
+    background:
+        radial-gradient(55% 70% at 72% 45%, rgba(200, 240, 49, 0.10), transparent 65%),
+        radial-gradient(80% 60% at 70% 100%, rgba(255, 255, 255, 0.05), transparent 70%),
+        var(--color-bg);
+}
+
+/* Large bicycle illustration on the right, fading into the dark */
+.home-hero-art {
+    position: absolute;
+    inset: 0 -6% 0 40%;
+    z-index: -2; /* behind the readability gradient below */
+    margin: 0;
+    display: flex;
+    align-items: center;
+}
+
+.home-hero-art img {
+    width: 100%;
+    height: auto;
+    opacity: 0.95;
+}
+
+/* Gradient that keeps the headline readable over the artwork */
+.home-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(90deg, var(--color-bg) 0%, rgba(10, 10, 11, 0.92) 32%, rgba(10, 10, 11, 0.2) 70%, transparent 100%);
+}
+
+/* Flex children with auto margins would shrink, so the container keeps full width */
+.home-hero > .container,
+.hero-quicklinks {
+    width: 100%;
+}
+
+.home-hero-content {
+    max-width: 640px;
+}
+
+.home-hero h1 {
+    font-size: clamp(3.2rem, 8.5vw, 7rem);
+    line-height: 0.95;
+    margin-bottom: 28px;
+}
+
+.home-hero h1 .text-accent {
+    display: block;
+}
+
+.home-hero .lead {
+    font-size: 1.2rem;
+    max-width: 30em;
+}
+
+/* Quick links along the bottom of the hero */
+.hero-quicklinks {
+    margin-top: 88px;
+    border-top: 1px solid var(--color-border);
+    background: rgba(10, 10, 11, 0.6);
+}
+
+.hero-quicklinks ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.hero-quicklinks li {
+    flex: 1 1 0;
+}
+
+.hero-quicklinks a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 20px 4px;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    border-right: 1px solid var(--color-border);
+    padding-right: 20px;
+    margin-right: 20px;
+}
+
+.hero-quicklinks li:last-child a {
+    border-right: 0;
+    margin-right: 0;
+}
+
+.hero-quicklinks a:hover,
+.hero-quicklinks a:focus-visible {
+    color: var(--color-accent);
+}
+
+/* ---------- Section heading used on the homepage ---------- */
+.section-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 16px 32px;
+    margin-bottom: 40px;
+}
+
+.section-head .section-subtitle {
+    margin-bottom: 0;
+    max-width: 36em;
+}
+
+/* ---------- Explore cards ---------- */
+.explore-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+.explore-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    padding: 28px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-decoration: none;
+    background:
+        radial-gradient(90% 60% at 50% 18%, rgba(200, 240, 49, 0.08), transparent 70%),
+        linear-gradient(180deg, var(--color-surface-2), var(--color-surface));
+    transition: border-color 0.25s, transform 0.25s;
+}
+
+.explore-card:hover,
+.explore-card:focus-visible {
+    border-color: rgba(200, 240, 49, 0.55);
+    transform: translateY(-4px);
+}
+
+.explore-number {
+    margin-bottom: 28px;
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+}
+
+.explore-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 8px;
+}
+
+.explore-card p {
+    flex: 1; /* pushes the link to the bottom so all four cards line up */
+    color: var(--color-muted);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+/* ---------- Bicycle type cards on the homepage ---------- */
+.type-card {
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 8px;
+}
+
+.type-card .placeholder-image {
+    border: 1px solid var(--color-border);
+}
+
+.type-card .text-link {
+    margin-top: auto;
+}
+
+/* ---------- Anatomy section ---------- */
+.anatomy-image {
+    border: 1px solid var(--color-border);
+}
+
+.system-list li {
+    padding: 16px 0;
+    margin: 0;
+    border-top: 1px solid var(--color-border);
+}
+
+.system-list li:last-child {
+    border-bottom: 1px solid var(--color-border);
+}
+
+.system-number {
+    flex: 0 0 44px;
+    color: var(--color-accent);
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    padding-top: 3px;
+}
+
+/* ---------- Featured model cards ---------- */
+.model-card {
+    display: flex;
+    flex-direction: column;
+    padding: 0 0 24px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    overflow: hidden;
+}
+
+.model-card .placeholder-image {
+    aspect-ratio: 16 / 10;
+    border: 0;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border);
+    margin-bottom: 4px;
+}
+
+.model-card .eyebrow,
+.model-card h3,
+.model-card p,
+.model-card .text-link {
+    margin-left: 24px;
+    margin-right: 24px;
+}
+
+.model-card .text-link {
+    margin-top: auto;
+}
+
+/* ---------- Compare promotion band ---------- */
+.promo-band {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    align-items: center;
+    gap: 40px;
+    padding: 64px;
+    border: 1px solid var(--color-border);
+    border-radius: 24px;
+    overflow: hidden;
+    background:
+        radial-gradient(70% 120% at 100% 50%, rgba(200, 240, 49, 0.14), transparent 60%),
+        var(--color-surface);
+}
+
+.promo-band h2 {
+    font-size: clamp(2rem, 4vw, 3.25rem);
+    line-height: 1.02;
+}
+
+.promo-band p {
+    color: var(--color-muted);
+    max-width: 32em;
+}
+
+/* Two simple columns that hint at a side-by-side comparison */
+.promo-visual {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+}
+
+.promo-visual div {
+    padding: 18px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: 12px;
+    background: rgba(10, 10, 11, 0.55);
+}
+
+.promo-visual span {
+    display: block;
+    height: 8px;
+    margin-top: 12px;
+    border-radius: 4px;
+    background: var(--color-border-strong);
+}
+
+.promo-visual span:first-child {
+    margin-top: 0;
+    width: 55%;
+    background: var(--color-accent);
+}
+
+.promo-visual span:nth-child(3) {
+    width: 70%;
+}
+
+.promo-visual span:nth-child(4) {
+    width: 45%;
+}
+
+/* ---------- Homepage responsive rules ---------- */
+@media (max-width: 1024px) {
+    .explore-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .home-hero-art {
+        inset: 0 -10% 0 20%;
+        opacity: 0.6;
+    }
+
+    .promo-band {
+        grid-template-columns: 1fr;
+        padding: 48px;
+    }
+}
+
+@media (max-width: 720px) {
+    .home-hero {
+        min-height: 0;
+        padding-top: 56px;
+    }
+
+    .home-hero-art {
+        position: relative;
+        inset: auto;
+        order: 2;
+        margin: 24px -20% 0 0;
+        opacity: 0.8;
+    }
+
+    .home-hero::before {
+        background: linear-gradient(180deg, transparent 0%, rgba(10, 10, 11, 0.4) 100%);
+    }
+
+    .hero-quicklinks {
+        order: 3;
+        margin-top: 0;
+    }
+
+    .hero-quicklinks li {
+        flex: 1 1 50%;
+    }
+
+    .hero-quicklinks a {
+        border-right: 0;
+        margin-right: 0;
+        border-bottom: 1px solid var(--color-border);
+    }
+
+    .explore-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .promo-band {
+        padding: 32px 24px;
+    }
+
+    .page-hero {
+        padding: 48px 0 56px;
+    }
+}
+
+/* ---------- Respect reduced-motion preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .btn:hover,
+    .type-tile:hover,
+    .card-link:hover,
+    .related-card:hover,
+    .explore-card:hover,
+    .explore-card:focus-visible {
+        transform: none;
+    }
+
+}
+
+/* ---------- Error pages ---------- */
+.error-page {
+    min-height: 60vh;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(50% 60% at 50% 30%, rgba(200, 240, 49, 0.08), transparent 70%);
+}
+
+.error-code {
+    margin: 0 0 8px;
+    font-size: clamp(6rem, 22vw, 13rem);
+    font-weight: 900;
+    line-height: 0.9;
+    letter-spacing: -0.06em;
+    color: transparent;
+    -webkit-text-stroke: 2px var(--color-border-strong);
+}
+
+/* The homepage anatomy figure shows the whole illustration rather than cropping it */
+.anatomy-image {
+    aspect-ratio: 4 / 3;
+}
+
+.anatomy-image img {
+    object-fit: contain;
+    padding: 24px;
 }

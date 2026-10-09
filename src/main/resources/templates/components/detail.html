@@ -5,7 +5,7 @@
 
 <header th:replace="~{fragments/layout :: header('components')}"></header>
 
-<main th:with="system=${component.system}">
+<main id="main" th:with="system=${component.system}">
     <!-- Introduction -->
     <section class="page-hero">
         <div class="container hero-grid">
