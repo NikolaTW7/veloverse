@@ -27,11 +27,11 @@
                 </a>
             </div>
 
-            <!-- Shows the stored image when there is one, otherwise a labelled placeholder -->
-            <figure class="placeholder-image page-hero-image" th:if="${component.imageUrl == null}">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <!-- A stored image takes priority; otherwise the matching photo, or a placeholder -->
+            <th:block th:if="${component.imageUrl == null}">
+                <figure th:replace="~{fragments/photos :: componentPhoto(${component.name},
+                    '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager')}"></figure>
+            </th:block>
             <figure class="page-hero-image photo" th:if="${component.imageUrl != null}">
                 <img th:src="@{${component.imageUrl}}" th:alt="${component.name}">
             </figure>

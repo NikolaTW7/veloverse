@@ -8,10 +8,11 @@
 <main id="main">
     <!-- Cinematic hero: headline on the left, large bicycle illustration on the right -->
     <section class="home-hero" aria-labelledby="hero-title">
-        <figure class="home-hero-art">
-            <!-- Original illustration; can be swapped for a licensed photograph later (see IMAGE-CREDITS.md) -->
-            <img th:src="@{/images/bike-hero.svg}" alt="" width="1600" height="1000">
-        </figure>
+        <!-- Licensed photograph (credits in IMAGE-CREDITS.md) -->
+        <figure th:replace="~{fragments/photos :: photo('hero', 1280, 905,
+            'Black-and-white close-up of a road bike frame and drop handlebars against a black background',
+            'Josh Nuttall', 'https://unsplash.com/photos/grayscale-photography-of-road-bicycle-pIwu5XNvXpk', 'Unsplash',
+            '(max-width: 720px) 100vw, 60vw', 'home-hero-art', 'eager', true)}"></figure>
 
         <div class="container">
             <div class="home-hero-content">
@@ -93,10 +94,8 @@
 
             <div class="card-grid card-grid-4" th:if="${!featuredTypes.isEmpty()}">
                 <article class="type-card" th:each="type : ${featuredTypes}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
-                    </figure>
+                    <figure th:replace="~{fragments/photos :: typePhoto(${type.name},
+                        '(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 300px', '', 'lazy')}"></figure>
                     <h3 th:text="${type.name}">Road Bike</h3>
                     <p class="clamp-3" th:text="${type.description}">Description</p>
                     <a class="text-link" th:href="@{/bicycle-types/{id}(id=${type.id})}">Learn more<span class="visually-hidden" th:text="' about ' + ${type.name}"></span> <span class="arrow" aria-hidden="true">&rarr;</span></a>
@@ -109,10 +108,11 @@
     <!-- Anatomy of a Bicycle: the main component systems -->
     <section class="section">
         <div class="container split-grid">
-            <figure class="placeholder-image anatomy-image">
-                <img th:src="@{/images/bike-hero.svg}" alt="" width="1600" height="1000">
-                <figcaption>Illustration</figcaption>
-            </figure>
+            <!-- Cropped to the cassette and chain so no brand lettering is visible -->
+            <figure th:replace="~{fragments/photos :: photo('anatomy', 1280, 756,
+                'Close-up of a bicycle drivetrain: rear cassette, chain, spokes and disc brake rotor',
+                'Harvey Tan Villarino', 'https://www.pexels.com/photo/close-up-shot-of-a-bicycle-gears-4530854/', 'Pexels',
+                '(max-width: 900px) 100vw, 560px', 'anatomy-image', 'lazy', false)}"></figure>
 
             <div>
                 <p class="eyebrow eyebrow-accent">How a bike works</p>
@@ -159,13 +159,11 @@
 
             <div class="card-grid card-grid-3" th:if="${!featuredBicycles.isEmpty()}">
                 <article class="model-card" th:each="bike : ${featuredBicycles}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Photo to be added</figcaption>
-                    </figure>
+                    <figure th:replace="~{fragments/photos :: bikePhoto(${bike.brand.name}, ${bike.name},
+                        '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
                     <h3 th:text="${bike.name}">Model</h3>
-                    <p th:text="${bike.type.name} + ' · ' + ${bike.frameMaterial.name} + (${bike.year} != null ? ' · ' + ${bike.year} : '')">Type &middot; Frame &middot; Year</p>
+                    <p th:text="${bike.type.name} + ' · ' + (${bike.frameMaterial != null} ? ${bike.frameMaterial.name} : 'Frame not confirmed') + (${bike.year} != null ? ' · ' + ${bike.year} : '')">Type &middot; Frame &middot; Year</p>
                     <a class="text-link" th:href="@{/bicycles/{id}(id=${bike.id})}">
                         Learn more<span class="visually-hidden" th:text="' about the ' + ${bike.brand.name} + ' ' + ${bike.name}"></span>
                         <span class="arrow" aria-hidden="true">&rarr;</span>

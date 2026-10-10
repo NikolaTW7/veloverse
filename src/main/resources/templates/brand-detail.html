@@ -15,16 +15,21 @@
                     <span aria-hidden="true">&rsaquo;</span>
                     <a th:href="@{/brands}">Brands</a>
                     <span aria-hidden="true">&rsaquo;</span>
-                    <span aria-current="page" th:text="${brand.name}">Trek</span>
+                    <span aria-current="page" th:text="${brand.name}">Giant</span>
                 </nav>
                 <p class="eyebrow eyebrow-accent">Bicycle brand</p>
-                <h1 th:text="${brand.name}">Trek</h1>
+                <h1 th:text="${brand.name}">Giant</h1>
                 <p class="lead" th:if="${brand.description}" th:text="${brand.description}">Description</p>
                 <p class="lead" th:unless="${brand.description}">No description has been added for this brand yet.</p>
 
-                <div class="info-chip" th:if="${brand.country}">
-                    <span class="eyebrow">Country</span>
-                    <strong th:text="${brand.country}">United States</strong>
+                <div class="brand-facts">
+                    <div class="info-chip">
+                        <span class="eyebrow">Country</span>
+                        <strong th:text="${brand.country} ?: 'Not stated by the brand'">Taiwan</strong>
+                    </div>
+                    <a class="btn btn-outline" th:if="${brand.website}" th:href="${brand.website}"
+                       rel="noopener noreferrer">Official website<span class="visually-hidden"
+                       th:text="' of ' + ${brand.name}"></span> <span aria-hidden="true">&nearr;</span></a>
                 </div>
 
                 <p class="section-more">
@@ -33,10 +38,19 @@
                     </a>
                 </p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: brandPhoto(${brand.name},
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager')}"></figure>
+        </div>
+    </section>
+
+    <!-- What the brand is known for -->
+    <section class="section" th:if="${!brand.specialityList.isEmpty()}">
+        <div class="container">
+            <h2 class="section-title">Known For</h2>
+            <p class="section-subtitle" th:text="'The kinds of bicycles and products ' + ${brand.name} + ' specialises in.'">Specialities.</p>
+            <ul class="chip-list speciality-list">
+                <li th:each="speciality : ${brand.specialityList}"><span class="chip" th:text="${speciality}">Road bikes</span></li>
+            </ul>
         </div>
     </section>
 
@@ -47,10 +61,8 @@
 
             <div class="card-grid card-grid-3" th:if="${!bicycles.isEmpty()}">
                 <article class="type-tile" th:each="bike : ${bicycles}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
-                    </figure>
+                    <figure th:replace="~{fragments/photos :: bikePhoto(${brand.name}, ${bike.name},
+                        '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <div class="type-tile-body">
                         <p class="eyebrow" th:text="${bike.type.name}">Type</p>
                         <h3 th:text="${bike.name}">Model name</h3>
@@ -61,7 +73,7 @@
                             </div>
                             <div>
                                 <dt>Frame</dt>
-                                <dd th:text="${bike.frameMaterial.name}">Material</dd>
+                                <dd th:text="${bike.frameMaterial != null} ? ${bike.frameMaterial.name} : 'Not confirmed'">Material</dd>
                             </div>
                         </dl>
                         <p class="clamp-3" th:if="${bike.description}" th:text="${bike.description}">Description</p>

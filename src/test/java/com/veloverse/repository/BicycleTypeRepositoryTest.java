@@ -43,4 +43,17 @@ class BicycleTypeRepositoryTest {
         assertThat(road.getAdvantageList()).hasSize(3);
         assertThat(road.getDisadvantageList()).hasSize(3);
     }
+
+    @Test
+    void timeTrialTriathlonTypeIsLoadedWithItsDetails() {
+        BicycleType tt = repository.findAllByOrderByIdAsc().stream()
+                .filter(type -> type.getName().equals("Time-Trial / Triathlon Bike"))
+                .findFirst()
+                .orElseThrow();
+
+        assertThat(tt.getDescription()).contains("aero extensions");
+        assertThat(tt.getBestUse()).isNotBlank();
+        assertThat(tt.getAdvantageList()).isNotEmpty();
+        assertThat(tt.getDisadvantageList()).isNotEmpty();
+    }
 }

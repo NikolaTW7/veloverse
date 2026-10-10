@@ -162,6 +162,71 @@
         </div>
     </section>
 
+    <!-- Photos of the parts on the diagram, from the same database records -->
+    <section class="section" th:if="${!systems.isEmpty()}">
+        <div class="container">
+            <p class="eyebrow eyebrow-accent">Real parts</p>
+            <h2 class="section-title">Parts Up Close</h2>
+            <p class="section-subtitle">Photos of the components labelled on the diagram above. Choose a part
+                to learn what it does and how it works.</p>
+
+            <div class="card-grid card-grid-4">
+                <th:block th:each="system : ${systems}">
+                    <article class="part-card" th:each="part : ${system.components}">
+                        <figure th:replace="~{fragments/photos :: componentPhoto(${part.name},
+                            '(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 300px', '', 'lazy')}"></figure>
+                        <div class="part-card-body">
+                            <p class="eyebrow" th:text="${system.name}">Drivetrain</p>
+                            <h3 th:text="${part.name}">Chain</h3>
+                            <p class="clamp-3" th:text="${part.description}">Description</p>
+                            <a class="text-link" th:href="@{/components/{id}(id=${part.id})}">Learn more<span
+                                class="visually-hidden" th:text="' about the ' + ${part.name}"></span>
+                                <span aria-hidden="true">&rarr;</span></a>
+                        </div>
+                    </article>
+                </th:block>
+            </div>
+
+            <h3 class="parts-extra-title">Other parts you might spot</h3>
+            <div class="card-grid card-grid-3">
+                <article class="part-card">
+                    <figure th:replace="~{fragments/photos :: photo('part-bottom-bracket', 990, 660,
+                        'Crank arm attached to the frame at the bottom bracket', '', '', '',
+                        '(max-width: 720px) 100vw, 400px', '', 'lazy', false)}"></figure>
+                    <div class="part-card-body">
+                        <p class="eyebrow">Drivetrain</p>
+                        <h3>Bottom Bracket</h3>
+                        <p>The bearings inside the frame where the crank axle passes through. They let the
+                            cranks spin smoothly and take the force of every pedal stroke.</p>
+                    </div>
+                </article>
+                <article class="part-card">
+                    <figure th:replace="~{fragments/photos :: photo('part-chainrings', 1280, 853,
+                        'Crankset with several chainrings of different sizes and the front derailleur', '', '', '',
+                        '(max-width: 720px) 100vw, 400px', '', 'lazy', false)}"></figure>
+                    <div class="part-card-body">
+                        <p class="eyebrow">Drivetrain</p>
+                        <h3>Chainrings</h3>
+                        <p>The toothed rings on the crankset. On bikes with two or three, a front derailleur
+                            moves the chain between them: a larger ring gives a harder, faster gear and a
+                            smaller one makes climbing easier.</p>
+                    </div>
+                </article>
+                <article class="part-card">
+                    <figure th:replace="~{fragments/photos :: photo('part-rear-shock', 1280, 853,
+                        'Rear shock mounted in the frame of a full-suspension mountain bike', '', '', '',
+                        '(max-width: 720px) 100vw, 400px', '', 'lazy', false)}"></figure>
+                    <div class="part-card-body">
+                        <p class="eyebrow">Suspension</p>
+                        <h3>Rear Shock</h3>
+                        <p>Found on full-suspension mountain bikes. It compresses over bumps so the rear
+                            wheel can follow the ground, which improves grip and comfort.</p>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
     <!-- Component systems from the database -->
     <section class="section section-light">
         <div class="container">

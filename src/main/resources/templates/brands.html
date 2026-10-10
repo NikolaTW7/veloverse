@@ -19,10 +19,10 @@
                 <p class="lead">Meet some of the manufacturers behind the bicycles we ride. Each brand has its own
                     history, home country and range of bikes, from racing machines to folding city bikes.</p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: photo('header-brands', 1280, 854,
+                'Road bike held in a workstand in a bicycle repair workshop',
+                'Alexander Dummer', 'https://www.pexels.com/photo/bicycle-bike-repair-shop-132682/', 'Pexels',
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager', false)}"></figure>
         </div>
     </section>
 
@@ -31,10 +31,8 @@
         <div class="container">
             <div class="card-grid card-grid-3" th:if="${!brands.isEmpty()}">
                 <article class="type-tile" th:each="brand : ${brands}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
-                    </figure>
+                    <figure th:replace="~{fragments/photos :: brandPhoto(${brand.name},
+                        '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <div class="type-tile-body">
                         <p class="eyebrow" th:if="${brand.country}" th:text="${brand.country}">Country</p>
                         <h2 th:text="${brand.name}">Brand</h2>
@@ -45,6 +43,10 @@
                     </div>
                 </article>
             </div>
+
+            <p class="trademark-note" th:if="${!brands.isEmpty()}">Brand names and logos shown in the photos are
+                trademarks of their owners. VeloVerse is an independent educational website and is not connected
+                with these brands.</p>
 
             <p class="empty-state" th:if="${brands.isEmpty()}">No brands have been added yet.
                 Please check back soon.</p>

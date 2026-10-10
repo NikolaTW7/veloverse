@@ -2,7 +2,6 @@ package com.veloverse.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -13,17 +12,23 @@ import com.veloverse.model.Bicycle;
 import com.veloverse.model.BicycleType;
 import com.veloverse.model.Brand;
 import com.veloverse.model.Material;
+import com.veloverse.service.BicycleService;
 
 /**
- * Checks against the real PostgreSQL database that the bicycles table was created and filled,
- * and that each bicycle is linked to the correct brand, type and frame material.
- * Like the other database tests, this needs DB_PASSWORD to be set. It only reads data.
+ * Checks against the real PostgreSQL database that the six bicycle models are loaded,
+ * and that each is linked to the correct brand, type and (when confirmed) frame material.
+ * Like the other database tests, this needs DB_PASSWORD to be set. It runs against the separate
+ * veloverse_test database (see src/test/resources/config/application.properties), which is
+ * rebuilt from schema.sql and data.sql for every test run, so no update script is needed.
  */
 @SpringBootTest
 class BicycleRepositoryTest {
 
     @Autowired
     private BicycleRepository repository;
+
+    @Autowired
+    private BicycleService service;
 
     private Bicycle find(List<Bicycle> bicycles, String name) {
         return bicycles.stream()
@@ -33,101 +38,117 @@ class BicycleRepositoryTest {
     }
 
     @Test
-    void sixStarterBicyclesAreLoadedInOrder() {
+    void exactlySixBicyclesAreLoadedInOrder() {
         List<Bicycle> bicycles = repository.findAllByOrderByIdAsc();
 
         assertThat(bicycles).extracting(Bicycle::getName)
-                .contains("520 Disc", "Rockhopper Sport 29", "Escape 3",
-                        "Topstone 3", "C Line Explore", "Domane SL 5 Gen 4");
+                .containsExactly("S5", "Folding Bicycle", "V3-RS", "Avant", "Speedmax CFR",
+                        "Endurace WMN CF SL Disc 8.0 Di2");
         assertThat(bicycles).extracting(Bicycle::getId).isSorted();
+    }
+
+    @Test
+    void bothCanyonModelsBelongToOneCanyonBrand() {
+        List<Bicycle> bicycles = repository.findAllByOrderByIdAsc();
+
+        assertThat(bicycles).extracting(bike -> bike.getBrand().getName())
+                .containsExactly("Cervélo", "Brompton", "Colnago", "Orbea", "Canyon", "Canyon");
+        assertThat(find(bicycles, "Speedmax CFR").getBrand().getId())
+                .isEqualTo(find(bicycles, "Endurace WMN CF SL Disc 8.0 Di2").getBrand().getId());
     }
 
     @Test
     void bicyclesAreLinkedToBrandTypeAndFrameMaterial() {
         List<Bicycle> bicycles = repository.findAllByOrderByIdAsc();
 
-        Bicycle brompton = find(bicycles, "C Line Explore");
-        assertThat(brompton.getBrand().getName()).isEqualTo("Brompton");
-        assertThat(brompton.getType().getName()).isEqualTo("Folding Bike");
-        assertThat(brompton.getFrameMaterial().getName()).isEqualTo("Steel");
+        Bicycle speedmax = find(bicycles, "Speedmax CFR");
+        assertThat(speedmax.getType().getName()).isEqualTo("Time-Trial / Triathlon Bike");
+        assertThat(speedmax.getFrameMaterial().getName()).isEqualTo("Carbon Fibre");
+        assertThat(speedmax.getYear()).isEqualTo(2020);
 
-        Bicycle domane = find(bicycles, "Domane SL 5 Gen 4");
-        assertThat(domane.getBrand().getName()).isEqualTo("Trek");
-        assertThat(domane.getType().getName()).isEqualTo("Road Bike");
-        assertThat(domane.getFrameMaterial().getName()).isEqualTo("Carbon Fibre");
+        Bicycle brompton = find(bicycles, "Folding Bicycle");
+        assertThat(brompton.getType().getName()).isEqualTo("Folding Bike");
+
+        assertThat(find(bicycles, "S5").getYear()).isEqualTo(2019);
     }
 
     @Test
-    void uncertainWeightsAreLeftEmpty() {
+    void unconfirmedValuesAreLeftEmpty() {
         List<Bicycle> bicycles = repository.findAllByOrderByIdAsc();
 
-        assertThat(find(bicycles, "Domane SL 5 Gen 4").getWeightKg()).isEqualByComparingTo(new BigDecimal("8.93"));
-        assertThat(find(bicycles, "520 Disc").getWeightKg()).isNull();
-        assertThat(find(bicycles, "C Line Explore").getWeightKg()).isNull();
+        // The exact Brompton and Orbea variants are not confirmed, so their frame material is NULL
+        assertThat(find(bicycles, "Folding Bicycle").getFrameMaterial()).isNull();
+        assertThat(find(bicycles, "Avant").getFrameMaterial()).isNull();
+        assertThat(find(bicycles, "Folding Bicycle").getYear()).isNull();
+        assertThat(find(bicycles, "Avant").getYear()).isNull();
+        assertThat(find(bicycles, "V3-RS").getYear()).isNull();
+        // No complete-bike weight was confirmed for any of the six models
+        assertThat(bicycles).allSatisfy(bike -> assertThat(bike.getWeightKg()).isNull());
+    }
+
+    @Test
+    void everyModelHasEducationalDetailsAndASource() {
+        assertThat(repository.findAllByOrderByIdAsc()).allSatisfy(bike -> {
+            assertThat(bike.getDescription()).isNotBlank();
+            assertThat(bike.getIntendedUse()).isNotBlank();
+            assertThat(bike.getFeatureList()).isNotEmpty();
+            assertThat(bike.getAdvantageList()).isNotEmpty();
+            assertThat(bike.getDisadvantageList()).isNotEmpty();
+            assertThat(bike.getSourceUrl()).startsWith("https://");
+        });
     }
 
     @Test
     void findWithDetailsByIdLoadsOneBicycleOrNothing() {
-        Bicycle domane = find(repository.findAllByOrderByIdAsc(), "Domane SL 5 Gen 4");
+        Bicycle avant = find(repository.findAllByOrderByIdAsc(), "Avant");
 
-        Bicycle found = repository.findWithDetailsById(domane.getId()).orElseThrow();
-        assertThat(found.getName()).isEqualTo("Domane SL 5 Gen 4");
-        assertThat(found.getBrand().getName()).isEqualTo("Trek");
+        Bicycle found = repository.findWithDetailsById(avant.getId()).orElseThrow();
+        assertThat(found.getName()).isEqualTo("Avant");
+        assertThat(found.getBrand().getName()).isEqualTo("Orbea");
         assertThat(found.getType().getName()).isEqualTo("Road Bike");
-        assertThat(found.getFrameMaterial().getName()).isEqualTo("Carbon Fibre");
+        assertThat(found.getFrameMaterial()).isNull();
 
         assertThat(repository.findWithDetailsById(-1)).isEmpty();
     }
 
     @Test
     void findByBrandReturnsOnlyThatBrandsBicycles() {
-        Bicycle domane = find(repository.findAllByOrderByIdAsc(), "Domane SL 5 Gen 4");
-        Integer trekId = domane.getBrand().getId();
+        Bicycle speedmax = find(repository.findAllByOrderByIdAsc(), "Speedmax CFR");
 
-        List<Bicycle> trekBicycles = repository.findByBrandIdOrderByIdAsc(trekId);
-        assertThat(trekBicycles).extracting(Bicycle::getName)
-                .containsExactly("520 Disc", "Domane SL 5 Gen 4");
-        assertThat(trekBicycles.get(0).getType().getName()).isEqualTo("Touring Bike");
+        List<Bicycle> canyonBicycles = repository.findByBrandIdOrderByIdAsc(speedmax.getBrand().getId());
+        assertThat(canyonBicycles).extracting(Bicycle::getName)
+                .containsExactly("Speedmax CFR", "Endurace WMN CF SL Disc 8.0 Di2");
 
         assertThat(repository.findByBrandIdOrderByIdAsc(-1)).isEmpty();
     }
 
-    private List<String> searchNames(String text) {
-        return repository
-                .findByNameContainingIgnoreCaseOrBrandNameContainingIgnoreCaseOrTypeNameContainingIgnoreCaseOrderByIdAsc(
-                        text, text, text)
-                .stream().map(Bicycle::getName).toList();
+    @Test
+    void searchWorksWithTheRealData() {
+        assertThat(service.search("cervelo")).extracting(Bicycle::getName).containsExactly("S5");
+        assertThat(service.search("canyon")).extracting(Bicycle::getName)
+                .containsExactly("Speedmax CFR", "Endurace WMN CF SL Disc 8.0 Di2");
+        assertThat(service.search("triathlon")).extracting(Bicycle::getName).containsExactly("Speedmax CFR");
+        assertThat(service.search("folding")).extracting(Bicycle::getName).containsExactly("Folding Bicycle");
+        assertThat(service.search("road bike")).extracting(Bicycle::getName)
+                .containsExactly("S5", "V3-RS", "Avant", "Endurace WMN CF SL Disc 8.0 Di2");
     }
 
     @Test
-    void searchMatchesModelBrandOrTypeIgnoringCase() {
-        // Brand name, in any letter case
-        assertThat(searchNames("trek")).containsExactly("520 Disc", "Domane SL 5 Gen 4");
-        assertThat(searchNames("TREK")).containsExactly("520 Disc", "Domane SL 5 Gen 4");
-        // Model name, including part of a name
-        assertThat(searchNames("escape")).containsExactly("Escape 3");
-        assertThat(searchNames("Rockhopper")).containsExactly("Rockhopper Sport 29");
-        // Bicycle type
-        assertThat(searchNames("Gravel")).containsExactly("Topstone 3");
-        assertThat(searchNames("folding bike")).containsExactly("C Line Explore");
-    }
-
-    @Test
-    void searchWithNoMatchReturnsNothing() {
-        assertThat(searchNames("unicycle")).isEmpty();
-        // % and _ are treated as normal characters, not as "match anything"
-        assertThat(searchNames("%")).isEmpty();
-        assertThat(searchNames("_")).isEmpty();
-    }
-
-    @Test
-    void filterOptionsOnlyIncludeValuesUsedByBicyclesInAlphabeticalOrder() {
+    void filterOptionsOnlyIncludeValuesUsedByBicycles() {
         assertThat(repository.findTypesInUse()).extracting(BicycleType::getName)
-                .containsExactly("Folding Bike", "Gravel Bike", "Hybrid Bike", "Mountain Bike", "Road Bike", "Touring Bike");
+                .containsExactlyInAnyOrder("Folding Bike", "Road Bike", "Time-Trial / Triathlon Bike");
         assertThat(repository.findBrandsInUse()).extracting(Brand::getName)
-                .containsExactly("Brompton", "Cannondale", "Giant", "Specialized", "Trek");
-        // Rubber and Titanium are in the materials table but no bicycle frame uses them
+                .containsExactlyInAnyOrder("Brompton", "Canyon", "Cervélo", "Colnago", "Orbea");
+        // Bicycles without a confirmed frame material do not add an empty option
         assertThat(repository.findFrameMaterialsInUse()).extracting(Material::getName)
-                .containsExactly("Aluminium", "Carbon Fibre", "Steel");
+                .containsExactly("Carbon Fibre");
+    }
+
+    @Test
+    void materialFilterSkipsBicyclesWithoutAConfirmedFrameMaterial() {
+        Material carbon = repository.findFrameMaterialsInUse().get(0);
+
+        assertThat(service.search(null, null, null, carbon.getId())).extracting(Bicycle::getName)
+                .containsExactly("S5", "V3-RS", "Speedmax CFR", "Endurace WMN CF SL Disc 8.0 Di2");
     }
 }

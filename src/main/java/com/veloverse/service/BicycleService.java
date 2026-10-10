@@ -1,6 +1,8 @@
 package com.veloverse.service;
 
+import java.text.Normalizer;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -28,30 +30,41 @@ public class BicycleService {
     }
 
     /**
-     * Bicycles whose model name, brand or type contains the search text (case-insensitive).
+     * Bicycles whose model name, brand or type contains the search text.
+     * Letter case and accents are ignored, so "cervelo" finds "Cervélo".
      * An empty or blank search returns every bicycle.
+     * The catalogue is small, so the matching is done in Java on the full list.
      */
     public List<Bicycle> search(String query) {
+        List<Bicycle> all = findAll();
         if (query == null || query.isBlank()) {
-            return findAll();
+            return all;
         }
-        String text = query.trim();
-        return repository
-                .findByNameContainingIgnoreCaseOrBrandNameContainingIgnoreCaseOrTypeNameContainingIgnoreCaseOrderByIdAsc(
-                        text, text, text);
+        String text = simplify(query.trim());
+        return all.stream()
+                .filter(bike -> simplify(bike.getName()).contains(text)
+                        || simplify(bike.getBrand().getName()).contains(text)
+                        || simplify(bike.getType().getName()).contains(text))
+                .toList();
+    }
+
+    /** Lower case without accents, e.g. "Cervélo" becomes "cervelo". */
+    private static String simplify(String text) {
+        String withoutAccents = Normalizer.normalize(text, Normalizer.Form.NFD).replaceAll("\\p{M}", "");
+        return withoutAccents.toLowerCase(Locale.ROOT);
     }
 
     /**
      * Search plus the three dropdown filters. A null ID means "All" for that filter,
      * and every filter that is set must match, so filters can be combined.
-     * The catalogue is small, so the filters are applied in Java to the search results;
-     * this keeps the existing search query unchanged.
+     * The filters are applied in Java to the search results.
      */
     public List<Bicycle> search(String query, Integer typeId, Integer brandId, Integer materialId) {
         return search(query).stream()
                 .filter(bike -> typeId == null || typeId.equals(bike.getType().getId()))
                 .filter(bike -> brandId == null || brandId.equals(bike.getBrand().getId()))
-                .filter(bike -> materialId == null || materialId.equals(bike.getFrameMaterial().getId()))
+                .filter(bike -> materialId == null
+                        || (bike.getFrameMaterial() != null && materialId.equals(bike.getFrameMaterial().getId())))
                 .toList();
     }
 

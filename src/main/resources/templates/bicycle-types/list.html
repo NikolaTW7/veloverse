@@ -19,10 +19,9 @@
                 <p class="lead">Explore different types of bicycles and learn what each one is designed for,
                     from fast road riding to rough off-road trails.</p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: photo('header-bicycle-types', 1280, 990,
+                'A storage room full of bicycles of different types, sizes and colours', '', '', '',
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager', false)}"></figure>
         </div>
     </section>
 
@@ -31,10 +30,8 @@
         <div class="container">
             <div class="card-grid card-grid-4" th:if="${!types.isEmpty()}">
                 <article class="type-tile" th:each="type : ${types}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
-                    </figure>
+                    <figure th:replace="~{fragments/photos :: typePhoto(${type.name},
+                        '(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 300px', '', 'lazy')}"></figure>
                     <div class="type-tile-body">
                         <h2 th:text="${type.name}">Road Bike</h2>
                         <p class="clamp-3" th:text="${type.description}">Description</p>

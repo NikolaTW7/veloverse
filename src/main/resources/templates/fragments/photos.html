@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<!--
+    Licensed photographs (V3). Every photo is stored locally as WebP in /images/photos/
+    at 640 and 1280 px wide (the homepage hero also at 1920 px). Credits, original pages
+    and licences are listed in IMAGE-CREDITS.md.
+
+    photo(...) parameters:
+      file     base file name, e.g. 'type-road-bike'
+      w, h     pixel size of the large (-1280) version; w is usually 1280 but can be smaller
+               when the original photo was smaller, so it is never enlarged
+      alt      description of the photo
+      author   photographer, pageUrl original photo page ('' when the source is not yet known:
+               no credit is shown, and IMAGE-CREDITS.md flags the photo instead)
+      site     'Unsplash' or 'Pexels', or '' when the author is the site itself (Magnific)
+      sizes    the "sizes" attribute for responsive loading
+      cls      extra CSS classes for the figure ('' for none)
+      loading  'lazy' for images below the fold, 'eager' for images at the top of a page
+      big      true to also offer the 1920 px version
+-->
+<figure th:fragment="photo(file, w, h, alt, author, pageUrl, site, sizes, cls, loading, big)"
+        class="photo" th:classappend="${cls}"
+        th:with="s640=@{/images/photos/{f}-640.webp(f=${file})},
+                 s1280=@{/images/photos/{f}-1280.webp(f=${file})},
+                 s1920=@{/images/photos/{f}-1920.webp(f=${file})}">
+    <img th:src="${s1280}"
+         th:attr="srcset=${big} ? ${s640 + ' 640w, ' + s1280 + ' ' + w + 'w, ' + s1920 + ' 1920w'} : ${s640 + ' 640w, ' + s1280 + ' ' + w + 'w'},
+                  sizes=${sizes}, width=${w}, height=${h}, loading=${loading},
+                  fetchpriority=${big} ? 'high' : null"
+         th:alt="${alt}" decoding="async">
+    <figcaption class="photo-credit" th:if="${!#strings.isEmpty(pageUrl)}">Photo: <a th:href="${pageUrl}" th:text="${author}" rel="noopener">Photographer</a><th:block
+        th:if="${!#strings.isEmpty(site)}"> / <span th:text="${site}">Unsplash</span></th:block></figcaption>
+</figure>
+
+<!--
+    typePhoto(typeName, ...) chooses the photo for a bicycle type by its name, so no database
+    changes are needed. A type without an approved photo keeps the neutral placeholder.
+-->
+<th:block th:fragment="typePhoto(typeName, sizes, cls, loading)"
+          th:with="slug=${typeName == null ? '' : #strings.replace(#strings.toLowerCase(typeName), ' ', '-')}">
+    <th:block th:switch="${slug}">
+        <th:block th:case="'road-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-road-bike', 1280, 904,
+                'Black road bike with drop handlebars and deep-section wheels on a dark studio background',
+                'Mikkel Bech', 'https://unsplash.com/photos/yjAFnkLtKY0', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'mountain-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-mountain-bike', 1280, 853,
+                'Mountain bike with knobbly tyres and front suspension leaning on an olive tree in long grass',
+                'Riccardo Chiarini', 'https://unsplash.com/photos/_C-ZxPF-BtQ', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'gravel-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-gravel-bike', 1280, 709,
+                'Gravel bike with drop handlebars, disc brakes and tan-wall tyres against a wooden wall',
+                'Dmitrii Vaccinium', 'https://unsplash.com/photos/sw9Vozf6j_4', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'hybrid-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-hybrid-bike', 1280, 853,
+                'Dark green hybrid bike with flat handlebars and a rear rack parked by a white railing beside a river',
+                'Marija Zaric', 'https://unsplash.com/photos/a-dark-green-bicycle-parked-by-a-railing-i-5wzpRpfRk', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'bmx'">
+            <figure th:replace="~{fragments/photos :: photo('type-bmx', 1280, 853,
+                'Black BMX bike with high-rise handlebars and 20-inch tyres parked against a grey panelled wall',
+                'Magnific', 'https://www.magnific.com/free-photo/vintage-black-small-bicycle_13291051.htm', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'fixed-gear-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-fixed-gear-bike', 1280, 853,
+                'White fixed-gear bike with a single chainring and a brown leather saddle against a dark wall',
+                'Robert Bye', 'https://unsplash.com/photos/tG36rvCeqng', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'touring-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-touring-bike', 1280, 853,
+                'Loaded touring bike with frame, saddle and handlebar bags leaning on a fence by a river',
+                'Valentin Lacoste', 'https://unsplash.com/photos/a-loaded-touring-bicycle-parked-by-a-river-and-fence-GjddTGZjNpE', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'electric-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-electric-bike', 1280, 853,
+                'Black electric bike with wide tyres and a frame-mounted battery parked at a bike rack',
+                'Erik Mclean', 'https://www.pexels.com/photo/9538575/', 'Pexels',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'folding-bike'">
+            <figure th:replace="~{fragments/photos :: photo('type-folding-bike', 1280, 853,
+                'Green folding bike with small wheels and a hinged frame parked in a garden',
+                'Christina &amp; Peter', 'https://www.pexels.com/photo/green-folding-bike-leaning-against-chain-link-fence-20568623/', 'Pexels',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'time-trial-/-triathlon-bike'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-canyon-speedmax-cfr',
+                'Blue triathlon bike with aero extensions on the handlebar, a frame shaped to cut through the air and deep carbon wheels',
+                'Peter Ehrit Werbefotografie GmbH / Canyon Bicycles GmbH', 'https://commons.wikimedia.org/wiki/File:Speedmax-cfr-blue-2020.jpg',
+                'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/',
+                'Cropped and resized by VeloVerse. This adapted version is licensed under CC BY-SA 4.0.',
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="*">
+            <figure class="placeholder-image" th:classappend="${cls}">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Placeholder image</figcaption>
+            </figure>
+        </th:block>
+    </th:block>
+</th:block>
+
+<!--
+    componentPhoto(name, ...) chooses the photo for a bicycle component by its name, in the
+    same way as typePhoto. Components without a suitable photo (for example the brake caliper,
+    stem and seatpost) keep the neutral placeholder. The sources of these photos have not been
+    confirmed yet, so no credit is shown (see IMAGE-CREDITS.md).
+-->
+<th:block th:fragment="componentPhoto(name, sizes, cls, loading)"
+          th:with="slug=${name == null ? '' : #strings.replace(#strings.replace(#strings.toLowerCase(name), ' &amp; ', '-and-'), ' ', '-')}">
+    <th:block th:switch="${slug}">
+        <th:block th:case="'frame'">
+            <figure th:replace="~{fragments/photos :: photo('part-frame', 1280, 853,
+                'Bare carbon road bike frame on a white background', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'fork'">
+            <figure th:replace="~{fragments/photos :: photo('part-fork', 1280, 853,
+                'Rigid black carbon fork with its steerer tube, on a white background', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'crankset'">
+            <figure th:replace="~{fragments/photos :: photo('part-crankset', 1280, 853,
+                'Crankset with two chainrings, a crank arm and a flat pedal', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'chain'">
+            <figure th:replace="~{fragments/photos :: photo('part-chain', 1280, 853,
+                'Bicycle chain running over the front chainring, below the front derailleur', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'cassette'">
+            <figure th:replace="~{fragments/photos :: photo('part-cassette', 1280, 853,
+                'Rear cassette with many sprockets of different sizes, mounted on the rear wheel', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'rear-derailleur'">
+            <figure th:replace="~{fragments/photos :: photo('part-rear-derailleur', 1280, 853,
+                'Rear derailleur guiding the chain through its two small pulley wheels', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'brake-lever'">
+            <figure th:replace="~{fragments/photos :: photo('part-brake-lever', 1280, 853,
+                'Brake lever on a drop handlebar wrapped in black bar tape', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'brake-rotor'">
+            <figure th:replace="~{fragments/photos :: photo('part-brake-rotor', 1280, 853,
+                'Disc brake rotor bolted to the front hub, next to a white suspension fork', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'rim'">
+            <figure th:replace="~{fragments/photos :: photo('part-rim', 1280, 853,
+                'Wheel rim with a narrow tyre, spokes and the tyre valve', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'hub-and-spokes'">
+            <figure th:replace="~{fragments/photos :: photo('part-hub-and-spokes', 1280, 853,
+                'Rear wheel hub with spokes laced to it and a single-speed sprocket and chain', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'tyre'">
+            <figure th:replace="~{fragments/photos :: photo('part-tyre', 1280, 853,
+                'Knobbly mountain bike tyre on a dirt trail', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'handlebar'">
+            <figure th:replace="~{fragments/photos :: photo('part-handlebar', 1280, 853,
+                'Drop handlebar with grey bar tape and a bike computer, seen from above', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'saddle'">
+            <figure th:replace="~{fragments/photos :: photo('part-saddle', 1280, 853,
+                'Black bicycle saddle covered in raindrops', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="*">
+            <figure class="placeholder-image" th:classappend="${cls}">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Photo to be added</figcaption>
+            </figure>
+        </th:block>
+    </th:block>
+</th:block>
+
+<!--
+    licensedPhoto(...) is used for the Wikimedia Commons photos of real brands and models.
+    These licences (CC BY 2.0 and CC BY-SA 4.0) require the author, a link to the source,
+    a link to the licence and a note of what was changed. The credit is always shown under
+    the photo, so it never covers the bicycle. Full details are in IMAGE-CREDITS.md.
+      licence, licenceUrl  e.g. 'CC BY 2.0' and its creativecommons.org address
+      changes              what VeloVerse changed (for CC BY-SA photos this also says that
+                           the adapted version is shared under the same licence)
+-->
+<figure th:fragment="licensedPhoto(file, alt, author, pageUrl, licence, licenceUrl, changes, sizes, cls, loading)"
+        class="photo photo-licensed" th:classappend="${cls}"
+        th:with="s640=@{/images/photos/{f}-640.webp(f=${file})},
+                 s1280=@{/images/photos/{f}-1280.webp(f=${file})}">
+    <img th:src="${s1280}"
+         th:attr="srcset=${s640 + ' 640w, ' + s1280 + ' 1280w'}, sizes=${sizes}, loading=${loading}"
+         width="1280" height="853" th:alt="${alt}" decoding="async">
+    <figcaption class="photo-credit">Photo: <a th:href="${pageUrl}" th:text="${author}" rel="noopener">Author</a>,
+        <a th:href="${licenceUrl}" th:text="${licence}" rel="license noopener">CC BY 2.0</a>.
+        <span th:text="${changes}">Cropped and resized by VeloVerse.</span></figcaption>
+</figure>
+
+<!--
+    bikePhoto(brandName, modelName, ...) chooses the photo of a bicycle model by its brand and
+    model name. A model without a photo keeps the neutral placeholder.
+-->
+<th:block th:fragment="bikePhoto(brandName, modelName, sizes, cls, loading)"
+          th:with="key=${brandName + ' ' + modelName},
+                   byChanges='Cropped and resized by VeloVerse.',
+                   bySaChanges='Cropped and resized by VeloVerse. This adapted version is licensed under CC BY-SA 4.0.'">
+    <th:block th:switch="${key}">
+        <th:block th:case="'Cervélo S5'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-cervelo-s5',
+                'Black Cervélo S5 aero road bike with deep carbon wheels and disc brakes, leaning against a concrete wall',
+                'Glory Cycles', 'https://commons.wikimedia.org/wiki/File:Cerv%C3%A9lo_S5_(2019)_-_03_(cropped).jpg',
+                'CC BY 2.0', 'https://creativecommons.org/licenses/by/2.0/', ${byChanges},
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Brompton Folding Bicycle'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-brompton-folding',
+                'Orange Brompton folding bicycle, unfolded, with small wheels and mudguards, standing in a rear-wheel stand',
+                'Alicjajoanna', 'https://commons.wikimedia.org/wiki/File:Brompton_bicycle_3.jpg',
+                'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/',
+                'Cropped, plain wall added at each side so the whole bicycle fits, and resized by VeloVerse. This adapted version is licensed under CC BY-SA 4.0.',
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Colnago V3-RS'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-colnago-v3rs',
+                'White Colnago V3-RS road bike with blue details and deep carbon wheels against a brick wall',
+                'Glory Cycles', 'https://commons.wikimedia.org/wiki/File:Colnago_V3-RS_Dura-Ace_Di2_Princeton_Carbon.jpg',
+                'CC BY 2.0', 'https://creativecommons.org/licenses/by/2.0/', ${byChanges},
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Orbea Avant'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-orbea-avant',
+                'Red, white and black Orbea Avant road bike with disc brakes on a stand inside a bicycle shop',
+                'Glory Cycles', 'https://commons.wikimedia.org/wiki/File:Orbea_Avant_Complete_bike_(16645931942).jpg',
+                'CC BY 2.0', 'https://creativecommons.org/licenses/by/2.0/', ${byChanges},
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Canyon Speedmax CFR'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-canyon-speedmax-cfr',
+                'Blue Canyon Speedmax CFR triathlon bike with aero extensions on the handlebar and deep carbon wheels',
+                'Peter Ehrit Werbefotografie GmbH / Canyon Bicycles GmbH', 'https://commons.wikimedia.org/wiki/File:Speedmax-cfr-blue-2020.jpg',
+                'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/', ${bySaChanges},
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Canyon Endurace WMN CF SL Disc 8.0 Di2'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('bike-canyon-endurace-wmn',
+                'Turquoise Canyon Endurace WMN road bike with drop handlebars and disc brakes on a white background',
+                'Marion Lauenstein / Canyon Bicycles GmbH', 'https://commons.wikimedia.org/wiki/File:CANYON-endurace-wmn-cf-sl-disc-8-0-di2_2135_tq_P5.jpg',
+                'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/', ${bySaChanges},
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="*">
+            <figure class="placeholder-image" th:classappend="${cls}">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Photo to be added</figcaption>
+            </figure>
+        </th:block>
+    </th:block>
+</th:block>
+
+<!--
+    brandPhoto(brandName, ...) shows one of the brand's model photos on the brand pages.
+-->
+<th:block th:fragment="brandPhoto(brandName, sizes, cls, loading)">
+    <th:block th:switch="${brandName}">
+        <th:block th:case="'Cervélo'"><figure th:replace="~{fragments/photos :: bikePhoto('Cervélo', 'S5', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
+        <th:block th:case="'Brompton'"><figure th:replace="~{fragments/photos :: bikePhoto('Brompton', 'Folding Bicycle', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
+        <th:block th:case="'Colnago'"><figure th:replace="~{fragments/photos :: bikePhoto('Colnago', 'V3-RS', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
+        <th:block th:case="'Orbea'"><figure th:replace="~{fragments/photos :: bikePhoto('Orbea', 'Avant', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
+        <th:block th:case="'Canyon'"><figure th:replace="~{fragments/photos :: bikePhoto('Canyon', 'Speedmax CFR', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
+        <th:block th:case="*">
+            <figure class="placeholder-image" th:classappend="${cls}">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Photo to be added</figcaption>
+            </figure>
+        </th:block>
+    </th:block>
+</th:block>
+
+</body>
+</html>

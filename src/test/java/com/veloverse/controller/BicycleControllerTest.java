@@ -270,4 +270,127 @@ class BicycleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("C Line Explore")));
     }
+
+    @Test
+    void detailPageShowsIntendedUseFeaturesProsConsAndSource() throws Exception {
+        Brand tsunami = new Brand("Tsunami", null, null);
+        ReflectionTestUtils.setField(tsunami, "id", 3);
+        BicycleType fixedGear = new BicycleType("Fixed-Gear Bike", "One fixed gear.", null, null, null);
+        ReflectionTestUtils.setField(fixedGear, "id", 6);
+        Material aluminium = new Material("Aluminium", "Light and affordable.");
+        ReflectionTestUtils.setField(aluminium, "id", 1);
+        Bicycle snm100 = new Bicycle(tsunami, fixedGear, aluminium, "SNM100 Complete Fixie", 2021);
+        ReflectionTestUtils.setField(snm100, "id", 3);
+        ReflectionTestUtils.setField(snm100, "intendedUse", "Riding around town and on flat roads.");
+        ReflectionTestUtils.setField(snm100, "features", "Aluminium frame\nFront rim brake included");
+        ReflectionTestUtils.setField(snm100, "advantages", "Very simple\nLight for the price");
+        ReflectionTestUtils.setField(snm100, "disadvantages", "Only one gear");
+        ReflectionTestUtils.setField(snm100, "sourceUrl", "https://tsunamibicycle.com/product/snm100/");
+        when(bicycleService.findById(3)).thenReturn(Optional.of(snm100));
+
+        mockMvc.perform(get("/bicycles/3"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("What is it designed for?")))
+                .andExpect(content().string(containsString("Riding around town and on flat roads.")))
+                .andExpect(content().string(containsString("<li>Front rim brake included</li>")))
+                .andExpect(content().string(containsString("Pros &amp; Cons")))
+                .andExpect(content().string(containsString("<li>Light for the price</li>")))
+                .andExpect(content().string(containsString("<li>Only one gear</li>")))
+                .andExpect(content().string(containsString("href=\"https://tsunamibicycle.com/product/snm100/\"")));
+    }
+
+    @Test
+    void detailPageHidesEducationalSectionsWhenThereIsNoContent() throws Exception {
+        // domane() has specifications but no intended use, features, pros, cons or source
+        when(bicycleService.findById(6)).thenReturn(Optional.of(domane()));
+
+        mockMvc.perform(get("/bicycles/6"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(not(containsString("What is it designed for?"))))
+                .andExpect(content().string(not(containsString("Pros &amp; Cons"))))
+                .andExpect(content().string(not(containsString("Specifications checked against"))));
+    }
+
+    // A real model from the collection whose frame material is not confirmed (stored as NULL)
+    private static Bicycle bromptonWithoutFrameMaterial() {
+        Brand brand = new Brand("Brompton", "United Kingdom", "A folding bike maker.");
+        ReflectionTestUtils.setField(brand, "id", 27);
+        BicycleType type = new BicycleType("Folding Bike", "Folds down small.", null, null, null);
+        ReflectionTestUtils.setField(type, "id", 9);
+        Bicycle bike = new Bicycle(brand, type, null, "Folding Bicycle", null);
+        ReflectionTestUtils.setField(bike, "id", 18);
+        return bike;
+    }
+
+    private static Bicycle speedmax() {
+        Brand canyon = new Brand("Canyon", "Germany", "A German bicycle company.");
+        ReflectionTestUtils.setField(canyon, "id", 30);
+        BicycleType tt = new BicycleType("Time-Trial / Triathlon Bike", "Built for riding against the clock.", null, null, null);
+        ReflectionTestUtils.setField(tt, "id", 10);
+        Material carbon = new Material("Carbon Fibre", "Light and stiff.");
+        ReflectionTestUtils.setField(carbon, "id", 2);
+        Bicycle bike = new Bicycle(canyon, tt, carbon, "Speedmax CFR", 2020);
+        ReflectionTestUtils.setField(bike, "id", 21);
+        return bike;
+    }
+
+    @Test
+    void unknownFrameMaterialIsShownAsNotConfirmed() throws Exception {
+        when(bicycleService.search(null, null, null, null)).thenReturn(List.of(bromptonWithoutFrameMaterial()));
+        when(bicycleService.findById(18)).thenReturn(Optional.of(bromptonWithoutFrameMaterial()));
+
+        mockMvc.perform(get("/bicycles"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Not confirmed")));
+
+        mockMvc.perform(get("/bicycles/18"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("<dd>Not confirmed</dd>")))
+                // No link to a material page when there is no material
+                .andExpect(content().string(not(containsString("href=\"/materials/"))));
+    }
+
+    @Test
+    void ccBySaPhotoShowsAuthorSourceLicenceAndChanges() throws Exception {
+        when(bicycleService.findById(21)).thenReturn(Optional.of(speedmax()));
+
+        mockMvc.perform(get("/bicycles/21"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/images/photos/bike-canyon-speedmax-cfr-1280.webp")))
+                .andExpect(content().string(containsString("Peter Ehrit Werbefotografie GmbH / Canyon Bicycles GmbH")))
+                .andExpect(content().string(containsString("href=\"https://commons.wikimedia.org/wiki/File:Speedmax-cfr-blue-2020.jpg\"")))
+                .andExpect(content().string(containsString("href=\"https://creativecommons.org/licenses/by-sa/4.0/\"")))
+                .andExpect(content().string(containsString("This adapted version is licensed under CC BY-SA 4.0.")))
+                .andExpect(content().string(not(containsString("Placeholder image"))));
+    }
+
+    @Test
+    void ccByPhotoShowsLicenceAndChangesOnTheList() throws Exception {
+        Brand cervelo = new Brand("Cervélo", "Canada", null);
+        ReflectionTestUtils.setField(cervelo, "id", 26);
+        BicycleType road = new BicycleType("Road Bike", "Fast on paved roads.", null, null, null);
+        Material carbon = new Material("Carbon Fibre", "Light and stiff.");
+        Bicycle s5 = new Bicycle(cervelo, road, carbon, "S5", 2019);
+        ReflectionTestUtils.setField(s5, "id", 17);
+        when(bicycleService.search(null, null, null, null)).thenReturn(List.of(s5));
+
+        mockMvc.perform(get("/bicycles"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/images/photos/bike-cervelo-s5-640.webp")))
+                .andExpect(content().string(containsString("Glory Cycles")))
+                .andExpect(content().string(containsString("href=\"https://creativecommons.org/licenses/by/2.0/\"")))
+                .andExpect(content().string(containsString("Cropped and resized by VeloVerse.")))
+                .andExpect(content().string(containsString("trademarks of their owners")));
+    }
+
+    @Test
+    void modelWithoutAnApprovedPhotoKeepsThePlaceholder() throws Exception {
+        // brompton() is a test model ("C Line Explore") that has no photo
+        when(bicycleService.findById(5)).thenReturn(Optional.of(brompton()));
+
+        mockMvc.perform(get("/bicycles/5"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("placeholder-bike.svg")))
+                .andExpect(content().string(not(containsString("photo-licensed"))));
+    }
 }

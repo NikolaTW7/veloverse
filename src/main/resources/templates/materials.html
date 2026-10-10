@@ -20,10 +20,10 @@
                     how light, strong, comfortable and long-lasting a bike is. Choose a material below to
                     learn what it is, where it is used, and its main advantages and disadvantages.</p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: photo('header-materials', 1280, 905,
+                'Black-and-white study of a bicycle frame and handlebar against a black background',
+                'Josh Nuttall', 'https://unsplash.com/photos/black-road-bike-on-against-black-background-eTrHMJwI5ro', 'Unsplash',
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager', false)}"></figure>
         </div>
     </section>
 

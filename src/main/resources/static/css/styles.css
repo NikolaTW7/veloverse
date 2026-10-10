@@ -2184,3 +2184,339 @@ a:focus-visible .arrow {
     object-fit: contain;
     padding: 24px;
 }
+
+/* =================================================================
+   V3 photography: licensed photos stored locally as WebP.
+   Credits are listed in IMAGE-CREDITS.md and shown on each photo.
+   ================================================================= */
+.photo {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius);
+    background: var(--color-surface-2);
+}
+
+.photo img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Small credit pill: muted text on a dark backing for contrast */
+.photo-credit {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    max-width: calc(100% - 20px);
+    padding: 3px 9px;
+    font-size: 0.7rem;
+    line-height: 1.4;
+    color: var(--color-muted);
+    background: rgba(10, 10, 11, 0.8);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.photo-credit a {
+    color: var(--color-text);
+    text-decoration: underline;
+    text-decoration-color: var(--color-border-strong);
+    text-underline-offset: 2px;
+}
+
+.photo-credit a:hover,
+.photo-credit a:focus-visible {
+    color: var(--color-accent);
+    text-decoration-color: var(--color-accent);
+}
+
+/* Frames: 3:2 keeps the full bicycle visible in every landscape photo */
+.type-tile .photo {
+    aspect-ratio: 3 / 2;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.type-card .photo {
+    aspect-ratio: 3 / 2;
+    margin-bottom: 20px;
+    border: 1px solid var(--color-border);
+}
+
+.page-hero-image.photo {
+    aspect-ratio: 16 / 10;
+}
+
+.anatomy-image.photo {
+    aspect-ratio: 4 / 3;
+}
+
+.anatomy-image.photo img {
+    object-fit: cover;
+    padding: 0;
+}
+
+/* Homepage hero photo: fills the right side and fades into the dark behind the headline */
+.home-hero-art.photo {
+    position: absolute; /* keeps the hero layout from .home-hero-art */
+    border-radius: 0;
+    overflow: visible;
+    background: none;
+}
+
+.home-hero-art.photo img {
+    height: 100%;
+    object-fit: cover;
+    object-position: 65% 50%;
+    opacity: 1;
+}
+
+.home-hero-art .photo-credit {
+    top: 16px;
+    bottom: auto;
+    right: calc(10% + 16px); /* the hero photo extends past the right edge of the screen */
+}
+
+/* The readability gradient must not block clicks on the photo credit */
+.home-hero::before {
+    pointer-events: none;
+}
+
+@media (max-width: 720px) {
+    .home-hero-art.photo {
+        position: relative;
+        margin: 24px 0 0;
+        aspect-ratio: 4 / 3;
+        opacity: 1;
+    }
+
+    .home-hero-art .photo-credit {
+        top: auto;
+        bottom: 10px;
+        right: 10px;
+    }
+}
+
+/* On small cards the credit sits under the photo, so it never covers the bicycle */
+.type-tile .photo,
+.type-card .photo {
+    aspect-ratio: auto;
+    background: none;
+}
+
+.type-tile .photo img,
+.type-card .photo img {
+    aspect-ratio: 3 / 2;
+    height: auto;
+    background: var(--color-surface-2);
+}
+
+.type-card .photo img {
+    border-radius: var(--radius);
+}
+
+.type-card .photo {
+    border: 0;
+}
+
+.type-card .photo img {
+    border: 1px solid var(--color-border);
+}
+
+.type-tile .photo-credit,
+.type-card .photo-credit {
+    position: static;
+    display: block;
+    max-width: none;
+    padding: 6px 0 0;
+    background: none;
+    border: 0;
+    border-radius: 0;
+}
+
+.type-tile .photo-credit {
+    padding: 8px 20px 0;
+}
+
+.type-card .photo {
+    overflow: visible;
+}
+
+
+/* ---------- Component photo cards (Components page) ---------- */
+.part-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: border-color 0.2s, transform 0.2s;
+}
+
+/* Only cards that link to a component page react on hover */
+.part-card:has(.text-link):hover {
+    border-color: var(--color-border-strong);
+    transform: translateY(-3px);
+}
+
+.part-card .photo,
+.part-card .placeholder-image {
+    aspect-ratio: 3 / 2;
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.part-card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 18px 20px 20px;
+}
+
+.part-card-body .eyebrow {
+    margin-bottom: 6px;
+}
+
+.part-card h3 {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+}
+
+.part-card p {
+    color: var(--color-muted);
+    font-size: 0.92rem;
+}
+
+.part-card .text-link {
+    margin-top: auto;
+}
+
+.parts-extra-title {
+    margin: 56px 0 20px;
+    font-size: 1.4rem;
+}
+
+/* ---------- Brand and model details ---------- */
+.brand-facts {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 16px;
+}
+
+/* Keep the text and arrow on one line (.btn normally stacks its content) */
+.brand-facts .btn {
+    flex-direction: row;
+    gap: 6px;
+}
+
+.speciality-list {
+    margin-top: 8px;
+}
+
+.spec-source {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+.feature-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.feature-list li {
+    position: relative;
+    padding: 6px 0 6px 22px;
+    color: var(--color-muted);
+}
+
+/* Small lime dot in place of a bullet */
+.feature-list li::before {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 15px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-accent);
+}
+
+/* =================================================================
+   Brand and model photos from Wikimedia Commons (CC BY / CC BY-SA).
+   The whole bicycle stays visible (contain, not cover), and the credit with the
+   licence and the list of changes sits under the photo instead of on top of it.
+   ================================================================= */
+.photo.photo-licensed {
+    aspect-ratio: auto;
+    border: 0;
+    overflow: visible;
+    background: none;
+    border-radius: 0;
+    box-shadow: none;
+}
+
+.photo.photo-licensed img {
+    aspect-ratio: 3 / 2;
+    height: auto;
+    object-fit: contain;
+    background: var(--color-surface-2);
+    border-radius: var(--radius);
+}
+
+.photo.photo-licensed .photo-credit {
+    position: static;
+    display: block;
+    max-width: none;
+    padding: 8px 0 0;
+    white-space: normal;
+    background: none;
+    border: 0;
+    border-radius: 0;
+    line-height: 1.5;
+}
+
+.page-hero-image.photo-licensed img {
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow);
+}
+
+/* Inside cards the photo runs edge to edge, so the credit needs the card's side padding */
+.type-tile .photo.photo-licensed,
+.model-card .photo.photo-licensed {
+    border-bottom: 0;
+    margin-bottom: 4px;
+}
+
+.type-tile .photo.photo-licensed img,
+.model-card .photo.photo-licensed img {
+    border-radius: 0;
+    border-bottom: 1px solid var(--color-border);
+}
+
+.type-tile .photo.photo-licensed .photo-credit {
+    padding: 8px 20px 0;
+}
+
+.model-card .photo.photo-licensed .photo-credit {
+    padding: 8px 24px 4px;
+}
+
+.type-card .photo.photo-licensed img {
+    border: 1px solid var(--color-border);
+}
+
+/* Short trademark note under the brand and model lists */
+.trademark-note {
+    margin-top: 32px;
+    font-size: 0.8rem;
+    color: var(--color-muted);
+}

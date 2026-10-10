@@ -26,12 +26,6 @@ public interface BicycleRepository extends JpaRepository<Bicycle, Integer> {
     @EntityGraph(attributePaths = {"brand", "type", "frameMaterial"})
     List<Bicycle> findByBrandIdOrderByIdAsc(Integer brandId);
 
-    // Search: bicycles whose model name, brand name or type name contains the given text, ignoring case.
-    // Spring Data builds the query from the method name and escapes % and _ in the search text.
-    @EntityGraph(attributePaths = {"brand", "type", "frameMaterial"})
-    List<Bicycle> findByNameContainingIgnoreCaseOrBrandNameContainingIgnoreCaseOrTypeNameContainingIgnoreCaseOrderByIdAsc(
-            String name, String brandName, String typeName);
-
     // Options for the filter dropdowns: only the types, brands and frame materials that at least
     // one bicycle uses, in alphabetical order. (The materials table also holds component
     // materials such as Rubber, which would make no sense as a frame material filter.)

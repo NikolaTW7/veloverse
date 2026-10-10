@@ -20,10 +20,10 @@
                     and frame material, so you can see how the ideas from the rest of VeloVerse come together in an
                     actual bike.</p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: photo('header-bicycles', 1280, 720,
+                'Two touring bikes with panniers parked on a gravel path below wooded mountains',
+                'Damien Dufour', 'https://unsplash.com/photos/two-mountain-bikes-parked-by-the-road-overlooking-mountain-during-daytime-iEdqslBozGA', 'Unsplash',
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager', false)}"></figure>
         </div>
     </section>
 
@@ -35,7 +35,7 @@
                 <label for="bicycle-search">Search bicycles</label>
                 <div class="search-row">
                     <input id="bicycle-search" type="search" name="q" th:value="${query}" maxlength="100"
-                           placeholder="Model, brand or type, e.g. Trek or Gravel">
+                           placeholder="Model, brand or type, e.g. Giant or Fixed-Gear">
                     <button class="btn btn-dark" type="submit">Search</button>
                 </div>
 
@@ -54,7 +54,7 @@
                         <select id="filter-brand" name="brand">
                             <option value="">All brands</option>
                             <option th:each="b : ${brands}" th:value="${b.id}" th:text="${b.name}"
-                                    th:selected="${b.id == selectedBrand}">Trek</option>
+                                    th:selected="${b.id == selectedBrand}">Giant</option>
                         </select>
                     </div>
                     <div class="filter-field">
@@ -83,10 +83,8 @@
 
             <div class="card-grid card-grid-3" th:if="${!bicycles.isEmpty()}">
                 <article class="type-tile" th:each="bike : ${bicycles}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
-                    </figure>
+                    <figure th:replace="~{fragments/photos :: bikePhoto(${bike.brand.name}, ${bike.name},
+                        '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <div class="type-tile-body">
                         <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
                         <h2 th:text="${bike.name}">Model name</h2>
@@ -101,7 +99,7 @@
                             </div>
                             <div>
                                 <dt>Frame</dt>
-                                <dd th:text="${bike.frameMaterial.name}">Material</dd>
+                                <dd th:text="${bike.frameMaterial != null} ? ${bike.frameMaterial.name} : 'Not confirmed'">Material</dd>
                             </div>
                         </dl>
                         <p class="clamp-3" th:if="${bike.description}" th:text="${bike.description}">Description</p>
@@ -111,6 +109,10 @@
                     </div>
                 </article>
             </div>
+
+            <p class="trademark-note" th:if="${!bicycles.isEmpty()}">Brand names and logos shown in the photos are
+                trademarks of their owners. VeloVerse is an independent educational website and is not connected
+                with these brands.</p>
 
             <p class="empty-state" th:if="${bicycles.isEmpty() and query.isEmpty() and !filtersActive}">No bicycles have been added yet.
                 Please check back soon.</p>

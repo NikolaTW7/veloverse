@@ -194,23 +194,34 @@ JOIN materials m ON m.name = v.material_name
 ON CONFLICT DO NOTHING;
 
 -- ---------------------------------------------------------------
--- Brands (a small selection of well-known manufacturers, with general facts only)
+-- Brands: five manufacturers with six bicycle models below (Canyon has two).
+-- Sources for every fact are listed in DATA-SOURCES.md.
 -- ---------------------------------------------------------------
-INSERT INTO brands (name, country, description) VALUES
-('Trek', 'United States',
- 'An American bicycle company founded in 1976 in Wisconsin. Trek makes road, mountain, hybrid and electric bikes.'),
-('Specialized', 'United States',
- 'An American bicycle company founded in 1974 in California. Specialized makes road, mountain and electric bikes, as well as cycling equipment.'),
-('Giant', 'Taiwan',
- 'A Taiwanese bicycle company founded in 1972 and one of the largest bicycle manufacturers in the world. Giant makes road, mountain, hybrid and electric bikes.'),
-('Cannondale', 'United States',
- 'An American bicycle brand founded in 1971, known for its early work with aluminium frames. Cannondale makes road, mountain and electric bikes.'),
+INSERT INTO brands (name, country, description, website, specialities) VALUES
+('Cervélo', 'Canada',
+ 'A bicycle company founded in 1995 in Toronto, Canada, by engineers Gérard Vroomen and Phil White. Cervélo is best known for aerodynamic road and triathlon bikes ridden by professional racing teams. It is now owned by the Dutch company Pon Holdings and has its headquarters in California, United States.',
+ 'https://www.cervelo.com',
+ E'Aerodynamic road bikes (S-Series)\nTriathlon and time-trial bikes (P-Series)\nLightweight climbing road bikes (R-Series)\nGravel bikes (Áspero)'),
 ('Brompton', 'United Kingdom',
- 'A British company known for its compact folding bikes, which have been designed and built in London since the 1970s.')
+ 'A British company founded in 1976 by Andrew Ritchie and known for its folding bicycles, which fold into a compact package that stands up on its own. Its bikes are made in Greenford, London. Most models use 16-inch wheels and a steel main frame, and some versions have titanium parts.',
+ 'https://www.brompton.com',
+ E'Compact folding bikes with 16-inch wheels\nFolding bikes with 20-inch wheels (G Line, from 2024)\nElectric folding bikes'),
+('Colnago', 'Italy',
+ 'An Italian company founded in 1954 by Ernesto Colnago in Cambiago, near Milan. Colnago became famous for high-quality steel racing frames and later for carbon-fibre race bikes, starting with the C40 in the 1990s. Tadej Pogačar won the 2020 Tour de France on a Colnago. Since 2020 the company has been majority-owned by the UAE-based Chimera Investments.',
+ 'https://www.colnago.com',
+ E'Road racing bikes\nCarbon-fibre frames made in Italy (C-series, e.g. C68)\nMonocoque carbon race frames (V-series, e.g. V3Rs)'),
+('Orbea', 'Spain',
+ 'A Spanish company from the Basque Country, founded in 1840 in Eibar as a maker of guns. Orbea began making bicycles in 1930, and since 1969 it has been a workers'' co-operative and part of the Mondragon Corporation. Its headquarters are in Mallabia.',
+ 'https://www.orbea.com',
+ E'Road bikes (e.g. Orca and Avant)\nMountain bikes\nTriathlon bikes\nUrban and electric bikes'),
+('Canyon', 'Germany',
+ 'A German company based in Koblenz. It grew from Radsport Arnold, a bike parts business started in 1985 by brothers Roman and Franc Arnold, and has used the Canyon Bicycles name since the early 2000s. Canyon sells its bikes directly to riders online instead of through bike shops.',
+ 'https://www.canyon.com',
+ E'Road bikes (e.g. Ultimate and Endurace)\nTriathlon and time-trial bikes (Speedmax)\nMountain bikes\nElectric bikes')
 ON CONFLICT (name) DO NOTHING;
 
 -- ---------------------------------------------------------------
--- Ninth bicycle type, needed for the Brompton
+-- Ninth bicycle type
 -- ---------------------------------------------------------------
 INSERT INTO bicycle_types (name, description, best_use, advantages, disadvantages) VALUES
 ('Folding Bike',
@@ -221,37 +232,86 @@ INSERT INTO bicycle_types (name, description, best_use, advantages, disadvantage
 ON CONFLICT (name) DO NOTHING;
 
 -- ---------------------------------------------------------------
--- Bicycle models (specifications for the stated model year only).
--- Uncertain values are left NULL rather than guessed.
+-- Tenth bicycle type (added with the Canyon Speedmax CFR)
+-- ---------------------------------------------------------------
+INSERT INTO bicycle_types (name, description, best_use, advantages, disadvantages) VALUES
+('Time-Trial / Triathlon Bike',
+ 'Road bikes built for riding alone against the clock in time trials and triathlons. The rider leans forward on aero extensions fixed to the handlebar, and the frame, wheels and parts are shaped to reduce air resistance, which is the biggest force a cyclist works against at high speed.',
+ 'Time trials, triathlons and fast solo riding on smooth, open roads',
+ E'Low, narrow riding position and aerodynamic shapes save a lot of energy at high speed\nAero extensions let the rider rest on the forearms while keeping that position\nMany triathlon models have built-in storage for drinks, food and tools',
+ E'The brake levers are on the base bar, away from the aero extensions, so the bike is less agile and slower to stop\nNot suited to group rides or mass-start races, where riders need quick access to the brakes\nThe stretched position needs a careful bike fit and takes time to get used to\nTime-trial races run under UCI rules only allow approved bikes, so not every triathlon bike can be used there')
+ON CONFLICT (name) DO NOTHING;
+
+-- ---------------------------------------------------------------
+-- Bicycle models: six models from five brands (Canyon has two).
+-- Values that could not be verified are left NULL and shown as "Not specified"
+-- ("Not confirmed" for the frame material) rather than guessed.
 -- Brand, type and material are looked up by name, so no ID numbers are hard-coded.
+-- Features, advantages and disadvantages store one item per line.
 -- ---------------------------------------------------------------
 INSERT INTO bicycles (brand_id, type_id, frame_material_id, name, year, weight_kg,
-                      wheel_size, brake_system, drivetrain, gears, description)
+                      wheel_size, brake_system, drivetrain, gears, description,
+                      intended_use, features, advantages, disadvantages, source_url)
 SELECT b.brand_id, t.type_id, m.material_id, v.name, v.year, v.weight_kg,
-       v.wheel_size, v.brake_system, v.drivetrain, v.gears, v.description
+       v.wheel_size, v.brake_system, v.drivetrain, v.gears, v.description,
+       v.intended_use, v.features, v.advantages, v.disadvantages, v.source_url
 FROM (VALUES
- (1, 'Trek', 'Touring Bike', 'Steel', '520 Disc', 2023, NULL::NUMERIC,
-  '700c', 'Mechanical disc', '3 × 9-speed Shimano', 27,
-  'A steel touring bike designed for carrying luggage on long journeys, with mounts for racks and mudguards, disc brakes and a wide range of gears for loaded climbs.'),
- (2, 'Specialized', 'Mountain Bike', 'Aluminium', 'Rockhopper Sport 29', 2023, NULL,
-  '29"', 'Hydraulic disc', '2 × 9-speed', 18,
-  'An aluminium hardtail mountain bike with 29-inch wheels, a front suspension fork and hydraulic disc brakes.'),
- (3, 'Giant', 'Hybrid Bike', 'Aluminium', 'Escape 3', 2022, NULL,
-  '700c', 'Rim (linear-pull)', '3 × 7-speed Shimano Tourney', 21,
-  'An aluminium hybrid bike for commuting and fitness riding, with 700c wheels, 38 mm tyres and a wide 21-speed gear range.'),
- (4, 'Cannondale', 'Gravel Bike', 'Aluminium', 'Topstone 3', 2024, NULL,
-  '700c', 'Mechanical disc', '2 × 9-speed Shimano Sora', 18,
-  'An aluminium gravel bike with a carbon fork, 37 mm tyres and mechanical disc brakes, built for both paved and unpaved roads.'),
- (5, 'Brompton', 'Folding Bike', 'Steel', 'C Line Explore', 2024, NULL,
-  '16" (349 mm)', 'Rim (dual-pivot caliper)', '2 × 3-speed Brompton (3-speed internal hub)', 6,
-  'A steel folding bike with 16-inch wheels and six gears, made by combining a 3-speed internal hub with a 2-speed derailleur. It folds into a compact package for carrying and storage.'),
- (6, 'Trek', 'Road Bike', 'Carbon Fibre', 'Domane SL 5 Gen 4', 2024, 8.93,
-  '700c', 'Hydraulic disc', '2 × 12-speed Shimano 105', 24,
-  'A carbon-fibre endurance road bike with 32 mm tubeless-ready tyres, a 12-speed Shimano 105 drivetrain and hydraulic disc brakes. The listed weight of 8.93 kg is for a size 56 frame.')
+ (1, 'Cervélo', 'Road Bike', 'Carbon Fibre', 'S5', 2019, NULL::NUMERIC,
+  '700c', 'Disc', NULL, NULL::INTEGER,
+  'Cervélo''s aerodynamic road race bike. These details are for the 2019 S5, the first S5 to be made only with disc brakes. It has a full carbon frame and fork, and it was used by the professional Sunweb team from 2019. The S5 was sold in several builds with different groupsets and wheels, and the exact build in the photo is not confirmed, so the groupset is not listed here.',
+  'Road racing and fast rides on smooth roads, where cutting through the air saves the most energy.',
+  E'Full carbon aerodynamic frame with a carbon fork\nDisc brakes only, with 12 mm thru-axles\nCables routed inside the handlebar and stem\nRoom for tyres up to 28 mm (25 mm tyres were fitted on every build)\nFive frame sizes from 48 to 58 cm',
+  E'Very aerodynamic, so it stays fast at high speeds\nDisc brakes work consistently, also in wet weather\nAdjustable bar and stem for fitting the riding position',
+  E'Expensive: complete bikes cost from US$6,500 to US$12,000 at launch in 2018\nThe low race position can feel uncomfortable on long, relaxed rides\nTyres are limited to 28 mm, so it is not meant for rough roads or gravel',
+  'https://bikerumor.com/2018/10/02/all-new-2019-cervelo-s5-slips-in-faster-sleekly-integrated-disc-only-aero-road-bike/'),
+ (2, 'Brompton', 'Folding Bike', NULL, 'Folding Bicycle', NULL, NULL,
+  '16-inch (349 mm rim)', 'Rim brakes', NULL, NULL,
+  'A Brompton folding bicycle, shown unfolded. Brompton sells several model lines and the exact model and year of the bike in the photo are not confirmed, so only details shared by its 16-inch-wheel folding bikes are listed. Bromptons use a steel main frame, but on some models parts of the frame are titanium, so the frame material is shown as not confirmed.',
+  'Commuting that combines cycling with trains or buses, and riding in town when storage space is small.',
+  E'Folds into a compact package that stands up on its own\n16-inch wheels (349 mm rims)\nHinged main frame and handlebar stem\nRear frame section folds underneath the bike\nMudguards fitted on the bike in the photo',
+  E'Small enough when folded to take on public transport or keep under a desk\nQuick to fold and unfold\nSmall wheels make it easy to manoeuvre in town',
+  E'Small wheels feel less smooth on rough roads and potholes\nNot designed for long, fast rides\nMore expensive than many non-folding bikes',
+  'https://en.wikipedia.org/wiki/Brompton_Bicycle'),
+ (3, 'Colnago', 'Road Bike', 'Carbon Fibre', 'V3-RS', NULL, NULL,
+  '700c', 'Disc', NULL, NULL,
+  'Colnago''s monocoque carbon race bike, written "V3Rs" by Colnago and launched in July 2019. It was sold with rim brakes or disc brakes, and the bike in the photo has disc brakes. Colnago gave a target frame weight of 790 g (size 50, unpainted). The model year and full build of the bike in the photo are not confirmed, so they are not listed here.',
+  'Road racing and fast all-round riding on paved roads, including hilly routes.',
+  E'Monocoque carbon-fibre frame\nDropped seatstays and a hidden seatpost clamp\nAvailable with rim brakes or disc brakes\nCables hidden inside the stem and steerer on the disc version\nEight frame sizes',
+  E'Light frame for climbing and quick acceleration\nStiffer than the previous V2-R, according to Colnago\nDisc version gives consistent braking in all weather',
+  E'Expensive: the frameset alone cost £3,999.95 (disc) in the UK at launch\nAn aggressive race position that may not suit beginners\nTyre clearance is about 30 mm, so it is not made for gravel',
+  'https://www.bikeradar.com/news/colnago-v3rs/'),
+ (4, 'Orbea', 'Road Bike', NULL, 'Avant', NULL, NULL,
+  '700c', 'Hydraulic disc', NULL, NULL,
+  'Orbea''s endurance road bike, designed for comfort on long rides with a more upright position than Orbea''s Orca race bike. The Avant was sold with a carbon or an aluminium frame and with disc or rim brakes. The variant and year of the bike in the photo are not confirmed: the photographer describes it as set up with Shimano Ultegra and hydraulic disc brakes.',
+  'Long road rides, sportives and comfortable training rides on paved roads.',
+  E'Endurance geometry: higher handlebar and shorter reach than a race bike\nRoom for tyres up to 28 mm\nHidden mudguard mounts\nInternal cable routing and a tapered head tube\nShimano Ultegra parts and hydraulic disc brakes on the bike in the photo',
+  E'More upright and comfortable than a race bike on long rides\nRoom for wider tyres and mudguards makes it practical all year\nHydraulic disc brakes give strong braking in the wet',
+  E'Less aerodynamic and a little slower than a pure race bike\nTyres are limited to about 28 mm, so it is not a gravel bike\nThe exact frame material depends on the version',
+  'https://road.cc/content/review/118552-orbea-avant-road-bike'),
+ (5, 'Canyon', 'Time-Trial / Triathlon Bike', 'Carbon Fibre', 'Speedmax CFR', 2020, NULL,
+  NULL, 'Disc', NULL, NULL,
+  'Canyon''s top-level carbon triathlon bike. The disc-brake Speedmax range was launched in November 2020, with the CFR as its most expensive version, and this studio photo from 2020 shows a Speedmax CFR with disc brakes and aero extensions. The wheel size depends on the frame size (650c or 700c) and the exact build is not confirmed, so these are not listed here.',
+  'Triathlons and solo riding at high speed on smooth roads, where a low, aerodynamic position saves the most energy.',
+  E'Canyon CFR carbon frame and carbon fork\nDisc brakes\nAero extensions for a low, narrow riding position\nBuilt-in storage on the triathlon Speedmax Disc models: a bento box for food and drink and a tool box\nWheel size depends on frame size (650c or 700c)',
+  E'Very aerodynamic, so it is fast on flat and rolling roads\nThe storage built into the frame keeps food and tools tidy and out of the wind\nDisc brakes work consistently, also in wet weather',
+  E'Very expensive: the top Speedmax CFR cost €11,999 at its launch in November 2020\nThe aero position is tiring for beginners and needs a careful bike fit\nNot suited to group rides or hilly, technical roads',
+  'https://www.tour-magazin.de/en/canyon-speedmax-disc-2021-new-triathlon-bike-presented-by-canyon/'),
+ (6, 'Canyon', 'Road Bike', 'Carbon Fibre', 'Endurace WMN CF SL Disc 8.0 Di2', 2020, NULL,
+  '700c', 'Disc', 'Shimano Di2 electronic shifting', NULL,
+  'A carbon endurance road bike from Canyon''s 2020 range. "WMN" was Canyon''s name for its versions with women''s-specific fit, and "Di2" means Shimano electronic gear shifting. These details are for the 2020 model; the exact groupset, gear count and weight were not confirmed, so they are not listed here.',
+  'Long road rides and fitness riding on paved roads, for riders who want comfort over many hours.',
+  E'Carbon frame and carbon fork\nDisc brakes\n700C wheels with 28 mm tyres\nShimano Di2 electronic gear shifting\nWomen''s-specific fit (WMN)',
+  E'Comfortable endurance position for long rides\nElectronic gears change quickly and precisely at the press of a button\n28 mm tyres add comfort and grip',
+  E'Electronic shifting needs its battery charged\nSold mainly online, so test rides and shop support may be harder to arrange\nLess aerodynamic than a race bike such as the Speedmax or an aero road bike',
+  'https://bikeinsights.com/bike-geometries/5ea197d562942c00179851e9-2020-canyon-bicycles-endurace-cf-sl-wmn-cf-sl-disc-80-di2-m')
 ) AS v(sort_order, brand_name, type_name, material_name, name, year, weight_kg,
-       wheel_size, brake_system, drivetrain, gears, description)
+       wheel_size, brake_system, drivetrain, gears, description,
+       intended_use, features, advantages, disadvantages, source_url)
 JOIN brands b ON b.name = v.brand_name
 JOIN bicycle_types t ON t.name = v.type_name
-JOIN materials m ON m.name = v.material_name
+-- LEFT JOIN: a model whose frame material is not confirmed keeps a NULL material
+LEFT JOIN materials m ON m.name = v.material_name
+-- The unique key treats a NULL year as different every time, so check by brand and name as well
+WHERE NOT EXISTS (SELECT 1 FROM bicycles x WHERE x.brand_id = b.brand_id AND x.name = v.name)
 ORDER BY v.sort_order
 ON CONFLICT (brand_id, name, year) DO NOTHING;

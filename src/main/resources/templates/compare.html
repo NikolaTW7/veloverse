@@ -19,10 +19,10 @@
                 <p class="lead">Choose two bicycles to see their specifications side by side. Comparing them
                     helps you understand how design choices differ between bikes built for different kinds of riding.</p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: photo('header-compare', 1280, 720,
+                'Two road bikes leaning side by side on a sea wall',
+                'Viktor Bystrov', 'https://unsplash.com/photos/black-and-gray-bicycles-on-sidewalk-mPqo7JYGPI0', 'Unsplash',
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager', false)}"></figure>
         </div>
     </section>
 
@@ -37,7 +37,7 @@
                             <option value="">Choose a bicycle</option>
                             <option th:each="bike : ${bicycles}" th:value="${bike.id}"
                                     th:text="${bike.brand.name + ' ' + bike.name + (bike.year != null ? ' (' + bike.year + ')' : '')}"
-                                    th:selected="${bike.id == selectedA}">Trek 520 Disc (2023)</option>
+                                    th:selected="${bike.id == selectedA}">Giant TCR Advanced Pro 2 (2025)</option>
                         </select>
                     </div>
                     <div class="filter-field">
@@ -46,7 +46,7 @@
                             <option value="">Choose a bicycle</option>
                             <option th:each="bike : ${bicycles}" th:value="${bike.id}"
                                     th:text="${bike.brand.name + ' ' + bike.name + (bike.year != null ? ' (' + bike.year + ')' : '')}"
-                                    th:selected="${bike.id == selectedB}">Trek Domane SL 5 Gen 4 (2024)</option>
+                                    th:selected="${bike.id == selectedB}">BXT 145 (2024)</option>
                         </select>
                     </div>
                     <div class="filter-actions">
@@ -97,7 +97,7 @@
                             <tr>
                                 <th scope="row">Model</th>
                                 <td th:text="${bikeA.name}">520 Disc</td>
-                                <td th:text="${bikeB.name}">Domane SL 5 Gen 4</td>
+                                <td th:text="${bikeB.name}">145</td>
                             </tr>
                             <tr>
                                 <th scope="row">Year</th>
@@ -111,13 +111,13 @@
                             </tr>
                             <tr>
                                 <th scope="row">Frame material</th>
-                                <td th:text="${bikeA.frameMaterial.name}">Steel</td>
-                                <td th:text="${bikeB.frameMaterial.name}">Carbon Fibre</td>
+                                <td th:text="${bikeA.frameMaterial != null} ? ${bikeA.frameMaterial.name} : 'Not confirmed'">Steel</td>
+                                <td th:text="${bikeB.frameMaterial != null} ? ${bikeB.frameMaterial.name} : 'Not confirmed'">Carbon Fibre</td>
                             </tr>
                             <tr>
                                 <th scope="row">Weight</th>
-                                <td th:text="${bikeA.weightKg != null} ? ${bikeA.weightKg} + ' kg' : 'Not specified'">Not specified</td>
-                                <td th:text="${bikeB.weightKg != null} ? ${bikeB.weightKg} + ' kg' : 'Not specified'">8.93 kg</td>
+                                <td th:text="${bikeA.weightKg != null} ? ${bikeA.weightKg.stripTrailingZeros().toPlainString()} + ' kg' : 'Not specified'">Not specified</td>
+                                <td th:text="${bikeB.weightKg != null} ? ${bikeB.weightKg.stripTrailingZeros().toPlainString()} + ' kg' : 'Not specified'">8.93 kg</td>
                             </tr>
                             <tr>
                                 <th scope="row">Wheel size</th>

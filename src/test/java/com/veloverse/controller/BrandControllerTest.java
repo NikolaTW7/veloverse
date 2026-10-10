@@ -126,4 +126,59 @@ class BrandControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("No Trek bicycle models have been added yet.")));
     }
+
+    @Test
+    void detailPageShowsWebsiteSpecialitiesAndUnknownCountry() throws Exception {
+        Brand tsunami = new Brand("Tsunami", null, "A brand of track and fixed-gear bikes.");
+        ReflectionTestUtils.setField(tsunami, "id", 3);
+        ReflectionTestUtils.setField(tsunami, "website", "https://tsunamibicycle.com");
+        ReflectionTestUtils.setField(tsunami, "specialities", "Track and fixed-gear bikes\nSingle-speed bikes");
+        when(brandService.findById(3)).thenReturn(Optional.of(tsunami));
+        when(bicycleService.findByBrand(3)).thenReturn(List.of());
+
+        mockMvc.perform(get("/brands/3"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Not stated by the brand")))
+                .andExpect(content().string(containsString("href=\"https://tsunamibicycle.com\"")))
+                .andExpect(content().string(containsString("Official website")))
+                .andExpect(content().string(containsString("Known For")))
+                .andExpect(content().string(containsString("Single-speed bikes")));
+    }
+
+    @Test
+    void brandPagesShowTheBrandsLicensedPhoto() throws Exception {
+        Brand colnago = new Brand("Colnago", "Italy", "An Italian bicycle company.");
+        ReflectionTestUtils.setField(colnago, "id", 28);
+        when(brandService.findAll()).thenReturn(List.of(colnago));
+        when(brandService.findById(28)).thenReturn(Optional.of(colnago));
+        when(bicycleService.findByBrand(28)).thenReturn(List.of());
+
+        mockMvc.perform(get("/brands"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/images/photos/bike-colnago-v3rs-640.webp")))
+                .andExpect(content().string(containsString("href=\"https://creativecommons.org/licenses/by/2.0/\"")));
+
+        mockMvc.perform(get("/brands/28"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/images/photos/bike-colnago-v3rs-1280.webp")))
+                .andExpect(content().string(containsString("Glory Cycles")))
+                .andExpect(content().string(containsString("Cropped and resized by VeloVerse.")));
+    }
+
+    @Test
+    void modelWithoutAConfirmedFrameMaterialShowsNotConfirmed() throws Exception {
+        Brand orbea = new Brand("Orbea", "Spain", "A Spanish bicycle company.");
+        ReflectionTestUtils.setField(orbea, "id", 29);
+        BicycleType road = new BicycleType("Road Bike", "Fast on paved roads.", null, null, null);
+        Bicycle avant = new Bicycle(orbea, road, null, "Avant", null);
+        ReflectionTestUtils.setField(avant, "id", 20);
+        when(brandService.findById(29)).thenReturn(Optional.of(orbea));
+        when(bicycleService.findByBrand(29)).thenReturn(List.of(avant));
+
+        mockMvc.perform(get("/brands/29"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Avant")))
+                .andExpect(content().string(containsString("Not confirmed")))
+                .andExpect(content().string(containsString("/images/photos/bike-orbea-avant-640.webp")));
+    }
 }

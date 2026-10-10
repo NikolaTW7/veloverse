@@ -90,4 +90,16 @@ class BicycleTypeControllerTest {
         mockMvc.perform(get("/bicycle-types/abc"))
                 .andExpect(status().isNotFound());
     }
+
+    @Test
+    void timeTrialTypeShowsItsLicensedPhoto() throws Exception {
+        when(bicycleTypeService.findAll()).thenReturn(List.of(type(10, "Time-Trial / Triathlon Bike")));
+
+        mockMvc.perform(get("/bicycle-types"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("Time-Trial / Triathlon Bike")))
+                .andExpect(content().string(containsString("/images/photos/bike-canyon-speedmax-cfr-640.webp")))
+                .andExpect(content().string(containsString("href=\"https://creativecommons.org/licenses/by-sa/4.0/\"")))
+                .andExpect(content().string(containsString("This adapted version is licensed under CC BY-SA 4.0.")));
+    }
 }

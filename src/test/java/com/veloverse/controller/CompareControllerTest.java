@@ -183,4 +183,17 @@ class CompareControllerTest {
                 .andExpect(content().string(containsString("aria-current=\"page\">Compare</a>")))
                 .andExpect(content().string(not(containsString("Compare <small>Coming soon</small>"))));
     }
+
+    @Test
+    void unknownFrameMaterialIsShownAsNotConfirmed() throws Exception {
+        Brand orbea = withId(new Brand("Orbea", "Spain", null), 29);
+        Bicycle avant = withId(new Bicycle(orbea, withId(new BicycleType("Road Bike", "x", null, null, null), 1),
+                null, "Avant", null), 20);
+        when(bicycleService.findById(20)).thenReturn(Optional.of(avant));
+
+        mockMvc.perform(get("/compare").param("a", "20").param("b", "6"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("<td>Not confirmed</td>")))
+                .andExpect(content().string(containsString("<td>Carbon Fibre</td>")));
+    }
 }

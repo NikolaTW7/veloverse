@@ -15,10 +15,10 @@
                     <span aria-hidden="true">&rsaquo;</span>
                     <a th:href="@{/bicycles}">Bicycles</a>
                     <span aria-hidden="true">&rsaquo;</span>
-                    <span aria-current="page" th:text="${bicycle.brand.name + ' ' + bicycle.name}">Trek 520 Disc</span>
+                    <span aria-current="page" th:text="${bicycle.brand.name + ' ' + bicycle.name}">Giant TCR Advanced Pro 2</span>
                 </nav>
                 <p class="eyebrow eyebrow-accent" th:text="${bicycle.brand.name}">Brand</p>
-                <h1 th:text="${bicycle.name}">520 Disc</h1>
+                <h1 th:text="${bicycle.name}">TCR Advanced Pro 2</h1>
                 <p class="lead" th:if="${bicycle.description}" th:text="${bicycle.description}">Description</p>
                 <p class="lead" th:unless="${bicycle.description}">No description has been added for this bicycle yet.</p>
 
@@ -28,10 +28,8 @@
                     </a>
                 </p>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: bikePhoto(${bicycle.brand.name}, ${bicycle.name},
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager')}"></figure>
         </div>
     </section>
 
@@ -43,7 +41,7 @@
             <dl class="spec-table">
                 <div>
                     <dt>Brand</dt>
-                    <dd><a th:href="@{/brands/{id}(id=${bicycle.brand.id})}" th:text="${bicycle.brand.name}">Trek</a></dd>
+                    <dd><a th:href="@{/brands/{id}(id=${bicycle.brand.id})}" th:text="${bicycle.brand.name}">Giant</a></dd>
                 </div>
                 <div>
                     <dt>Model</dt>
@@ -59,11 +57,12 @@
                 </div>
                 <div>
                     <dt>Frame material</dt>
-                    <dd><a th:href="@{/materials/{id}(id=${bicycle.frameMaterial.id})}" th:text="${bicycle.frameMaterial.name}">Steel</a></dd>
+                    <dd th:if="${bicycle.frameMaterial}"><a th:href="@{/materials/{id}(id=${bicycle.frameMaterial.id})}" th:text="${bicycle.frameMaterial.name}">Steel</a></dd>
+                    <dd th:unless="${bicycle.frameMaterial}">Not confirmed</dd>
                 </div>
                 <div>
                     <dt>Weight</dt>
-                    <dd th:text="${bicycle.weightKg != null} ? ${bicycle.weightKg} + ' kg' : 'Not specified'">8.93 kg</dd>
+                    <dd th:text="${bicycle.weightKg != null} ? ${bicycle.weightKg.stripTrailingZeros().toPlainString()} + ' kg' : 'Not specified'">8.93 kg</dd>
                 </div>
                 <div>
                     <dt>Wheel size</dt>
@@ -79,9 +78,57 @@
                 </div>
                 <div>
                     <dt>Number of gears</dt>
-                    <dd th:text="${bicycle.gears} ?: 'Not specified'">27</dd>
+                    <dd th:text="${bicycle.gears} ?: 'Not specified'">24</dd>
                 </div>
             </dl>
+            <p class="spec-source" th:if="${bicycle.sourceUrl}">
+                Specifications checked against
+                <a th:href="${bicycle.sourceUrl}" rel="noopener noreferrer">this source</a>.
+                Values that could not be confirmed are marked &ldquo;Not specified&rdquo; or &ldquo;Not confirmed&rdquo;.
+            </p>
+        </div>
+    </section>
+
+    <!-- What the bicycle is for and what makes it different -->
+    <section class="section" th:if="${bicycle.intendedUse != null or !bicycle.featureList.isEmpty()}">
+        <div class="container info-columns">
+            <article class="info-block" th:if="${bicycle.intendedUse}">
+                <h2>What is it designed for?</h2>
+                <p th:text="${bicycle.intendedUse}">Intended use</p>
+            </article>
+            <article class="info-block" th:if="${!bicycle.featureList.isEmpty()}">
+                <h2>Main features</h2>
+                <ul class="feature-list">
+                    <li th:each="feature : ${bicycle.featureList}" th:text="${feature}">Feature</li>
+                </ul>
+            </article>
+        </div>
+    </section>
+
+    <!-- Advantages and disadvantages, in the same layout as the bicycle type pages -->
+    <section class="section section-dark"
+             th:if="${!bicycle.advantageList.isEmpty() or !bicycle.disadvantageList.isEmpty()}">
+        <div class="container">
+            <h2 class="section-title text-center">Pros &amp; Cons</h2>
+            <p class="section-subtitle text-center"
+               th:text="'The main trade-offs of the ' + ${bicycle.brand.name} + ' ' + ${bicycle.name} + '.'">The main trade-offs.</p>
+
+            <div class="pros-cons">
+                <div class="pros-cons-panel">
+                    <h3>Advantages</h3>
+                    <ul class="pc-list pc-list-pro" th:if="${!bicycle.advantageList.isEmpty()}">
+                        <li th:each="item : ${bicycle.advantageList}" th:text="${item}">Advantage</li>
+                    </ul>
+                    <p th:if="${bicycle.advantageList.isEmpty()}">No advantages recorded yet.</p>
+                </div>
+                <div class="pros-cons-panel">
+                    <h3>Disadvantages</h3>
+                    <ul class="pc-list pc-list-con" th:if="${!bicycle.disadvantageList.isEmpty()}">
+                        <li th:each="item : ${bicycle.disadvantageList}" th:text="${item}">Disadvantage</li>
+                    </ul>
+                    <p th:if="${bicycle.disadvantageList.isEmpty()}">No disadvantages recorded yet.</p>
+                </div>
+            </div>
         </div>
     </section>
 

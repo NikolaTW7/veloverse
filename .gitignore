@@ -31,3 +31,19 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# PostgreSQL database backups
+*.backup
+*.dump
+
+# Local secrets and environment variables
+.env
+.env.*
+!.env.example
+application-local.properties
+application-secrets.properties
+
+# Temporary files
+*.log
+*.tmp
+

@@ -1,6 +1,7 @@
 package com.veloverse.model;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -13,7 +14,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 /**
- * A bicycle model, such as the Trek 520 Disc.
+ * A bicycle model, such as the Giant TCR Advanced Pro 2.
  * Maps to the bicycles table. Each bicycle has one brand, one type and one frame material.
  * Specification fields may be null when no reliable value is available.
  */
@@ -34,11 +35,12 @@ public class Bicycle {
     @JoinColumn(name = "type_id")
     private BicycleType type;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    // Optional: NULL when the exact frame material of the model could not be confirmed
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "frame_material_id")
     private Material frameMaterial;
 
-    // Model name without the brand, e.g. "520 Disc"
+    // Model name without the brand, e.g. "TCR Advanced Pro 2"
     private String name;
 
     // Model year the specifications belong to
@@ -63,6 +65,24 @@ public class Bicycle {
 
     @Column(name = "image_url")
     private String imageUrl;
+
+    // What the bicycle is designed for
+    @Column(name = "intended_use", columnDefinition = "TEXT")
+    private String intendedUse;
+
+    // Main features, advantages and disadvantages, one item per line
+    @Column(columnDefinition = "TEXT")
+    private String features;
+
+    @Column(columnDefinition = "TEXT")
+    private String advantages;
+
+    @Column(columnDefinition = "TEXT")
+    private String disadvantages;
+
+    // Page the specifications were checked against
+    @Column(name = "source_url")
+    private String sourceUrl;
 
     protected Bicycle() {
         // Required by JPA
@@ -126,5 +146,37 @@ public class Bicycle {
 
     public String getImageUrl() {
         return imageUrl;
+    }
+
+    public String getIntendedUse() {
+        return intendedUse;
+    }
+
+    public String getFeatures() {
+        return features;
+    }
+
+    public String getAdvantages() {
+        return advantages;
+    }
+
+    public String getDisadvantages() {
+        return disadvantages;
+    }
+
+    public String getSourceUrl() {
+        return sourceUrl;
+    }
+
+    public List<String> getFeatureList() {
+        return TextLines.split(features);
+    }
+
+    public List<String> getAdvantageList() {
+        return TextLines.split(advantages);
+    }
+
+    public List<String> getDisadvantageList() {
+        return TextLines.split(disadvantages);
     }
 }

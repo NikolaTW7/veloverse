@@ -26,10 +26,8 @@
                     <strong th:text="${type.bestUse}">Best use</strong>
                 </div>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: typePhoto(${type.name},
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager')}"></figure>
         </div>
     </section>
 
