@@ -1,0 +1,117 @@
+<mxfile host="app.diagrams.net">
+  <diagram name="Page-1" id="Oc4WymMjEHi7y-qCgWR9">
+    <mxGraphModel dx="1023" dy="1126" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <UserObject label="" mermaidData="{&#xa;  &quot;data&quot;: &quot;\nflowchart TD\n    Browser[\&quot;User / Web Browser&lt;br/&gt;HTML, CSS, JavaScript\&quot;]\n    Controller[\&quot;Spring MVC Controllers&lt;br/&gt;Handle HTTP requests\&quot;]\n    Service[\&quot;Service Layer&lt;br/&gt;Application logic\&quot;]\n    Repository[\&quot;Spring Data JPA Repositories&lt;br/&gt;Database access\&quot;]\n    Database[(\&quot;PostgreSQL Database&lt;br/&gt;7 relational tables\&quot;)]\n    Thymeleaf[\&quot;Thymeleaf Templates&lt;br/&gt;Server-side HTML rendering\&quot;]\n\n    Browser --&gt;|\&quot;HTTP request\&quot;| Controller\n    Controller --&gt;|\&quot;Calls\&quot;| Service\n    Service --&gt;|\&quot;Calls\&quot;| Repository\n    Repository &lt;--&gt;|\&quot;Read / Write\&quot;| Database\n    Service -.-&gt;|\&quot;Returns data\&quot;| Controller\n    Controller --&gt;|\&quot;Provides model data\&quot;| Thymeleaf\n    Thymeleaf --&gt;|\&quot;Rendered HTML response\&quot;| Browser\n\n    classDef frontend fill:#DBEAFE,stroke:#2563EB,color:#1E3A8A\n    classDef backend fill:#E0E7FF,stroke:#4F46E5,color:#312E81\n    classDef storage fill:#DCFCE7,stroke:#16A34A,color:#14532D\n    classDef template fill:#FEF3C7,stroke:#D97706,color:#78350F\n\n    class Browser frontend\n    class Controller,Service,Repository backend\n    class Database storage\n    class Thymeleaf template\n&quot;,&#xa;  &quot;config&quot;: null,&#xa;  &quot;version&quot;: &quot;12&quot;&#xa;}" id="6Zxl3Cun7JK5rSql-8rI-1">
+          <mxCell connectable="0" parent="1" style="group;transparentBounds=1;editIcon=1;lockedGroup=0;groupPadding=10;" vertex="1">
+            <mxGeometry as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="User / Web Browser&#xa;HTML, CSS, JavaScript" mermaidId="n:Browser" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="User / Web Browser&#xa;HTML, CSS, JavaScript" id="6Zxl3Cun7JK5rSql-8rI-2">
+          <mxCell parent="6Zxl3Cun7JK5rSql-8rI-1" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#DBEAFE;strokeColor=#2563EB;fontColor=#1E3A8A;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;labelWidth=120;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="108" width="152" x="186" y="30" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Spring MVC Controllers&#xa;Handle HTTP requests" mermaidId="n:Controller" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#E0E7FF;strokeColor=#4F46E5;fontColor=#312E81;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="Spring MVC Controllers&#xa;Handle HTTP requests" id="6Zxl3Cun7JK5rSql-8rI-3">
+          <mxCell parent="6Zxl3Cun7JK5rSql-8rI-1" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#E0E7FF;strokeColor=#4F46E5;fontColor=#312E81;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;labelWidth=120;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="108" width="152" x="66" y="239" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Service Layer&#xa;Application logic" mermaidId="n:Service" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#E0E7FF;strokeColor=#4F46E5;fontColor=#312E81;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="Service Layer&#xa;Application logic" id="6Zxl3Cun7JK5rSql-8rI-4">
+          <mxCell parent="6Zxl3Cun7JK5rSql-8rI-1" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#E0E7FF;strokeColor=#4F46E5;fontColor=#312E81;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="67" width="152" x="30" y="461" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Spring Data JPA Repositories&#xa;Database access" mermaidId="n:Repository" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#E0E7FF;strokeColor=#4F46E5;fontColor=#312E81;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="Spring Data JPA Repositories&#xa;Database access" id="6Zxl3Cun7JK5rSql-8rI-5">
+          <mxCell parent="6Zxl3Cun7JK5rSql-8rI-1" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#E0E7FF;strokeColor=#4F46E5;fontColor=#312E81;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;labelWidth=120;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="87" width="152" x="30" y="656" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="PostgreSQL Database&#xa;7 relational tables" mermaidId="n:Database" mermaidBaseStyle="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#14532D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="PostgreSQL Database&#xa;7 relational tables" id="6Zxl3Cun7JK5rSql-8rI-6">
+          <mxCell parent="6Zxl3Cun7JK5rSql-8rI-1" style="html=1;shape=cylinder3;boundedLbl=1;backgroundOutline=1;size=10;strokeWidth=2;whiteSpace=wrap;fillColor=#DCFCE7;strokeColor=#16A34A;fontColor=#14532D;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;labelWidth=120;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="149" width="144" x="34" y="844" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="Thymeleaf Templates&#xa;Server-side HTML rendering" mermaidId="n:Thymeleaf" mermaidBaseStyle="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#78350F;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;" mermaidBaseValue="Thymeleaf Templates&#xa;Server-side HTML rendering" id="6Zxl3Cun7JK5rSql-8rI-7">
+          <mxCell parent="6Zxl3Cun7JK5rSql-8rI-1" style="html=1;whiteSpace=wrap;strokeWidth=2;fillColor=#FEF3C7;strokeColor=#D97706;fontColor=#78350F;fontFamily=Recursive;fontSize=14;shadow=1;shadowColor=#000000;shadowOffsetX=4;shadowOffsetY=4;shadowBlur=0;shadowOpacity=6;labelWidth=120;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" vertex="1">
+            <mxGeometry height="108" width="152" x="254" y="448" as="geometry" />
+          </mxCell>
+        </UserObject>
+        <UserObject label="HTTP request" mermaidId="e:Browser-&gt;Controller#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.35;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="HTTP request" id="6Zxl3Cun7JK5rSql-8rI-8">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-2" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.35;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-3">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="240" y="158" />
+                <mxPoint x="142" y="158" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Calls" mermaidId="e:Controller-&gt;Service#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.28;exitY=1;entryX=0.36;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="Calls" id="6Zxl3Cun7JK5rSql-8rI-9">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.28;exitY=1;entryX=0.36;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-4">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="109" y="367" />
+                <mxPoint x="66" y="367" />
+                <mxPoint x="66" y="428" />
+                <mxPoint x="84" y="428" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Calls" mermaidId="e:Service-&gt;Repository#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="Calls" id="6Zxl3Cun7JK5rSql-8rI-10">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-5">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Read / Write" mermaidId="e:Repository-&gt;Database#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=block;startSize=8;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;sourcePerimeterSpacing=4;" mermaidBaseValue="Read / Write" id="6Zxl3Cun7JK5rSql-8rI-11">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-5" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=block;startSize=8;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.5;exitY=1;entryX=0.5;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;sourcePerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-6">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points" />
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Returns data" mermaidId="e:Service-&gt;Controller#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.64;exitY=0;entryX=0.5;entryY=1;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="Returns data" id="6Zxl3Cun7JK5rSql-8rI-12">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;dashed=1;dashPattern=2 2;fixDash=1;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.64;exitY=0;entryX=0.5;entryY=1;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-3">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="128" y="428" />
+                <mxPoint x="142" y="428" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Provides model data" mermaidId="e:Controller-&gt;Thymeleaf#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.72;exitY=1;entryX=0.35;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="Provides model data" id="6Zxl3Cun7JK5rSql-8rI-13">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-3" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.72;exitY=1;entryX=0.35;entryY=0;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-7">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="175" y="367" />
+                <mxPoint x="284" y="367" />
+                <mxPoint x="284" y="428" />
+                <mxPoint x="308" y="428" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+        <UserObject label="Rendered HTML response" mermaidId="e:Thymeleaf-&gt;Browser#0" mermaidBaseStyle="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=16;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.64;exitY=0;entryX=0.64;entryY=1;strokeWidth=2;targetPerimeterSpacing=4;" mermaidBaseValue="Rendered HTML response" id="6Zxl3Cun7JK5rSql-8rI-14">
+          <mxCell edge="1" parent="6Zxl3Cun7JK5rSql-8rI-1" source="6Zxl3Cun7JK5rSql-8rI-7" style="edgeStyle=orthogonalEdgeStyle;rounded=1;curved=0;startArrow=none;endArrow=block;endSize=8;jumpStyle=arc;jumpSize=12;strokeColor=#000000;html=1;fontSize=14;labelBackgroundColor=#cccccc;fontFamily=Recursive;fontColor=#28253D;exitX=0.64;exitY=0;entryX=0.64;entryY=1;strokeWidth=2;targetPerimeterSpacing=4;fontSource=https%3A%2F%2Ffonts.googleapis.com%2Fcss%3Ffamily%3DRecursive;" target="6Zxl3Cun7JK5rSql-8rI-2">
+            <mxGeometry relative="1" as="geometry">
+              <Array as="points">
+                <mxPoint x="352" y="428" />
+                <mxPoint x="376" y="428" />
+                <mxPoint x="376" y="397" />
+                <mxPoint x="376" y="188" />
+                <mxPoint x="376" y="158" />
+                <mxPoint x="284" y="158" />
+              </Array>
+            </mxGeometry>
+          </mxCell>
+        </UserObject>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
