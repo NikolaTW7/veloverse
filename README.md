@@ -214,3 +214,10 @@ Developed as a personal software engineering and web development project.
 
 **GitHub:** [NikolaTW7](https://github.com/NikolaTW7)
 
+## Live Demo
+
+Explore VeloVerse online:
+
+🌐 https://veloverse.site
+
+
