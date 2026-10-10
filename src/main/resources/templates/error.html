@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- Spring Boot shows this page for any error without a more specific page (e.g. error/404.html) -->
+<!--/* Each page builds its <head>, header and footer from the shared fragments in fragments/layout.html. An empty activePage means no menu link is highlighted. */-->
 <head th:replace="~{fragments/layout :: head('Something Went Wrong')}"></head>
 <body>
 
@@ -8,6 +9,7 @@
 
 <main id="main" class="section error-page">
     <div class="container narrow text-center">
+        <!--/* status is the HTTP status code (for example 500) that Spring Boot puts in the model for error pages. */-->
         <p class="eyebrow eyebrow-accent" th:text="'Error ' + ${status}">Error</p>
         <h1 class="section-title">Something went wrong</h1>
         <p class="lead centred">Sorry, the page could not be displayed. Please try again later.</p>

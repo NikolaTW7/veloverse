@@ -1,5 +1,6 @@
 package com.veloverse.repository;
 
+// Static import: lets the tests write assertThat(...) (from AssertJ) instead of Assertions.assertThat(...)
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -14,13 +15,17 @@ import com.veloverse.model.BicycleType;
  * Checks against the real PostgreSQL database that schema.sql and data.sql ran
  * and that the entity maps the bicycle_types columns correctly.
  * Like the existing startup test, this needs DB_PASSWORD to be set. It only reads data.
+ * @SpringBootTest starts the whole application against the separate veloverse_test database
+ * (see src/test/resources/config/application.properties), so nothing is mocked here.
  */
 @SpringBootTest
 class BicycleTypeRepositoryTest {
 
+    // @Autowired: Spring puts its real repository object into this field before the tests run
     @Autowired
     private BicycleTypeRepository repository;
 
+    // contains (not containsExactly) allows extra types; isSorted checks the IDs come back in ascending order
     @Test
     void starterBicycleTypesAreLoadedInOrder() {
         List<BicycleType> types = repository.findAllByOrderByIdAsc();
@@ -31,6 +36,7 @@ class BicycleTypeRepositoryTest {
         assertThat(types).extracting(BicycleType::getId).isSorted();
     }
 
+    // The advantages and disadvantages text columns are split into lists (one item per line) by the entity
     @Test
     void columnsAndAdvantageListsAreMapped() {
         BicycleType road = repository.findAllByOrderByIdAsc().stream()

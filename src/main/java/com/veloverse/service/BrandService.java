@@ -10,10 +10,16 @@ import org.springframework.transaction.annotation.Transactional;
 import com.veloverse.model.Brand;
 import com.veloverse.repository.BrandRepository;
 
+/**
+ * Application logic for brands, used by BrandController.
+ */
+// @Service: Spring creates one shared object of this class.
+// @Transactional(readOnly = true): each public method runs in a read-only database transaction.
 @Service
 @Transactional(readOnly = true)
 public class BrandService {
 
+    // Set once by the constructor (constructor injection) and never changed
     private final BrandRepository repository;
 
     public BrandService(BrandRepository repository) {
@@ -21,6 +27,7 @@ public class BrandService {
     }
 
     /** All brands in a stable display order (by ID). */
+    // Sort.by("id") sorts on the id field of the Brand entity
     public List<Brand> findAll() {
         return repository.findAll(Sort.by("id"));
     }

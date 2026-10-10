@@ -4,15 +4,20 @@
   the <head>, the logo, the header with main navigation and the footer.
   Every page marks its <main> with id="main" so the skip link works.
 -->
+<!--/* xmlns:th declares the "th:" prefix, so editors and validators know that th:... attributes belong to Thymeleaf. */-->
 <html xmlns:th="http://www.thymeleaf.org">
 
 <!-- Common <head>: pass the page title, e.g. ~{fragments/layout :: head('Home')} -->
+<!--/* Comments written like this one are Thymeleaf parser-level comments: they are removed on the server and never reach the browser. */-->
+<!--/* th:fragment gives this element a name (and parameters) so other pages can copy it in with th:replace. */-->
 <head th:fragment="head(pageTitle)">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="color-scheme" content="dark">
     <meta name="theme-color" content="#0a0a0b">
+    <!--/* th:text replaces the placeholder text with the result of the ${...} expression, HTML-escaped so user data cannot inject markup. */-->
     <title th:text="${pageTitle} + ' | VeloVerse'">VeloVerse</title>
+    <!--/* @{...} is a link expression: Thymeleaf adds the application context path, so links still work if the app is not deployed at "/". */-->
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 
@@ -20,6 +25,7 @@
 
 <!-- Site logo: an original road-bike outline in lime, followed by "Velo" (white) and "Verse" (lime).
      Used by both the header and the footer, so the two always match. -->
+<!--/* aria-label gives the link an accessible name for screen readers, and aria-hidden on the SVG hides the drawing from them. */-->
 <a th:fragment="logo" th:href="@{/}" class="logo" aria-label="VeloVerse home">
     <svg class="logo-icon" viewBox="0 0 48 30" aria-hidden="true" focusable="false">
         <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
@@ -50,12 +56,15 @@
 
 <!-- Header with main navigation. activePage marks the current page (e.g. 'home'). -->
 <header th:fragment="header(activePage)" class="site-header">
+    <!--/* Skip link: hidden until focused with the keyboard, it lets keyboard and screen-reader users jump straight past the navigation. */-->
     <a class="skip-link" href="#main">Skip to main content</a>
     <div class="container header-inner">
+        <!--/* th:replace swaps this placeholder tag for the fragment named after "::" in the given template file. */-->
         <a th:replace="~{fragments/layout :: logo}"></a>
 
         <nav class="site-nav" aria-label="Main navigation">
             <ul>
+                <!--/* th:classappend adds the is-active class only when the condition is true. A ternary without an else part gives null, and th:attr leaves the attribute out when its value is null, so aria-current="page" appears only on the current page link. */-->
                 <li>
                     <a th:href="@{/}" class="nav-link"
                        th:classappend="${activePage == 'home'} ? 'is-active'"
@@ -128,6 +137,7 @@
         </div>
 
         <div class="footer-bottom">
+            <!--/* #dates is a Thymeleaf utility object, used here to print the current year. */-->
             <p>&copy; <span th:text="${#dates.year(#dates.createNow())}">2026</span> VeloVerse. All rights reserved.</p>
             <p>Educational project &mdash; not affiliated with any brand.</p>
         </div>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The shared <head>, header and footer come from fragments/layout.html via th:replace. */-->
 <head th:replace="~{fragments/layout :: head('Bicycle Brands')}"></head>
 <body>
 
@@ -19,6 +20,7 @@
                 <p class="lead">Meet some of the manufacturers behind the bicycles we ride. Each brand has its own
                     history, home country and range of bikes, from racing machines to folding city bikes.</p>
             </div>
+            <!--/* Page header photo: the arguments match the photo(...) parameters described in fragments/photos.html. */-->
             <figure th:replace="~{fragments/photos :: photo('header-brands', 1280, 854,
                 'Road bike held in a workstand in a bicycle repair workshop',
                 'Alexander Dummer', 'https://www.pexels.com/photo/bicycle-bike-repair-shop-132682/', 'Pexels',
@@ -29,14 +31,17 @@
     <!-- All brands from the database -->
     <section class="section section-light">
         <div class="container">
+            <!--/* th:if shows the cards only when there are brands; th:each then repeats the <article> once per brand. */-->
             <div class="card-grid card-grid-3" th:if="${!brands.isEmpty()}">
                 <article class="type-tile" th:each="brand : ${brands}">
                     <figure th:replace="~{fragments/photos :: brandPhoto(${brand.name},
                         '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <div class="type-tile-body">
+                        <!--/* th:if with a plain value hides the element when that value is null, so a missing country is not shown. */-->
                         <p class="eyebrow" th:if="${brand.country}" th:text="${brand.country}">Country</p>
                         <h2 th:text="${brand.name}">Brand</h2>
                         <p class="clamp-3" th:if="${brand.description}" th:text="${brand.description}">Description</p>
+                        <!--/* @{/brands/{id}(id=...)} fills in the {id} path variable, giving links like /brands/2. The visually-hidden span tells screen-reader users which brand the link is about. */-->
                         <a class="btn btn-light" th:href="@{/brands/{id}(id=${brand.id})}">
                             Learn more<span class="visually-hidden" th:text="' about ' + ${brand.name}"></span>
                         </a>

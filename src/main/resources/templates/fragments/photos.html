@@ -20,16 +20,20 @@
       loading  'lazy' for images below the fold, 'eager' for images at the top of a page
       big      true to also offer the 1920 px version
 -->
+<!--/* th:with creates local variables (here the three image URLs) that can be used inside this element. {f} is a path variable filled in from (f=...). */-->
 <figure th:fragment="photo(file, w, h, alt, author, pageUrl, site, sizes, cls, loading, big)"
         class="photo" th:classappend="${cls}"
         th:with="s640=@{/images/photos/{f}-640.webp(f=${file})},
                  s1280=@{/images/photos/{f}-1280.webp(f=${file})},
                  s1920=@{/images/photos/{f}-1920.webp(f=${file})}">
+    <!--/* srcset lists the same photo in several widths (640w, 1280w ...) and sizes tells the browser how wide it will be shown, so it downloads the smallest file that still looks sharp. */-->
+    <!--/* th:attr sets several attributes at once. fetchpriority is set to null when big is false, and Thymeleaf leaves out an attribute whose value is null. */-->
     <img th:src="${s1280}"
          th:attr="srcset=${big} ? ${s640 + ' 640w, ' + s1280 + ' ' + w + 'w, ' + s1920 + ' 1920w'} : ${s640 + ' 640w, ' + s1280 + ' ' + w + 'w'},
                   sizes=${sizes}, width=${w}, height=${h}, loading=${loading},
                   fetchpriority=${big} ? 'high' : null"
          th:alt="${alt}" decoding="async">
+    <!--/* th:if only renders the credit when a source page URL was given. #strings.isEmpty treats null and empty text as empty. */-->
     <figcaption class="photo-credit" th:if="${!#strings.isEmpty(pageUrl)}">Photo: <a th:href="${pageUrl}" th:text="${author}" rel="noopener">Photographer</a><th:block
         th:if="${!#strings.isEmpty(site)}"> / <span th:text="${site}">Unsplash</span></th:block></figcaption>
 </figure>
@@ -38,8 +42,11 @@
     typePhoto(typeName, ...) chooses the photo for a bicycle type by its name, so no database
     changes are needed. A type without an approved photo keeps the neutral placeholder.
 -->
+<!--/* th:block is a Thymeleaf-only element: it groups attributes and disappears from the final HTML, leaving only its content. */-->
 <th:block th:fragment="typePhoto(typeName, sizes, cls, loading)"
           th:with="slug=${typeName == null ? '' : #strings.replace(#strings.toLowerCase(typeName), ' ', '-')}">
+    <!--/* The slug is the type name in lower case with spaces turned into hyphens, e.g. "Road Bike" becomes "road-bike". */-->
+    <!--/* th:switch / th:case works like a Java switch: only the first matching case is rendered, and th:case="*" is the default. */-->
     <th:block th:switch="${slug}">
         <th:block th:case="'road-bike'">
             <figure th:replace="~{fragments/photos :: photo('type-road-bike', 1280, 904,
@@ -114,10 +121,10 @@
 
 <!--
     componentPhoto(name, ...) chooses the photo for a bicycle component by its name, in the
-    same way as typePhoto. Components without a suitable photo (for example the brake caliper,
-    stem and seatpost) keep the neutral placeholder. The sources of these photos have not been
+    same way as typePhoto. A component without a suitable photo keeps the neutral placeholder. The sources of these photos have not been
     confirmed yet, so no credit is shown (see IMAGE-CREDITS.md).
 -->
+<!--/* Same idea as typePhoto, but " & " in a name becomes "-and-", e.g. "Hub & Spokes" becomes "hub-and-spokes". */-->
 <th:block th:fragment="componentPhoto(name, sizes, cls, loading)"
           th:with="slug=${name == null ? '' : #strings.replace(#strings.replace(#strings.toLowerCase(name), ' &amp; ', '-and-'), ' ', '-')}">
     <th:block th:switch="${slug}">
@@ -181,6 +188,21 @@
                 'Drop handlebar with grey bar tape and a bike computer, seen from above', '', '', '',
                 ${sizes}, ${cls}, ${loading}, false)}"></figure>
         </th:block>
+        <th:block th:case="'brake-caliper'">
+            <figure th:replace="~{fragments/photos :: photo('part-brake-caliper', 1280, 853,
+                'Mechanical disc brake caliper on a black front fork, gripping the disc brake rotor', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'stem'">
+            <figure th:replace="~{fragments/photos :: photo('part-stem', 1280, 853,
+                'Black handlebar stem clamping the handlebar, seen close up from the side', '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'seatpost'">
+            <figure th:replace="~{fragments/photos :: photo('part-seatpost', 1280, 853,
+                'Black seatpost with its saddle clamp being adjusted with a hex key',  '', '', '',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
         <th:block th:case="'saddle'">
             <figure th:replace="~{fragments/photos :: photo('part-saddle', 1280, 853,
                 'Black bicycle saddle covered in raindrops', '', '', '',
@@ -196,30 +218,39 @@
 </th:block>
 
 <!--
-    licensedPhoto(...) is used for the Wikimedia Commons photos of real brands and models.
-    These licences (CC BY 2.0 and CC BY-SA 4.0) require the author, a link to the source,
+    licensedPhoto(...) is used for the Wikimedia Commons photos of real brands, models and materials.
+    These licences (CC BY 2.0/3.0 and CC BY-SA 3.0/4.0) require the author, a link to the source,
     a link to the licence and a note of what was changed. The credit is always shown under
     the photo, so it never covers the bicycle. Full details are in IMAGE-CREDITS.md.
+      w, h                 pixel size of the large (-1280) file (licensedPhoto uses 1280 x 853)
       licence, licenceUrl  e.g. 'CC BY 2.0' and its creativecommons.org address
       changes              what VeloVerse changed (for CC BY-SA photos this also says that
                            the adapted version is shared under the same licence)
 -->
-<figure th:fragment="licensedPhoto(file, alt, author, pageUrl, licence, licenceUrl, changes, sizes, cls, loading)"
+<figure th:fragment="licensedPhotoSized(file, w, h, alt, author, pageUrl, licence, licenceUrl, changes, sizes, cls, loading)"
         class="photo photo-licensed" th:classappend="${cls}"
         th:with="s640=@{/images/photos/{f}-640.webp(f=${file})},
                  s1280=@{/images/photos/{f}-1280.webp(f=${file})}">
     <img th:src="${s1280}"
-         th:attr="srcset=${s640 + ' 640w, ' + s1280 + ' 1280w'}, sizes=${sizes}, loading=${loading}"
-         width="1280" height="853" th:alt="${alt}" decoding="async">
+         th:attr="srcset=${s640 + ' 640w, ' + s1280 + ' ' + w + 'w'}, sizes=${sizes}, loading=${loading},
+                  width=${w}, height=${h}"
+         th:alt="${alt}" decoding="async">
     <figcaption class="photo-credit">Photo: <a th:href="${pageUrl}" th:text="${author}" rel="noopener">Author</a>,
         <a th:href="${licenceUrl}" th:text="${licence}" rel="license noopener">CC BY 2.0</a>.
         <span th:text="${changes}">Cropped and resized by VeloVerse.</span></figcaption>
 </figure>
 
+<!-- Same as licensedPhotoSized, for the usual 1280 x 853 large file -->
+<th:block th:fragment="licensedPhoto(file, alt, author, pageUrl, licence, licenceUrl, changes, sizes, cls, loading)">
+    <figure th:replace="~{fragments/photos :: licensedPhotoSized(${file}, 1280, 853, ${alt}, ${author}, ${pageUrl},
+        ${licence}, ${licenceUrl}, ${changes}, ${sizes}, ${cls}, ${loading})}"></figure>
+</th:block>
+
 <!--
     bikePhoto(brandName, modelName, ...) chooses the photo of a bicycle model by its brand and
     model name. A model without a photo keeps the neutral placeholder.
 -->
+<!--/* The switch key is "brand name + space + model name". byChanges and bySaChanges are reusable credit texts for the two licences. */-->
 <th:block th:fragment="bikePhoto(brandName, modelName, sizes, cls, loading)"
           th:with="key=${brandName + ' ' + modelName},
                    byChanges='Cropped and resized by VeloVerse.',
@@ -280,6 +311,7 @@
 <!--
     brandPhoto(brandName, ...) shows one of the brand's model photos on the brand pages.
 -->
+<!--/* Each brand reuses the photo of one of its models through the bikePhoto fragment. */-->
 <th:block th:fragment="brandPhoto(brandName, sizes, cls, loading)">
     <th:block th:switch="${brandName}">
         <th:block th:case="'Cervélo'"><figure th:replace="~{fragments/photos :: bikePhoto('Cervélo', 'S5', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
@@ -287,6 +319,58 @@
         <th:block th:case="'Colnago'"><figure th:replace="~{fragments/photos :: bikePhoto('Colnago', 'V3-RS', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
         <th:block th:case="'Orbea'"><figure th:replace="~{fragments/photos :: bikePhoto('Orbea', 'Avant', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
         <th:block th:case="'Canyon'"><figure th:replace="~{fragments/photos :: bikePhoto('Canyon', 'Speedmax CFR', ${sizes}, ${cls}, ${loading})}"></figure></th:block>
+        <th:block th:case="*">
+            <figure class="placeholder-image" th:classappend="${cls}">
+                <img th:src="@{/images/placeholder-bike.svg}" alt="">
+                <figcaption>Photo to be added</figcaption>
+            </figure>
+        </th:block>
+    </th:block>
+</th:block>
+
+<!--
+    materialPhoto(name, ...) chooses the photo for a material by its name. Wikimedia Commons
+    photos use licensedPhoto/licensedPhotoSized, so the author, licence and changes are shown.
+    A material without a photo keeps the neutral placeholder.
+-->
+<th:block th:fragment="materialPhoto(name, sizes, cls, loading)">
+    <th:block th:switch="${name}">
+        <th:block th:case="'Aluminium'">
+            <figure th:replace="~{fragments/photos :: licensedPhotoSized('material-aluminium', 1059, 706,
+                'A chunk of shiny, freshly cut aluminium metal on a light background',
+                'Unknown author (images-of-elements.com)', 'https://commons.wikimedia.org/wiki/File:Aluminium-4.jpg',
+                'CC BY 3.0', 'https://creativecommons.org/licenses/by/3.0/',
+                'Plain background extended at the sides and resized by VeloVerse.',
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Carbon Fibre'">
+            <figure th:replace="~{fragments/photos :: licensedPhoto('material-carbon-fibre',
+                'Close-up of black woven carbon fibre fabric, showing the criss-cross pattern of the fibre bundles',
+                'Acheolg', 'https://commons.wikimedia.org/wiki/File:Woven_carbon_fiber_fabric.jpg',
+                'CC BY-SA 4.0', 'https://creativecommons.org/licenses/by-sa/4.0/',
+                'Cropped and resized by VeloVerse. This adapted version is licensed under CC BY-SA 4.0.',
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Steel'">
+            <figure th:replace="~{fragments/photos :: photo('material-steel', 1280, 853,
+                'Stack of rusty steel pipes seen end-on',
+                'engin akyurt', 'https://unsplash.com/photos/a-large-stack-of-pipes-stacked-on-top-of-each-other-F4nEetWGt0A', 'Unsplash',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
+        <th:block th:case="'Titanium'">
+            <figure th:replace="~{fragments/photos :: licensedPhotoSized('material-titanium', 1206, 804,
+                'A bar of high-purity titanium crystals on a light background',
+                'Alchemist-hp (pse-mendelejew.de)', 'https://commons.wikimedia.org/wiki/File:Titan-crystal_bar.JPG',
+                'CC BY-SA 3.0', 'https://creativecommons.org/licenses/by-sa/3.0/',
+                'Cropped and resized by VeloVerse. This adapted version is licensed under CC BY-SA 3.0.',
+                ${sizes}, ${cls}, ${loading})}"></figure>
+        </th:block>
+        <th:block th:case="'Rubber'">
+            <figure th:replace="~{fragments/photos :: photo('material-rubber', 1280, 853,
+                'Pile of used rubber tyres held together with a blue ratchet strap',
+                'Tokuo Nobuhiro', 'https://www.pexels.com/photo/close-up-of-a-stack-of-used-tires-16945365/', 'Pexels',
+                ${sizes}, ${cls}, ${loading}, false)}"></figure>
+        </th:block>
         <th:block th:case="*">
             <figure class="placeholder-image" th:classappend="${cls}">
                 <img th:src="@{/images/placeholder-bike.svg}" alt="">

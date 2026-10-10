@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The page title is "brand + model", built inside the ${...} expression and passed into the shared head fragment. */-->
 <head th:replace="~{fragments/layout :: head(${bicycle.brand.name + ' ' + bicycle.name})}"></head>
 <body>
 
@@ -19,6 +20,7 @@
                 </nav>
                 <p class="eyebrow eyebrow-accent" th:text="${bicycle.brand.name}">Brand</p>
                 <h1 th:text="${bicycle.name}">TCR Advanced Pro 2</h1>
+                <!--/* th:if and th:unless with the same condition form an if/else: exactly one of these two paragraphs is shown. */-->
                 <p class="lead" th:if="${bicycle.description}" th:text="${bicycle.description}">Description</p>
                 <p class="lead" th:unless="${bicycle.description}">No description has been added for this bicycle yet.</p>
 
@@ -38,6 +40,7 @@
         <div class="container">
             <h2 class="section-title">Specifications</h2>
 
+            <!--/* A description list: each <dt> is a label and each <dd> its value. */-->
             <dl class="spec-table">
                 <div>
                     <dt>Brand</dt>
@@ -49,6 +52,7 @@
                 </div>
                 <div>
                     <dt>Year</dt>
+                    <!--/* ?: is the Elvis operator: show the year, or "Not specified" when it is null. */-->
                     <dd th:text="${bicycle.year} ?: 'Not specified'">2023</dd>
                 </div>
                 <div>
@@ -57,11 +61,13 @@
                 </div>
                 <div>
                     <dt>Frame material</dt>
+                    <!--/* @{/materials/{id}(id=...)} fills in the {id} path variable to link to the material page. */-->
                     <dd th:if="${bicycle.frameMaterial}"><a th:href="@{/materials/{id}(id=${bicycle.frameMaterial.id})}" th:text="${bicycle.frameMaterial.name}">Steel</a></dd>
                     <dd th:unless="${bicycle.frameMaterial}">Not confirmed</dd>
                 </div>
                 <div>
                     <dt>Weight</dt>
+                    <!--/* weightKg is a BigDecimal; stripTrailingZeros().toPlainString() turns 8.40 into "8.4" before " kg" is added. */-->
                     <dd th:text="${bicycle.weightKg != null} ? ${bicycle.weightKg.stripTrailingZeros().toPlainString()} + ' kg' : 'Not specified'">8.93 kg</dd>
                 </div>
                 <div>
@@ -83,6 +89,7 @@
             </dl>
             <p class="spec-source" th:if="${bicycle.sourceUrl}">
                 Specifications checked against
+                <!--/* External link: rel="noopener noreferrer" stops the other site from controlling this tab or seeing where the visitor came from. */-->
                 <a th:href="${bicycle.sourceUrl}" rel="noopener noreferrer">this source</a>.
                 Values that could not be confirmed are marked &ldquo;Not specified&rdquo; or &ldquo;Not confirmed&rdquo;.
             </p>
@@ -99,6 +106,7 @@
             <article class="info-block" th:if="${!bicycle.featureList.isEmpty()}">
                 <h2>Main features</h2>
                 <ul class="feature-list">
+                    <!--/* featureList comes from getFeatureList(), which splits the stored text into one item per line. */-->
                     <li th:each="feature : ${bicycle.featureList}" th:text="${feature}">Feature</li>
                 </ul>
             </article>

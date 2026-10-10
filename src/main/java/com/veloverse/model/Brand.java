@@ -2,6 +2,7 @@ package com.veloverse.model;
 
 import java.util.List;
 
+// JPA annotations that describe how this class maps to a database table
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,10 +14,12 @@ import jakarta.persistence.Table;
  * A bicycle manufacturer, such as Cervélo or Giant.
  * Maps to the brands table.
  */
+// @Entity: a JPA entity, so each object of this class is one row of the table named in @Table.
 @Entity
 @Table(name = "brands")
 public class Brand {
 
+    // Primary key, numbered automatically by PostgreSQL (IDENTITY)
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "brand_id")
@@ -37,6 +40,7 @@ public class Brand {
     @Column(columnDefinition = "TEXT")
     private String specialities;
 
+    // protected no-argument constructor: needed by JPA to create objects from rows
     protected Brand() {
         // Required by JPA
     }
@@ -47,6 +51,7 @@ public class Brand {
         this.description = description;
     }
 
+    // Getters used by the templates, e.g. ${brand.name} calls getName()
     public Integer getId() {
         return id;
     }
@@ -71,6 +76,7 @@ public class Brand {
         return specialities;
     }
 
+    // The specialities text split into one item per line, shown as chips on the Brand Detail page
     public List<String> getSpecialityList() {
         return TextLines.split(specialities);
     }

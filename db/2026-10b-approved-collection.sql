@@ -19,16 +19,21 @@
 --     bicycles first and then the brands keeps every foreign key valid. Bicycle types,
 --     materials and components are not touched.
 
+-- BEGIN and COMMIT wrap the steps in one transaction (all or nothing), as in the first script.
 BEGIN;
 
+-- Copy the current rows into backup tables with the same columns (only the first time).
 CREATE TABLE IF NOT EXISTS backup_2026_10b_brands AS TABLE brands;
 CREATE TABLE IF NOT EXISTS backup_2026_10b_bicycles AS TABLE bicycles;
 
+-- Remove every bicycle first, then every brand, so no bicycle is left pointing to a missing brand.
 DELETE FROM bicycles;
 DELETE FROM brands;
 
 COMMIT;
 
+-- The undo steps below are comments, so they never run with this script (see the first
+-- script for how to use them and what OVERRIDING SYSTEM VALUE does).
 -- To undo (restores the previous five brands and models exactly, with their original IDs).
 -- Stop the application first. data.sql adds the new rows again on every start-up, so a
 -- permanent undo also needs the previous version of data.sql:

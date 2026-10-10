@@ -2,7 +2,22 @@
 -- General educational descriptions of common bicycle types (no brand or model specifications).
 -- Advantages and disadvantages hold one point per line (\n inside the E'...' strings).
 -- ON CONFLICT DO NOTHING keeps this safe to re-run and never overwrites edited rows.
+-- Spring Boot runs this file on every start-up, straight after schema.sql.
+--
+-- How the strings work:
+--   A normal string is written in single quotes. A quote mark inside the text is written twice,
+--   for example the two quote marks in "rider" followed by "s" in the Drivetrain description.
+--   A string with the letter E just before the opening quote is a PostgreSQL escape string:
+--   inside it, a backslash followed by n becomes a real line break. The Java code splits these
+--   texts on line breaks to show each point as its own list item.
+--
+-- How ON CONFLICT DO NOTHING works:
+--   When an inserted row would break a UNIQUE rule (here the unique name), PostgreSQL skips
+--   that row instead of failing. So rows that already exist are kept exactly as they are.
 
+-- ---------------------------------------------------------------
+-- Bicycle types (eight general types, two more are added further down)
+-- ---------------------------------------------------------------
 INSERT INTO bicycle_types (name, description, best_use, advantages, disadvantages) VALUES
 ('Road Bike',
  'Designed for efficient riding on paved roads. Road bikes are light, with drop handlebars, narrow tyres and a forward-leaning riding position that reduces wind resistance.',
@@ -94,6 +109,12 @@ ON CONFLICT (name) DO NOTHING;
 -- ---------------------------------------------------------------
 -- Components (sort_order keeps the IDs in a sensible display order)
 -- ---------------------------------------------------------------
+-- The INSERT ... SELECT ... FROM (VALUES ...) pattern:
+--   (VALUES ...) AS v(...) builds a small temporary table in memory, one row per component,
+--   and names its columns. Each row gives the system by NAME (for example Drivetrain).
+--   JOIN component_systems s ON s.name = v.system_name looks up the matching system_id,
+--   so no ID numbers have to be hard-coded. SELECT then picks the columns to insert.
+--   ORDER BY v.sort_order inserts the rows in the listed order.
 INSERT INTO components (system_id, name, description, purpose, operation)
 SELECT s.system_id, v.name, v.description, v.purpose, v.operation
 FROM (VALUES
@@ -169,6 +190,10 @@ ON CONFLICT (name) DO NOTHING;
 -- ---------------------------------------------------------------
 -- Common materials for each component
 -- ---------------------------------------------------------------
+-- Fills the many-to-many join table. Each pair is written as (component name, material name),
+-- and the two JOINs turn the names into component_id and material_id.
+-- ON CONFLICT DO NOTHING with no column list skips any pair that is already stored
+-- (the pair is the primary key of component_materials).
 INSERT INTO component_materials (component_id, material_id)
 SELECT c.component_id, m.material_id
 FROM (VALUES
@@ -196,6 +221,7 @@ ON CONFLICT DO NOTHING;
 -- ---------------------------------------------------------------
 -- Brands: five manufacturers with six bicycle models below (Canyon has two).
 -- Sources for every fact are listed in DATA-SOURCES.md.
+-- specialities holds one item per line, like the advantages above.
 -- ---------------------------------------------------------------
 INSERT INTO brands (name, country, description, website, specialities) VALUES
 ('Cervélo', 'Canada',
@@ -249,6 +275,11 @@ ON CONFLICT (name) DO NOTHING;
 -- Brand, type and material are looked up by name, so no ID numbers are hard-coded.
 -- Features, advantages and disadvantages store one item per line.
 -- ---------------------------------------------------------------
+-- This uses the same INSERT ... SELECT ... FROM (VALUES ...) JOIN pattern as the components.
+-- NULL::NUMERIC and NULL::INTEGER in the first row tell PostgreSQL the types of the weight_kg and
+-- gears columns. Every row has NULL there, so without the cast PostgreSQL would treat them as text.
+-- Brand and type are required, so they use a normal JOIN. The frame material is optional,
+-- so it uses a LEFT JOIN (explained just below).
 INSERT INTO bicycles (brand_id, type_id, frame_material_id, name, year, weight_kg,
                       wheel_size, brake_system, drivetrain, gears, description,
                       intended_use, features, advantages, disadvantages, source_url)
@@ -310,8 +341,11 @@ FROM (VALUES
 JOIN brands b ON b.name = v.brand_name
 JOIN bicycle_types t ON t.name = v.type_name
 -- LEFT JOIN: a model whose frame material is not confirmed keeps a NULL material
+-- (a normal JOIN would drop that row completely, because NULL never matches a material name)
 LEFT JOIN materials m ON m.name = v.material_name
 -- The unique key treats a NULL year as different every time, so check by brand and name as well
+-- WHERE NOT EXISTS (...) only keeps a row when no bicycle with the same brand and name is stored yet.
+-- Without it, the models with a NULL year would be added again on every start-up.
 WHERE NOT EXISTS (SELECT 1 FROM bicycles x WHERE x.brand_id = b.brand_id AND x.name = v.name)
 ORDER BY v.sort_order
 ON CONFLICT (brand_id, name, year) DO NOTHING;

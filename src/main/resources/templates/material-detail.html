@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The page title is the material name, passed into the shared head fragment as a ${...} expression. */-->
 <head th:replace="~{fragments/layout :: head(${material.name})}"></head>
 <body>
 
@@ -24,10 +25,8 @@
                     <span aria-hidden="true">&larr;</span> Back to all materials
                 </a>
             </div>
-            <figure class="placeholder-image page-hero-image">
-                <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                <figcaption>Placeholder image: photo to be added</figcaption>
-            </figure>
+            <figure th:replace="~{fragments/photos :: materialPhoto(${material.name},
+                '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager')}"></figure>
         </div>
     </section>
 
@@ -35,12 +34,14 @@
     <section class="section section-dark">
         <div class="container">
             <h2 class="section-title text-center">Advantages &amp; Disadvantages</h2>
+            <!--/* Text in quotes is a literal; + joins it with ${...} values to build one sentence. */-->
             <p class="section-subtitle text-center"
                th:text="'The main strengths and weaknesses of ' + ${material.name} + '.'">The main trade-offs.</p>
 
             <div class="pros-cons">
                 <div class="pros-cons-panel">
                     <h3>Advantages</h3>
+                    <!--/* advantageList comes from getAdvantageList(), which splits the stored text into one item per line; th:each makes one <li> per item. */-->
                     <ul class="pc-list pc-list-pro" th:if="${!material.advantageList.isEmpty()}">
                         <li th:each="item : ${material.advantageList}" th:text="${item}">Advantage</li>
                     </ul>

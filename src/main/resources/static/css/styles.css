@@ -6,7 +6,33 @@
    needs the shared classes to match the rest of the site.
    ========================================================= */
 
+/* Contents (in file order)
+   1.  Design tokens (colours, sizes, font) and base element styles
+   2.  Header, navigation, buttons and placeholder images
+   3.  Original homepage layout: hero, sections, card grids, anatomy, footer
+   4.  Responsive rules for the layout above
+   5.  Shared helpers and the Bicycle Types pages
+   6.  Components and Anatomy pages
+   7.  Bicycles list, bicycle detail, search and filters
+   8.  Compare Bicycles page
+   9.  Dark cinematic layer: later overrides for typography, focus, headers and cards
+   10. Homepage (cinematic hero, explore cards, promo band) and its responsive rules
+   11. Reduced motion and error pages
+   12. Photography: photos, photo credits and licensed photos
+   13. Component photo cards, brand and model details
+   14. Compare page extras: difference badges, highlighted rows, subgrid
+
+   The cascade: when two rules have the same specificity, the one that comes
+   later in the file wins. Later sections rely on this to restyle earlier ones,
+   so the order of the rules matters.
+
+   Breakpoints: max-width 1024px = tablet, max-width 720px = phone,
+   max-width 380px = very narrow phone, min-width 1025px = desktop only. */
+
 /* ---------- Design tokens ---------- */
+/* Custom properties (names starting with --) work like variables. They are set once
+   on :root (the <html> element), every element inherits them, and rules read them
+   with var(--name), e.g. color: var(--color-accent). Change a value here to change it everywhere. */
 :root {
     color-scheme: dark; /* native form controls and scrollbars follow the dark theme */
 
@@ -27,6 +53,7 @@
     --color-footer-text: #a1a1aa;
     --color-danger: #f87171;
 
+    /* Shared corner radius, card shadow, maximum page width and font list */
     --radius: 14px;
     --shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
     --container: 1232px;
@@ -34,6 +61,7 @@
 }
 
 /* ---------- Base ---------- */
+/* border-box: width and height include padding and border, so sizes are easier to predict */
 *,
 *::before,
 *::after {
@@ -48,6 +76,7 @@ body {
     line-height: 1.6;
 }
 
+/* Images never overflow their container; display: block removes the small gap under inline images */
 img {
     max-width: 100%;
     display: block;
@@ -66,6 +95,7 @@ a {
     color: inherit;
 }
 
+/* Centred page column: never wider than --container, with space at the sides */
 .container {
     max-width: var(--container);
     margin: 0 auto;
@@ -76,7 +106,9 @@ a {
     color: var(--color-accent);
 }
 
-/* Hidden visually but still read by screen readers */
+/* Hidden visually but still read by screen readers (an accessibility helper).
+   Unlike display: none, the text stays available to assistive technology:
+   it is shrunk to 1px, clipped and taken out of the layout with position: absolute. */
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -87,6 +119,7 @@ a {
 }
 
 /* ---------- Header and navigation ---------- */
+/* position: relative lets z-index work, so the header stays above the page content */
 .site-header {
     position: relative;
     z-index: 50;
@@ -94,6 +127,8 @@ a {
     border-bottom: 1px solid var(--color-border);
 }
 
+/* Flexbox lays the children out in a row: logo on the left, navigation on the right
+   (justify-content: space-between), both centred vertically (align-items: center) */
 .header-inner {
     display: flex;
     align-items: center;
@@ -149,6 +184,8 @@ a.nav-link:focus-visible {
     font-weight: 600;
 }
 
+/* ::after adds an empty decorative box. position: absolute places it relative to the
+   nearest positioned ancestor, here the .nav-link (position: relative) */
 .nav-link.is-active::after {
     content: "";
     position: absolute;
@@ -160,12 +197,6 @@ a.nav-link:focus-visible {
     background: var(--color-accent);
 }
 
-/* Sections that are not built yet: visibly inactive, never clickable */
-.is-pending {
-    opacity: 0.55;
-    cursor: not-allowed;
-}
-
 /* ---------- Buttons ---------- */
 .button-row {
     display: flex;
@@ -173,6 +204,7 @@ a.nav-link:focus-visible {
     gap: 16px;
 }
 
+/* inline-flex in a column stacks the label and an optional <small> line, centred */
 .btn {
     display: inline-flex;
     flex-direction: column;
@@ -222,12 +254,14 @@ a.nav-link:focus-visible {
         var(--color-surface-2);
 }
 
+/* object-fit: cover fills the frame and crops the edges instead of stretching the image */
 .placeholder-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Pinned to the bottom-left corner of the figure, which is position: relative */
 .placeholder-image figcaption {
     position: absolute;
     left: 12px;
@@ -245,6 +279,7 @@ a.nav-link:focus-visible {
     padding: 96px 0;
 }
 
+/* CSS grid: two equal columns (1fr = one share of the free space) with a 64px gap */
 .hero-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -252,6 +287,8 @@ a.nav-link:focus-visible {
     gap: 64px;
 }
 
+/* clamp(min, preferred, max): the size follows 5% of the screen width (5vw)
+   but never goes below 2.5rem or above 4rem */
 .hero h1 {
     font-size: clamp(2.5rem, 5vw, 4rem);
 }
@@ -266,11 +303,6 @@ a.nav-link:focus-visible {
     color: var(--color-muted);
     max-width: 34em;
     margin-bottom: 32px;
-}
-
-.hero-image {
-    aspect-ratio: 1 / 1;
-    box-shadow: var(--shadow);
 }
 
 /* ---------- Sections ---------- */
@@ -294,14 +326,6 @@ a.nav-link:focus-visible {
     margin-bottom: 40px;
 }
 
-.section-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 0 24px;
-}
-
 .eyebrow {
     font-size: 0.75rem;
     font-weight: 600;
@@ -311,22 +335,13 @@ a.nav-link:focus-visible {
     margin: 16px 0 4px;
 }
 
-.pending-link {
-    font-size: 0.9rem;
-    color: var(--color-accent);
-    opacity: 0.6;
-}
-
-.section-header-row .pending-link {
-    margin-bottom: 40px;
-}
-
 /* ---------- Card grids ---------- */
 .card-grid {
     display: grid;
     gap: 24px;
 }
 
+/* repeat(4, 1fr) = four equal columns; the media queries further down use fewer columns on small screens */
 .card-grid-4 {
     grid-template-columns: repeat(4, 1fr);
 }
@@ -353,25 +368,6 @@ a.nav-link:focus-visible {
     font-size: 0.95rem;
 }
 
-.card-icon {
-    width: 48px;
-    height: 48px;
-    display: grid;
-    place-items: center;
-    margin-bottom: 24px;
-    border-radius: 8px;
-    background: var(--color-accent-soft);
-}
-
-.card-icon svg {
-    width: 24px;
-    height: 24px;
-    fill: none;
-    stroke: var(--color-accent);
-    stroke-width: 2;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-}
 
 .type-card .placeholder-image {
     aspect-ratio: 9 / 8;
@@ -384,11 +380,6 @@ a.nav-link:focus-visible {
     margin-bottom: 8px;
 }
 
-.model-card .placeholder-image {
-    aspect-ratio: 1 / 1;
-    border: 32px solid var(--color-bg-light);
-}
-
 /* ---------- Anatomy section ---------- */
 .split-grid {
     display: grid;
@@ -398,7 +389,6 @@ a.nav-link:focus-visible {
 }
 
 .anatomy-image {
-    aspect-ratio: 1 / 1;
     box-shadow: var(--shadow);
 }
 
@@ -420,14 +410,6 @@ a.nav-link:focus-visible {
     color: var(--color-muted);
 }
 
-.system-dot {
-    flex: 0 0 40px;
-    height: 40px;
-    border-radius: 8px;
-    border: 1px solid var(--color-border);
-    background: var(--color-bg) radial-gradient(circle, var(--color-accent) 5px, transparent 6px);
-}
-
 /* ---------- Footer ---------- */
 .site-footer {
     background: var(--color-footer);
@@ -440,6 +422,7 @@ a.nav-link:focus-visible {
     margin-bottom: 16px;
 }
 
+/* 2fr 1fr 1fr: the first column is twice as wide as each of the other two */
 .footer-grid {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
@@ -496,6 +479,10 @@ a.nav-link:focus-visible {
 }
 
 /* ---------- Responsive layout ---------- */
+
+/* A media query applies the rules inside it only when its condition is true.
+   max-width: 1024px means "screen 1024px wide or less". These rules come after the
+   desktop rules above, so on small screens they win. */
 
 /* Tablet: two columns, header wraps onto two rows */
 @media (max-width: 1024px) {
@@ -617,19 +604,6 @@ a.nav-link:focus-visible {
     color: var(--color-accent);
 }
 
-/* A whole card that works as one link */
-.card-link {
-    display: block;
-    text-decoration: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
-}
-
-.card-link:hover,
-.card-link:focus-visible {
-    border-color: var(--color-accent);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
-}
-
 .btn-light {
     background: var(--color-bg-light);
     border-color: var(--color-border);
@@ -677,6 +651,7 @@ a.nav-link:focus-visible {
     color: var(--color-accent);
 }
 
+/* Attribute selector: matches the breadcrumb item marked aria-current="page" in the HTML */
 .breadcrumb [aria-current="page"] {
     color: var(--color-accent);
 }
@@ -710,6 +685,7 @@ a.nav-link:focus-visible {
     border-radius: 0;
 }
 
+/* flex: 1 makes the body take all the space left under the image */
 .type-tile-body {
     display: flex;
     flex-direction: column;
@@ -913,6 +889,7 @@ a.nav-link:focus-visible {
     border-radius: var(--radius);
 }
 
+/* SVG shapes use stroke (line colour and width) and fill instead of border and background */
 .anatomy-bike .frame {
     stroke: var(--color-text);
     stroke-width: 9;
@@ -990,10 +967,7 @@ a.nav-link:focus-visible {
 }
 
 /* ---------- System cards ---------- */
-.system-card {
-    scroll-margin-top: 24px;
-}
-
+/* :target matches the element whose id is in the address after #, so a linked card is highlighted */
 .system-card:target {
     border-color: var(--color-accent);
     box-shadow: 0 0 0 3px var(--color-accent-soft);
@@ -1005,6 +979,7 @@ a.nav-link:focus-visible {
     margin: 16px 0 0;
 }
 
+/* li + li: every item that follows another item, so there is space between items but not above the first */
 .part-list li + li {
     margin-top: 8px;
 }
@@ -1072,18 +1047,6 @@ a.nav-link:focus-visible {
 }
 
 /* ---------- Component detail ---------- */
-.photo {
-    margin: 0;
-    overflow: hidden;
-    border-radius: var(--radius);
-}
-
-.photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
 .info-columns {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -1290,6 +1253,7 @@ a.chip:focus-visible {
     margin: 0;
 }
 
+/* Each div holds one dt (label) and one dd (value), pushed to opposite sides by space-between */
 .spec-table div {
     display: flex;
     justify-content: space-between;
@@ -1319,13 +1283,6 @@ a.chip:focus-visible {
 }
 
 /* =========================================================
-   Navigation update: "View all" link beside a section title
-   ========================================================= */
-.section-header-link {
-    margin-bottom: 40px;
-}
-
-/* =========================================================
    Bicycle search (Bicycles list page)
    ========================================================= */
 .search-form {
@@ -1334,6 +1291,8 @@ a.chip:focus-visible {
 
 .search-row {
     max-width: 640px;
+    display: flex;
+    gap: 12px;
 }
 
 .search-form label {
@@ -1342,13 +1301,9 @@ a.chip:focus-visible {
     margin-bottom: 8px;
 }
 
-.search-row {
-    display: flex;
-    gap: 12px;
-}
-
 .search-row input {
     flex: 1;
+    /* min-width: 0 lets the input shrink inside the flex row instead of pushing the button out */
     min-width: 0;
     padding: 12px 16px;
     font: inherit;
@@ -1379,6 +1334,7 @@ a.chip:focus-visible {
 }
 
 /* ---------- Bicycle filters (same form as the search box) ---------- */
+/* Three equal columns for the dropdowns plus an "auto" column just wide enough for the buttons */
 .filter-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr) auto;
@@ -1422,6 +1378,7 @@ a.chip:focus-visible {
     }
 
     .filter-actions {
+        /* 1 / -1 = from the first to the last grid line, so the buttons get a whole row */
         grid-column: 1 / -1;
     }
 }
@@ -1468,6 +1425,7 @@ a.chip:focus-visible {
     margin-top: 0;
 }
 
+/* Needed: a later .eyebrow rule sets a muted colour, so this more specific rule keeps "Bicycle A/B" lime */
 .compare-cards .eyebrow-accent {
     color: var(--color-accent);
 }
@@ -1484,6 +1442,7 @@ a.chip:focus-visible {
 .compare-table {
     width: 100%;
     border-collapse: collapse;
+    /* Fixed layout: column widths come from the header row, not from the content */
     table-layout: fixed;
 }
 
@@ -1492,6 +1451,7 @@ a.chip:focus-visible {
     padding: 14px 20px;
     text-align: left;
     vertical-align: top;
+    /* Long words or links may break anywhere instead of widening the table */
     overflow-wrap: anywhere;
 }
 
@@ -1519,6 +1479,7 @@ a.chip:focus-visible {
     border-top: 1px solid var(--color-border);
 }
 
+/* Zebra stripes: every second row gets a slightly lighter background */
 .compare-table tbody tr:nth-child(even) {
     background: var(--color-bg-light);
 }
@@ -1556,6 +1517,10 @@ a.chip:focus-visible {
    homepage sections. Everything uses the tokens at the top.
    ========================================================= */
 
+/* Many rules below repeat selectors from earlier in the file (h1, .section-title, .btn,
+   .page-hero ...). This is intentional: with the same specificity the later rule wins,
+   so each one overrides only the properties it sets and keeps the rest of the earlier rule. */
+
 /* ---------- Typography ---------- */
 body {
     -webkit-font-smoothing: antialiased;
@@ -1579,12 +1544,15 @@ h1 {
     letter-spacing: 0.14em;
 }
 
+/* ::selection styles text that the user highlights */
 ::selection {
     background: var(--color-accent);
     color: var(--color-on-accent);
 }
 
 /* ---------- Keyboard focus: always visible, never removed ---------- */
+/* :focus-visible applies when the browser decides focus should be shown (mainly keyboard use),
+   so a mouse click does not leave an outline but tabbing always does */
 :focus-visible {
     outline: 2px solid var(--color-accent);
     outline-offset: 3px;
@@ -1609,11 +1577,14 @@ h1 {
     text-decoration: none;
 }
 
+/* The link waits above the screen (top: -60px) and slides into view when it gets keyboard focus */
 .skip-link:focus {
     top: 12px;
 }
 
 /* ---------- Header: sticky on larger screens ---------- */
+/* min-width: 1025px = desktop only (just above the 1024px tablet breakpoint).
+   position: sticky keeps the header at the top while scrolling; backdrop-filter blurs the page behind it */
 @media (min-width: 1025px) {
     .site-header {
         position: sticky;
@@ -1650,6 +1621,7 @@ h1 {
 
 /* Arrow used after text links */
 .arrow {
+    /* inline-block is needed because transform does not move plain inline elements */
     display: inline-block;
     transition: transform 0.2s;
 }
@@ -1663,6 +1635,7 @@ a:focus-visible .arrow {
 .page-hero {
     position: relative;
     padding: 72px 0 88px;
+    /* Two background layers: the first one listed is painted on top */
     background:
         radial-gradient(60% 80% at 85% 10%, rgba(200, 240, 49, 0.08), transparent 60%),
         linear-gradient(180deg, #0f0f11 0%, var(--color-bg) 100%);
@@ -1684,10 +1657,6 @@ a:focus-visible .arrow {
 }
 
 /* ---------- Sections and cards ---------- */
-.section-light {
-    background: var(--color-bg-light);
-}
-
 .card,
 .type-tile,
 .related-card,
@@ -1697,7 +1666,6 @@ a:focus-visible .arrow {
     border-color: var(--color-border);
 }
 
-.card-link,
 .type-tile,
 .related-card,
 .related-part {
@@ -1705,7 +1673,6 @@ a:focus-visible .arrow {
 }
 
 .type-tile:hover,
-.card-link:hover,
 .related-card:hover {
     border-color: var(--color-border-strong);
     transform: translateY(-3px);
@@ -1766,11 +1733,15 @@ a:focus-visible .arrow {
    ========================================================= */
 
 /* ---------- Cinematic hero ---------- */
+/* position: relative makes the hero the reference box for the absolutely positioned art and
+   ::before gradient inside it. isolation: isolate starts a new stacking context, so their
+   negative z-index values put them behind the text but still inside the hero. */
 .home-hero {
     position: relative;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    /* min() picks the smaller value: 88% of the screen height, but at most 820px */
     min-height: min(88vh, 820px);
     padding: 96px 0 0;
     overflow: hidden;
@@ -1784,6 +1755,8 @@ a:focus-visible .arrow {
 /* Large bicycle illustration on the right, fading into the dark */
 .home-hero-art {
     position: absolute;
+    /* inset is shorthand for top, right, bottom, left: the art covers the right part of the hero
+       and runs slightly past its right edge */
     inset: 0 -6% 0 40%;
     z-index: -2; /* behind the readability gradient below */
     margin: 0;
@@ -1848,6 +1821,7 @@ a:focus-visible .arrow {
 }
 
 .hero-quicklinks li {
+    /* flex: 1 1 0 = grow, shrink, start from zero width, so all links share the row equally */
     flex: 1 1 0;
 }
 
@@ -2059,6 +2033,7 @@ a:focus-visible .arrow {
     background: var(--color-border-strong);
 }
 
+/* :first-child and :nth-child(n) pick spans by position to make bars of different widths */
 .promo-visual span:first-child {
     margin-top: 0;
     width: 55%;
@@ -2096,6 +2071,7 @@ a:focus-visible .arrow {
         padding-top: 56px;
     }
 
+    /* On phones the art becomes a normal flex item again; order: 2 places it after the text */
     .home-hero-art {
         position: relative;
         inset: auto;
@@ -2137,6 +2113,9 @@ a:focus-visible .arrow {
 }
 
 /* ---------- Respect reduced-motion preferences ---------- */
+/* prefers-reduced-motion matches when the user has asked their operating system for less animation.
+   Transitions become almost instant and the hover "lift" effects are switched off.
+   !important makes these declarations beat the normal rules above. */
 @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -2148,7 +2127,6 @@ a:focus-visible .arrow {
 
     .btn:hover,
     .type-tile:hover,
-    .card-link:hover,
     .related-card:hover,
     .explore-card:hover,
     .explore-card:focus-visible {
@@ -2171,6 +2149,7 @@ a:focus-visible .arrow {
     font-weight: 900;
     line-height: 0.9;
     letter-spacing: -0.06em;
+    /* Transparent text with only an outline (text-stroke) */
     color: transparent;
     -webkit-text-stroke: 2px var(--color-border-strong);
 }
@@ -2205,6 +2184,7 @@ a:focus-visible .arrow {
 }
 
 /* Small credit pill: muted text on a dark backing for contrast */
+/* Pinned to the bottom-right corner of the .photo figure (position: relative) */
 .photo-credit {
     position: absolute;
     right: 10px;
@@ -2217,6 +2197,7 @@ a:focus-visible .arrow {
     background: rgba(10, 10, 11, 0.8);
     border: 1px solid var(--color-border);
     border-radius: 999px;
+    /* nowrap + overflow: hidden + ellipsis: a long credit is cut off with "..." instead of wrapping */
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -2235,17 +2216,14 @@ a:focus-visible .arrow {
     text-decoration-color: var(--color-accent);
 }
 
-/* Frames: 3:2 keeps the full bicycle visible in every landscape photo */
+/* Card photo frames (the 3:2 ratio itself is set on the image further down) */
 .type-tile .photo {
-    aspect-ratio: 3 / 2;
     border-radius: 0;
     border-bottom: 1px solid var(--color-border);
 }
 
 .type-card .photo {
-    aspect-ratio: 3 / 2;
     margin-bottom: 20px;
-    border: 1px solid var(--color-border);
 }
 
 .page-hero-image.photo {
@@ -2303,6 +2281,7 @@ a:focus-visible .arrow {
 }
 
 /* On small cards the credit sits under the photo, so it never covers the bicycle */
+/* The figure grows with its content and the image itself keeps the 3:2 ratio */
 .type-tile .photo,
 .type-card .photo {
     aspect-ratio: auto;
@@ -2318,16 +2297,10 @@ a:focus-visible .arrow {
 
 .type-card .photo img {
     border-radius: var(--radius);
-}
-
-.type-card .photo {
-    border: 0;
-}
-
-.type-card .photo img {
     border: 1px solid var(--color-border);
 }
 
+/* position: static puts the credit back into the normal flow, under the image */
 .type-tile .photo-credit,
 .type-card .photo-credit {
     position: static;
@@ -2360,9 +2333,18 @@ a:focus-visible .arrow {
 }
 
 /* Only cards that link to a component page react on hover */
+/* :has(.text-link) matches a .part-card only if it contains an element with the class text-link */
 .part-card:has(.text-link):hover {
     border-color: var(--color-border-strong);
     transform: translateY(-3px);
+}
+
+/* Reduced motion: keep the border highlight but switch off the lift. This sits here, after the
+   hover rule, because the main reduced-motion block above comes earlier in the file and would lose. */
+@media (prefers-reduced-motion: reduce) {
+    .part-card:has(.text-link):hover {
+        transform: none;
+    }
 }
 
 .part-card .photo,
@@ -2519,4 +2501,113 @@ a:focus-visible .arrow {
     margin-top: 32px;
     font-size: 0.8rem;
     color: var(--color-muted);
+}
+
+/* =================================================================
+   Compare page: photo cards, difference summary and highlighted rows
+   ================================================================= */
+.compare-card .type-tile-body h2 {
+    margin-bottom: 12px;
+}
+
+.compare-chips {
+    margin: 0 0 16px;
+}
+
+.compare-use {
+    color: var(--color-muted);
+    font-size: 0.92rem;
+    margin-bottom: 20px;
+}
+
+.compare-use strong {
+    color: var(--color-text);
+    font-weight: 600;
+}
+
+.compare-card .text-link {
+    margin-top: auto;
+}
+
+.compare-summary {
+    margin-bottom: 20px;
+    padding: 16px 20px;
+    border: 1px solid var(--color-border);
+    border-left: 4px solid var(--color-accent);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+}
+
+.compare-summary p {
+    margin: 0;
+}
+
+.compare-summary strong {
+    color: var(--color-accent);
+}
+
+.compare-summary .compare-legend {
+    margin-top: 8px;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+    line-height: 1.8;
+}
+
+/* "Differs" label: text, not colour alone, shows which rows are different */
+.diff-badge {
+    display: inline-block;
+    margin-left: 6px;
+    padding: 1px 8px;
+    border-radius: 999px;
+    background: var(--color-accent-soft);
+    border: 1px solid rgba(200, 240, 49, 0.45);
+    color: var(--color-accent);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    vertical-align: 1px;
+    white-space: nowrap;
+}
+
+.compare-table tbody tr.row-different th,
+.compare-table tbody tr.row-different td {
+    background: var(--color-accent-soft);
+}
+
+/* An inset box-shadow draws a 4px lime bar on the left edge without changing the cell width */
+.compare-table tbody tr.row-different th:first-child {
+    box-shadow: inset 4px 0 0 var(--color-accent);
+}
+
+.compare-table tbody td.value-missing,
+.compare-legend .value-missing {
+    color: var(--color-muted);
+    font-style: italic;
+    font-weight: 400;
+}
+
+@media (max-width: 720px) {
+    .compare-table .diff-badge {
+        display: block;
+        width: fit-content;
+        margin: 6px 0 0;
+    }
+}
+
+/* Line the two cards up: photo + credit in one row, text in the next, even when one
+   photo credit is longer than the other (subgrid; older browsers simply skip this) */
+/* @supports applies the rules inside only if the browser understands that property and value */
+@supports (grid-template-rows: subgrid) {
+    .compare-cards {
+        grid-template-rows: auto auto;
+    }
+
+    /* subgrid: the card reuses the two rows of .compare-cards, so both cards share the same row heights */
+    .compare-card {
+        display: grid;
+        grid-row: span 2;
+        grid-template-rows: subgrid;
+        row-gap: 0;
+    }
 }

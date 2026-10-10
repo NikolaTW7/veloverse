@@ -9,20 +9,28 @@ import org.springframework.transaction.annotation.Transactional;
 import com.veloverse.model.BicycleType;
 import com.veloverse.repository.BicycleTypeRepository;
 
+/**
+ * Application logic for bicycle types, used by BicycleTypeController and HomeController.
+ */
+// @Service: Spring creates one shared object of this class.
+// @Transactional(readOnly = true): each public method runs in a read-only database transaction.
 @Service
 @Transactional(readOnly = true)
 public class BicycleTypeService {
 
+    // Set once by the constructor (constructor injection) and never changed
     private final BicycleTypeRepository repository;
 
     public BicycleTypeService(BicycleTypeRepository repository) {
         this.repository = repository;
     }
 
+    /** All bicycle types in ID order. */
     public List<BicycleType> findAll() {
         return repository.findAllByOrderByIdAsc();
     }
 
+    /** One type, or an empty Optional if no type has this ID. */
     public Optional<BicycleType> findById(Integer id) {
         return repository.findById(id);
     }

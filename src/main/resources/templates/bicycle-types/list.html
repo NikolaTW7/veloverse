@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The shared <head>, header and footer come from fragments/layout.html via th:replace. */-->
 <head th:replace="~{fragments/layout :: head('Bicycle Types')}"></head>
 <body>
 
@@ -28,6 +29,7 @@
     <!-- All bicycle types from the database -->
     <section class="section section-light">
         <div class="container">
+            <!--/* th:if shows the cards only when there are types; th:each then repeats the <article> once per type. */-->
             <div class="card-grid card-grid-4" th:if="${!types.isEmpty()}">
                 <article class="type-tile" th:each="type : ${types}">
                     <figure th:replace="~{fragments/photos :: typePhoto(${type.name},
@@ -35,10 +37,12 @@
                     <div class="type-tile-body">
                         <h2 th:text="${type.name}">Road Bike</h2>
                         <p class="clamp-3" th:text="${type.description}">Description</p>
+                        <!--/* th:block groups the two paragraphs under one th:if and is not itself written into the HTML. */-->
                         <th:block th:if="${type.bestUse}">
                             <p class="eyebrow">Best for</p>
                             <p class="best-use" th:text="${type.bestUse}">Best use</p>
                         </th:block>
+                        <!--/* {id} is a path variable filled in from (id=...). The visually-hidden span is read only by screen readers. */-->
                         <a class="btn btn-light" th:href="@{/bicycle-types/{id}(id=${type.id})}">
                             Learn more<span class="visually-hidden" th:text="' about ' + ${type.name}"></span>
                         </a>

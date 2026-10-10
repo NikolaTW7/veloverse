@@ -11,10 +11,17 @@ import com.veloverse.model.ComponentSystem;
 import com.veloverse.repository.ComponentRepository;
 import com.veloverse.repository.ComponentSystemRepository;
 
+/**
+ * Application logic for component systems and components, used by ComponentController.
+ */
+// @Service: Spring creates one shared object of this class.
+// @Transactional(readOnly = true): each public method runs in a read-only database transaction,
+// so the lazy relationships requested with @EntityGraph are loaded before the page is rendered.
 @Service
 @Transactional(readOnly = true)
 public class ComponentService {
 
+    // Two repositories, both set once by the constructor (constructor injection)
     private final ComponentSystemRepository systemRepository;
     private final ComponentRepository componentRepository;
 

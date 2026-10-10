@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The page title is the component name, passed into the shared head fragment as a ${...} expression. */-->
 <head th:replace="~{fragments/layout :: head(${component.name})}"></head>
 <body>
 
 <header th:replace="~{fragments/layout :: header('components')}"></header>
 
+<!--/* th:with creates a local variable "system", so the page can write ${system.name} instead of ${component.system.name}. */-->
 <main id="main" th:with="system=${component.system}">
     <!-- Introduction -->
     <section class="page-hero">
@@ -22,6 +24,7 @@
                 </p>
                 <h1 th:text="${component.name}">Cassette</h1>
                 <p class="lead" th:text="${component.description}">Description</p>
+                <!--/* Links to the system card on the overview page; "#system-3" jumps to the element with id="system-3". */-->
                 <a class="text-link" th:href="@{'/components#system-' + ${system.id}}">
                     View all <span th:text="${system.name}">Drivetrain</span> components <span aria-hidden="true">&rarr;</span>
                 </a>
@@ -32,6 +35,7 @@
                 <figure th:replace="~{fragments/photos :: componentPhoto(${component.name},
                     '(max-width: 900px) 100vw, 600px', 'page-hero-image', 'eager')}"></figure>
             </th:block>
+            <!--/* Here @{${...}} turns the stored image path into a full URL that includes the context path. */-->
             <figure class="page-hero-image photo" th:if="${component.imageUrl != null}">
                 <img th:src="@{${component.imageUrl}}" th:alt="${component.name}">
             </figure>
@@ -60,10 +64,14 @@
                th:text="'Materials commonly used to make the ' + ${component.name} + '.'">Common materials.</p>
 
             <div class="card-grid card-grid-3" th:if="${!component.materials.isEmpty()}">
+                <!--/* One card per material linked to this component in the database. */-->
                 <article class="card" th:each="material : ${component.materials}">
                     <h3 th:text="${material.name}">Steel</h3>
                     <p th:text="${material.description}">Material description</p>
-                    <span class="pending-link">Material page coming soon</span>
+                    <!--/* Link to the material's own page; only shown when the material has an ID to link to. */-->
+                    <a class="text-link" th:if="${material.id != null}" th:href="@{/materials/{id}(id=${material.id})}">
+                        Learn more<span class="visually-hidden" th:text="' about ' + ${material.name}"></span>
+                        <span aria-hidden="true">&rarr;</span></a>
                 </article>
             </div>
             <p class="empty-state" th:if="${component.materials.isEmpty()}">No materials have been recorded for this component yet.</p>
@@ -91,6 +99,7 @@
                 <p th:text="${system.description}">System description</p>
                 <p class="eyebrow">System components</p>
                 <ul class="chip-list">
+                    <!--/* The current component is shown as plain text (marked with aria-current="page"); every other part becomes a link. th:if / th:unless choose between them. */-->
                     <li th:each="part : ${systemComponents}">
                         <span class="chip chip-current" th:if="${part.id == component.id}" th:text="${part.name}" aria-current="page">Cassette</span>
                         <a class="chip" th:unless="${part.id == component.id}"

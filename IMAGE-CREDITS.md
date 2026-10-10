@@ -1,6 +1,6 @@
 # VeloVerse image credits
 
-Last updated: 10 October 2026 (Wikimedia Commons photos added for the five brands and six models)
+Last updated: 10 October 2026 (sources confirmed for 16 component photos)
 
 ## Photographs used on the website
 
@@ -47,44 +47,88 @@ Notes:
   frame and the BMX stickers). The photos are used only to illustrate bicycle types, not
   to suggest any brand endorses VeloVerse.
 
-## Photos added without a confirmed source (ACTION NEEDED)
+## Component photos: sources confirmed (checked 10 October 2026)
+
+The project owner supplied the original page for most component photos. Each one was checked
+before being recorded here:
+
+- **Same photo:** the size of the original file in `C:\Bike Project\photo-originals\components\`
+  is exactly the same as the size listed for that photo on Unsplash or Wikimedia Commons, and a
+  small greyscale comparison of the two images matches clearly (no other local photo comes close).
+  The Bottom Bracket file is byte-for-byte identical to the Commons file (same SHA-1 checksum).
+- **Photographer and licence:** read from Unsplash and Wikimedia Commons on 10 October 2026. All
+  the Unsplash photos are free photos under the Unsplash License, not Unsplash+ photos.
+
+| Website file (`images/photos/`) | Where it appears | Original file | Size (px) | Photographer | Original photo page | Licence |
+|---|---|---|---|---|---|---|
+| `part-frame-640/1280.webp` | Frame (card and page) | `components/frame.jpg.jpg` | 2998 x 2001 | Dmitriy Frantsev | https://unsplash.com/photos/a-bicycle-frame-with-a-white-background-IDa19zyxbFw | Unsplash License (free; not an Unsplash+ photo) |
+| `part-fork-640/1280.webp` | Fork (card and page) | `components/Front-Fork.jpg.jpg` | 2001 x 2998 | Dmitriy Frantsev | https://unsplash.com/photos/a-close-up-of-a-bike-frame-on-a-white-background-LjCODDZzxWI | Unsplash License (free; not an Unsplash+ photo) |
+| `part-crankset-640/1280.webp` | Crankset (card and page) | `components/Pedals-Cranks.jpg.jpg` | 6000 x 4000 | CHUTTERSNAP | https://unsplash.com/photos/a-close-up-of-a-bike-chain-and-gear-rOI5t1D_zxE | Unsplash License (free; not an Unsplash+ photo) |
+| `part-chain-640/1280.webp` | Chain (card and page) | `components/chain.jpg.jpg` | 6000 x 4000 | CHUTTERSNAP | https://unsplash.com/photos/a-close-up-of-a-bike-chain-and-gear-R8KOPO2oawY | Unsplash License (free; not an Unsplash+ photo) |
+| `part-cassette-640/1280.webp` | Cassette (card and page) | `components/Cassette.jpg` | 3376 x 6000 | Acelane Bikes | https://unsplash.com/photos/close-up-of-a-bicycles-rear-derailleur-and-cassette-V7Tn2zrXN-A | Unsplash License (free; not an Unsplash+ photo) |
+| `part-rear-derailleur-640/1280.webp` | Rear Derailleur (card and page) | `components/RearDerailleur-Gears.jpg.jpg` | 4000 x 6000 | Shawn Rain | https://unsplash.com/photos/close-up-of-a-bicycles-rear-derailleur-eCX9CYjn70o | Unsplash License (free; not an Unsplash+ photo) |
+| `part-brake-lever-640/1280.webp` | Brake Lever (card and page) | `components/Brake-Levers.jpg` | 6000 x 4000 | Shawn Rain | https://unsplash.com/photos/close-up-of-bicycle-handlebars-with-brake-levers-W4chIQ2ap2E | Unsplash License (free; not an Unsplash+ photo) |
+| `part-brake-rotor-640/1280.webp` | Brake Rotor (card and page) | `components/DiscBrakes.jpg.jpg` | 6048 x 4024 | Jan Kopřiva | https://unsplash.com/photos/a-close-up-of-the-front-brake-of-a-bike-OJrlFZ45iRQ | Unsplash License (free; not an Unsplash+ photo) |
+| `part-rim-640/1280.webp` | Rim (card and page) | `components/Wheel-spokes.jpg.jpg` | 7035 x 4690 | Ricardo IV Tamayo | https://unsplash.com/photos/a-close-up-of-the-spokes-of-a-bicycle-PJtAqmfXh5o | Unsplash License (free; not an Unsplash+ photo) |
+| `part-hub-and-spokes-640/1280.webp` | Hub & Spokes (card and page) | `components/Wheel Hub.jpg.jpg` | 3376 x 4726 | streetsh | https://unsplash.com/photos/a-close-up-of-the-spokes-of-a-bicycle-Gsoh-39BtOA | Unsplash License (free; not an Unsplash+ photo) |
+| `part-tyre-640/1280.webp` | Tyre (card and page) | `components/Tyres-Tread.jpg` | 6628 x 4419 | Greg Rosenke | https://unsplash.com/photos/a-close-up-of-a-bike-tire-on-a-rock-xMyqvj8EgQo | Unsplash License (free; not an Unsplash+ photo) |
+| `part-handlebar-640/1280.webp` | Handlebar (card and page) | `components/Handlebars.jpg.jpg` | 5472 x 3648 | Niklas Veenhuis | https://unsplash.com/photos/black-and-white-bicycle-handle-bar-N9Uwei-A4lo | Unsplash License (free; not an Unsplash+ photo) |
+| `part-saddle-640/1280.webp` | Saddle (card and page) | `components/Saddle.jpg.jpg` | 3500 x 2413 | Vidar Nordli-Mathisen | https://unsplash.com/photos/black-bicycle-saddle-yU9ncCHpjug | Unsplash License (free; not an Unsplash+ photo) |
+| `part-chainrings-640/1280.webp` | Components page, "Other parts you might spot" | `components/Chainring.jpg.jpg` | 5472 x 3648 | Danilo Lessa Bernardineli | https://unsplash.com/photos/a-close-up-of-a-bike-chain-and-gear-iWZOYd06ubs | Unsplash License (free; not an Unsplash+ photo) |
+| `part-rear-shock-640/1280.webp` | Components page, "Other parts you might spot" | `components/Suspension-Shock.jpg.jpg` | 3456 x 5184 | Maxim Yuryshev | https://unsplash.com/photos/a-close-up-of-a-bikes-front-brake-on2VEpE1N54 | Unsplash License (free; not an Unsplash+ photo) |
+| `part-bottom-bracket-640/1280.webp` | Components page, "Other parts you might spot" | `components/Bottom-Bracket.jpg` | 993 x 660 | B. Conolly (source: www.bootiebike.com) | https://commons.wikimedia.org/wiki/File:Micro_bicycle_bottom_bracket_Bootiebike_com_1000.jpg | CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/) |
+
+Notes on these photos:
+
+- **Unsplash License:** free to use, including commercially, and attribution is not required
+  (but appreciated). These photos currently show no credit on the website. Adding the
+  photographer's name under each one would match how the other Unsplash photos are credited.
+- **Bottom Bracket (ACTION NEEDED):** CC BY-SA 3.0 *requires* a visible credit wherever the photo
+  is shown: the author (B. Conolly), a link to the Commons page, a link to the licence, and a note
+  of the changes. The website does not show this credit yet, so the photo does not meet its
+  licence until the credit is added (for example with the existing `licensedPhotoSized`
+  fragment). Changes made by VeloVerse: cropped very slightly to 3:2 (990 x 660, used as the large
+  file), a smaller 640 px copy made, and both converted to WebP. As with the other CC BY-SA photos, the adapted WebP files must be shared
+  under the same licence (CC BY-SA 3.0).
+- **Rear Shock:** the Unsplash title says "front brake", but the photo itself shows the rear shock
+  of a full-suspension bike, which is how VeloVerse uses it.
+
+## Photos still without a confirmed source (ACTION NEEDED)
 
 These photos were supplied by the project owner in `C:\Bike Project\photo-originals\` (the
 Bicycle Types header in the main folder, the rest in `components\`). The files contain no
-author, copyright or source information, and no source or licence notes were supplied with them.
+author, copyright or source information, and no source has been confirmed for them yet.
 
 **Their photographer, original page and licence are therefore unknown.** No credit is shown on the
 website for them, because inventing one would be wrong. Before the site is published, record
-each photo's original page and licence here. Replace or remove any photo whose licence does not
-allow use on this website.
+each photo's original page and licence here, or replace the photo.
 
 | Website file (`images/photos/`) | Where it appears | Original file | Source / licence |
 |---|---|---|---|
 | `header-bicycle-types-640/1280.webp` | Bicycle Types page header | `bicycle-types-header.jpg.jpg` | Unknown: needs confirming |
-| `part-frame-640/1280.webp` | Frame (card and page) | `components/frame.jpg.jpg` | Unknown: plain product photo on white, may come from a manufacturer site |
-| `part-fork-640/1280.webp` | Fork | `components/Front-Fork.jpg.jpg` | Unknown: plain product photo on white, may come from a manufacturer site |
-| `part-crankset-640/1280.webp` | Crankset | `components/Pedals-Cranks.jpg.jpg` | Unknown |
-| `part-chain-640/1280.webp` | Chain | `components/chain.jpg.jpg` | Unknown |
-| `part-cassette-640/1280.webp` | Cassette | `components/Cassette.jpg` | Unknown. Possible match, not verified: an Unsplash photo by the manufacturer account Acelane Bikes of the same size (3376 x 6000), https://unsplash.com/photos/Ed6l2qZQpF4 or https://unsplash.com/photos/M0P02aimQBA |
-| `part-rear-derailleur-640/1280.webp` | Rear Derailleur | `components/RearDerailleur-Gears.jpg.jpg` | Unknown |
-| `part-brake-lever-640/1280.webp` | Brake Lever | `components/Brake-Levers.jpg` | Unknown |
-| `part-brake-rotor-640/1280.webp` | Brake Rotor | `components/DiscBrakes.jpg.jpg` | Unknown |
-| `part-rim-640/1280.webp` | Rim | `components/Wheel-spokes.jpg.jpg` | Unknown |
-| `part-hub-and-spokes-640/1280.webp` | Hub & Spokes | `components/Wheel Hub.jpg.jpg` | Unknown |
-| `part-tyre-640/1280.webp` | Tyre | `components/Tyres-Tread.jpg` | Unknown |
-| `part-handlebar-640/1280.webp` | Handlebar | `components/Handlebars.jpg.jpg` | Unknown |
-| `part-saddle-640/1280.webp` | Saddle | `components/Saddle.jpg.jpg` | Unknown |
-| `part-bottom-bracket-640/1280.webp` | Components page, "Other parts you might spot" | `components/Bottom-Bracket.jpg` | Unknown. The original is only 993 x 660, so the large file is 990 px wide (not enlarged) |
-| `part-chainrings-640/1280.webp` | Components page, "Other parts you might spot" | `components/Chainring.jpg.jpg` | Unknown |
-| `part-rear-shock-640/1280.webp` | Components page, "Other parts you might spot" | `components/Suspension-Shock.jpg.jpg` | Unknown. Possible match, not verified: Unsplash photo by Maxim Yuryshev of the same size (3456 x 5184), https://unsplash.com/photos/on2VEpE1N54 |
+| `part-brake-caliper-640/1280.webp` | Brake Caliper (card and page) | `components/Brake-Caliper.jpg.jpg` | Unknown (added 10 October 2026). Shows a mechanical disc caliper; the fork text "TRACK" is visible |
+| `part-stem-640/1280.webp` | Stem (card and page) | `components/Stem.jpg.jpg` | Unknown (added 10 October 2026). A Shimano Di2 junction box is visible under the stem |
+| `part-seatpost-640/1280.webp` | Seatpost (card and page) | `components/Seatpost.jpg.jpg` | Unknown (added 10 October 2026). Shows a Thomson Elite seatpost and the hands of a person adjusting it (no face) |
+
+A link supplied for "Gear Shifters"
+(https://commons.wikimedia.org/wiki/File:13-04-23-reiserad-RalfR-04.jpg, Ralf Roletschek, Free Art
+License) shows a twist-grip gear shifter on a cork handlebar grip. It does not match any photo in
+the project: VeloVerse has no gear shifter photo. It happens to have the same pixel size as
+`Brake-Caliper.jpg.jpg` (4288 x 2848, a common camera size), but the pictures are different, so
+it is **not** the source of the Brake Caliper photo.
 
 Not used:
 
-- **`components/headset.jpg.jpg`**: not used. Its embedded content credentials say "Created by
-  Google Generative AI" (digital source type: trained algorithmic media). VeloVerse does not use
+- **`components/headset.jpg.jpg`**: not used. The project owner confirmed it was generated with
+  Google Gemini, and its embedded content credentials say "Created by Google Generative AI" (digital source type: trained algorithmic media). VeloVerse does not use
   AI-generated images. It is also a labelled exploded diagram rather than a photograph.
 
-How the photos were prepared: each was cropped to 3:2 around the component (the portrait
+The three photos added on 10 October 2026 were checked for embedded AI or content-credential
+markers (none found). Their only embedded copyright text is the standard Hewlett-Packard colour
+profile notice, which says nothing about the photographer.
+
+How the photos were prepared: each was cropped to 3:2 around the component (the portrait stem
+and seatpost photos keep the stem and the seatpost clamp in the frame) (the portrait
 cassette, rear derailleur, hub and rear shock photos keep the part in the centre; the fork photo
 was trimmed to the fork and padded with white rather than cropped) and saved as WebP at 640 px
 and 1280 px wide. The originals were not changed.
@@ -93,6 +137,27 @@ Brand names visible on some parts (for example Shimano on the cassette, rear der
 chainrings, L-TWOO on the brake lever, Retrospec on the crankset and the tyre model name) are part
 of the real components and are shown only to illustrate how each part looks.
 
+## Material photos (added 10 October 2026)
+
+The five material photos are shown on the Materials cards and on each material's page. Originals
+are kept unchanged in `C:\Bike Project\photo-originals\Materials\`. Each was cropped to 3:2 and
+saved as WebP at 640 px and up to 1280 px wide (never enlarged: the Aluminium and Titanium
+originals are smaller, so their large files are 1059 and 1206 px wide). The Steel and Rubber
+photos are the new replacements supplied on 10 October 2026.
+
+| Material | WebP files | Original file | Source page | Author | Licence | Changes |
+|---|---|---|---|---|---|---|
+| Aluminium | `material-aluminium-640/1280.webp` | `Aluminium.jpg` | https://commons.wikimedia.org/wiki/File:Aluminium-4.jpg (linked from the Wikipedia "Aluminium" article) | Unknown author; Commons gives the source as http://images-of-elements.com/aluminium.php | CC BY 3.0 (https://creativecommons.org/licenses/by/3.0/) | Plain background extended at both sides to reach 3:2 (nothing cropped from the metal), resized. The file matches the Commons original exactly (same SHA-1) |
+| Carbon Fibre | `material-carbon-fibre-640/1280.webp` | `carbon_fiber.jpg` | https://commons.wikimedia.org/wiki/File:Woven_carbon_fiber_fabric.jpg | Acheolg (own work, 20 May 2026) | CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/) | Cropped to 3:2, resized. **Adapted version licensed under CC BY-SA 4.0.** Note: the downloaded file is a 1280 px Wikipedia copy and its embedded camera data names the artist as "chan", not "Acheolg"; Commons credits Acheolg, so that name is used |
+| Steel | `material-steel-640/1280.webp` | `Steel.jpg.jpg` | https://unsplash.com/photos/a-large-stack-of-pipes-stacked-on-top-of-each-other-F4nEetWGt0A | engin akyurt (https://unsplash.com/@enginakyurt) | Unsplash License (free) | Cropped to 3:2, resized |
+| Titanium | `material-titanium-640/1280.webp` | `Titanium.jpg` | https://commons.wikimedia.org/wiki/File:Titan-crystal_bar.JPG | Alchemist-hp (pse-mendelejew.de), own work | CC BY-SA 3.0 (https://creativecommons.org/licenses/by-sa/3.0/) | The downloaded file is the 1280 px Wikipedia copy of the original; cropped to 3:2, resized. **Adapted version licensed under CC BY-SA 3.0** |
+| Rubber | `material-rubber-640/1280.webp` | `Rubber.jpg.jpg` | https://www.pexels.com/photo/close-up-of-a-stack-of-used-tires-16945365/ | Tokuo Nobuhiro | Pexels License (free) | Portrait photo cropped to a 3:2 landscape section of the tyre pile, resized |
+
+On the website, the three Wikimedia Commons photos show the author (linked to the Commons page),
+the licence (linked to the licence text) and the changes made, under the photo
+(`materialPhoto` and `licensedPhotoSized` in `templates/fragments/photos.html`). The Unsplash and
+Pexels photos show the photographer's name linked to the photo page.
+
 ## Images that are not photographs
 
 These are original vector drawings written as SVG code inside this project. They were not
@@ -100,7 +165,7 @@ produced by an image-generation model and show no brands, logos or people.
 
 | File | Where it appears | Licence |
 |---|---|---|
-| `src/main/resources/static/images/placeholder-bike.svg` | Placeholders for materials, the Brake Caliper, Stem and Seatpost components, and any future brand or model without a photo | Original to the VeloVerse project |
+| `src/main/resources/static/images/placeholder-bike.svg` | Placeholder for any future brand, model, component or material without a photo (no page currently shows it) | Original to the VeloVerse project |
 | `src/main/resources/static/images/bike-hero.svg` | No longer shown (replaced by the hero photo); kept in the project | Original to the VeloVerse project |
 | Inline SVG logo in `templates/fragments/layout.html` | Site logo | Original to the VeloVerse project |
 
@@ -163,7 +228,7 @@ What these licences require, and how VeloVerse meets it:
   Free to use, including commercially. Attribution not required (appreciated). Not allowed:
   implying that people or brands shown endorse the site, using a photo as part of a trademark,
   selling unaltered copies, or redistributing photos on other stock or wallpaper platforms.
-- **Creative Commons** (Wikimedia Commons photos): see the section above.
+- **Creative Commons** (Wikimedia Commons photos): see the brand/model and material sections above.
 - **Magnific free licence** (formerly Freepik): https://www.magnific.com/legal/terms-of-use
   Free content may be used by free users only with attribution to the website. Content showing
   logos or recognisable products is for editorial use only and must not be connected with any

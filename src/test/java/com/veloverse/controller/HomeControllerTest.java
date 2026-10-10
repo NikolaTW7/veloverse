@@ -1,5 +1,8 @@
 package com.veloverse.controller;
 
+// Static imports let the tests call these methods without their class name:
+// containsString / not (Hamcrest) check the page text, when (Mockito) sets what a mock returns,
+// get builds a fake GET request, and status / view / content check the response.
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
@@ -27,25 +30,34 @@ import com.veloverse.service.BicycleTypeService;
 /**
  * Web-layer test for the Home page.
  * @WebMvcTest loads only the MVC and Thymeleaf parts; the service is mocked, so no database is needed.
+ * Each test follows arrange (tell the mocks what to return), act (send a fake request with MockMvc)
+ * and assert (check the status, the template name and the rendered HTML).
  */
 @WebMvcTest(HomeController.class)
 class HomeControllerTest {
 
+    // MockMvc sends fake HTTP requests to the controller without starting a real web server.
+    // @Autowired asks Spring to put its MockMvc object into this field.
     @Autowired
     private MockMvc mockMvc;
 
+    // @MockitoBean: Spring uses a Mockito mock in place of the real service, so HomeController gets the fake.
+    // A mock that was not told what to return gives an empty list for methods that return a List.
     @MockitoBean
     private BicycleTypeService bicycleTypeService;
 
     @MockitoBean
     private BicycleService bicycleService;
 
+    // "throws Exception" is needed because mockMvc.perform(...) can throw a checked exception
     @Test
     void homePageReturnsOkAndRendersHomeTemplate() throws Exception {
+        // Entities have no setters, so ReflectionTestUtils.setField writes the private id field directly
         BicycleType road = new BicycleType("Road Bike", "Fast on paved roads.", "Road cycling", "", "");
         ReflectionTestUtils.setField(road, "id", 1);
         when(bicycleTypeService.findAll()).thenReturn(List.of(road));
 
+        // Act and assert: request the home page, then expect HTTP 200 and the home.html template
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("home"))

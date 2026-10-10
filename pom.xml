@@ -1,16 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<!-- Maven build file: it lists the libraries VeloVerse needs and how to build and run it. -->
 	<modelVersion>4.0.0</modelVersion>
+	<!-- The Spring Boot parent supplies matching versions for all Spring Boot libraries and
+	     sensible build defaults, so the dependencies below need no version numbers. -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>4.1.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
+	<!-- The coordinates of this project: group, name and version.
+	     SNAPSHOT means a work-in-progress version that has not been released. -->
 	<groupId>com.veloverse</groupId>
 	<artifactId>veloverse</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<!-- Empty project information tags created by Spring Initializr (they can be filled in later). -->
 	<name/>
 	<description/>
 	<url/>
@@ -26,32 +32,41 @@
 		<tag/>
 		<url/>
 	</scm>
+	<!-- The Java version used to compile the code. -->
 	<properties>
 		<java.version>21</java.version>
 	</properties>
+	<!-- Libraries used by the application. -->
 	<dependencies>
+		<!-- Spring Data JPA and Hibernate: map Java classes to database tables and provide repositories. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa</artifactId>
 		</dependency>
+		<!-- Thymeleaf: builds the HTML pages from the templates folder. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-thymeleaf</artifactId>
 		</dependency>
+		<!-- Bean Validation: lets code check values with annotations such as @NotBlank (not used in the code yet). -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
+		<!-- Spring Web MVC: controllers, request mapping and the embedded web server. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<!-- PostgreSQL JDBC driver. Scope runtime: it is needed to run the app, not to compile it. -->
 		<dependency>
 			<groupId>org.postgresql</groupId>
 			<artifactId>postgresql</artifactId>
 			<scope>runtime</scope>
 		</dependency>
+		<!-- Test libraries (scope test: used only by the tests, not packed into the app).
+		     Each one adds testing support (JUnit, Mockito, Spring test helpers) for the matching starter above. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jpa-test</artifactId>
@@ -76,6 +91,7 @@
 
 	<build>
 		<plugins>
+			<!-- Spring Boot Maven plugin: runs the app (mvnw spring-boot:run) and packages it as one runnable jar. -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

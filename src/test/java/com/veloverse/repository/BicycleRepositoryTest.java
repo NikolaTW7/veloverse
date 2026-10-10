@@ -1,5 +1,6 @@
 package com.veloverse.repository;
 
+// Static import: lets the tests write assertThat(...) (from AssertJ) instead of Assertions.assertThat(...)
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -20,16 +21,20 @@ import com.veloverse.service.BicycleService;
  * Like the other database tests, this needs DB_PASSWORD to be set. It runs against the separate
  * veloverse_test database (see src/test/resources/config/application.properties), which is
  * rebuilt from schema.sql and data.sql for every test run, so no update script is needed.
+ * This is an integration test: @SpringBootTest starts the whole application, so the real repository
+ * runs real SQL. Nothing is mocked, so the expected values below come from data.sql.
  */
 @SpringBootTest
 class BicycleRepositoryTest {
 
+    // @Autowired: Spring puts its real repository and service objects into these fields before the tests run
     @Autowired
     private BicycleRepository repository;
 
     @Autowired
     private BicycleService service;
 
+    /** Picks the bicycle with this model name from a list, or throws (failing the test) if it is not there. */
     private Bicycle find(List<Bicycle> bicycles, String name) {
         return bicycles.stream()
                 .filter(bicycle -> bicycle.getName().equals(name))
@@ -39,8 +44,10 @@ class BicycleRepositoryTest {
 
     @Test
     void exactlySixBicyclesAreLoadedInOrder() {
+        // Act: read every bicycle from the database
         List<Bicycle> bicycles = repository.findAllByOrderByIdAsc();
 
+        // Assert: extracting(...) turns the list of bicycles into a list of names (or IDs) to compare
         assertThat(bicycles).extracting(Bicycle::getName)
                 .containsExactly("S5", "Folding Bicycle", "V3-RS", "Avant", "Speedmax CFR",
                         "Endurace WMN CF SL Disc 8.0 Di2");
@@ -86,6 +93,7 @@ class BicycleRepositoryTest {
         assertThat(bicycles).allSatisfy(bike -> assertThat(bike.getWeightKg()).isNull());
     }
 
+    // allSatisfy runs the checks inside the lambda for every bicycle in the list
     @Test
     void everyModelHasEducationalDetailsAndASource() {
         assertThat(repository.findAllByOrderByIdAsc()).allSatisfy(bike -> {
@@ -98,6 +106,7 @@ class BicycleRepositoryTest {
         });
     }
 
+    // The ID is looked up first because IDs come from the database and are not hard-coded; -1 is never a real ID
     @Test
     void findWithDetailsByIdLoadsOneBicycleOrNothing() {
         Bicycle avant = find(repository.findAllByOrderByIdAsc(), "Avant");
@@ -122,6 +131,7 @@ class BicycleRepositoryTest {
         assertThat(repository.findByBrandIdOrderByIdAsc(-1)).isEmpty();
     }
 
+    // Same search rules as BicycleServiceTest, but on the real data: accents and case are ignored
     @Test
     void searchWorksWithTheRealData() {
         assertThat(service.search("cervelo")).extracting(Bicycle::getName).containsExactly("S5");
@@ -133,6 +143,7 @@ class BicycleRepositoryTest {
                 .containsExactly("S5", "V3-RS", "Avant", "Endurace WMN CF SL Disc 8.0 Di2");
     }
 
+    // The filter dropdowns list only types, brands and materials that at least one bicycle uses
     @Test
     void filterOptionsOnlyIncludeValuesUsedByBicycles() {
         assertThat(repository.findTypesInUse()).extracting(BicycleType::getName)
@@ -146,6 +157,7 @@ class BicycleRepositoryTest {
 
     @Test
     void materialFilterSkipsBicyclesWithoutAConfirmedFrameMaterial() {
+        // Carbon Fibre is the only material in use (checked in the test above), so it is the first item
         Material carbon = repository.findFrameMaterialsInUse().get(0);
 
         assertThat(service.search(null, null, null, carbon.getId())).extracting(Bicycle::getName)

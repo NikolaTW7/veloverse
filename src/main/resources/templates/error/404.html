@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <!-- Spring Boot shows this page automatically for any "not found" response -->
+<!--/* Spring Boot picks error/<status code>.html by name, so this file is used for 404 errors instead of the general error.html. */-->
 <head th:replace="~{fragments/layout :: head('Page Not Found')}"></head>
 <body>
 
@@ -8,6 +9,7 @@
 
 <main id="main" class="section error-page">
     <div class="container narrow text-center">
+        <!--/* The big "404" is decorative, so aria-hidden hides it from screen readers; the heading below says the same in words. */-->
         <p class="error-code" aria-hidden="true">404</p>
         <p class="eyebrow eyebrow-accent">Error 404</p>
         <h1 class="section-title">Page not found</h1>

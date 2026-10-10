@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The shared <head>, header and footer come from fragments/layout.html via th:replace. */-->
 <head th:replace="~{fragments/layout :: head('Components & Anatomy')}"></head>
 <body>
 
@@ -27,6 +28,7 @@
                 <h2 class="section-title text-center">Bicycle Anatomy</h2>
                 <p class="section-subtitle text-center">Explore the main parts of a bicycle. Click any labelled component
                     to learn what it does and how it works.</p>
+                <!--/* The diagram is an inline SVG drawing. role="img" and aria-labelledby give screen readers a short text description from its <title>. */-->
                 <p class="anatomy-hint">Scroll sideways to see the whole diagram.</p>
                 <div class="anatomy-scroll">
                     <svg class="anatomy-svg" viewBox="0 0 900 520" role="img" aria-labelledby="anatomy-title">
@@ -58,7 +60,10 @@
             <!-- Brake caliper -->
             <rect class="part filled" x="612" y="300" width="22" height="16" rx="3" transform="rotate(-45 623 308)"/>
         </g>
+        <!--/* Clickable labels: each group draws a pointer line, a dot and a rounded box with the part name. */-->
         <g class="anatomy-labels">
+            <!--/* componentIds is a map from component name to id (built in ComponentController). th:with stores this part's id in partId. */-->
+            <!--/* If the part is missing from the database, partId is null, the ternary gives null and Thymeleaf leaves out the href, so the label is simply not a link. */-->
             <g class="anatomy-label" th:with="partId=${componentIds['Saddle']}">
                 <line x1="372" y1="131" x2="365" y2="75"/><circle cx="372" cy="131" r="5"/>
                 <a th:href="${partId != null} ? @{/components/{id}(id=${partId})}">
@@ -171,6 +176,7 @@
                 to learn what it does and how it works.</p>
 
             <div class="card-grid card-grid-4">
+                <!--/* Two nested loops: the outer th:each goes through each system, the inner one through the components of that system. */-->
                 <th:block th:each="system : ${systems}">
                     <article class="part-card" th:each="part : ${system.components}">
                         <figure th:replace="~{fragments/photos :: componentPhoto(${part.name},
@@ -187,6 +193,7 @@
                 </th:block>
             </div>
 
+            <!--/* Extra parts that are not in the database, so their text is written directly in the template. */-->
             <h3 class="parts-extra-title">Other parts you might spot</h3>
             <div class="card-grid card-grid-3">
                 <article class="part-card">
@@ -234,6 +241,7 @@
             <p class="section-subtitle">Bicycle parts grouped by the job they do together.</p>
 
             <div class="card-grid card-grid-3" th:if="${!systems.isEmpty()}">
+                <!--/* th:id gives each card an id such as "system-3", so links ending in #system-3 (from the component pages) jump straight to it. */-->
                 <article class="card system-card" th:each="system : ${systems}" th:id="'system-' + ${system.id}">
                     <h3 th:text="${system.name}">Drivetrain</h3>
                     <p th:text="${system.description}">Description</p>

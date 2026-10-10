@@ -1,5 +1,6 @@
 package com.veloverse.repository;
 
+// Static import: lets the tests write assertThat(...) (from AssertJ) instead of Assertions.assertThat(...)
 import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.List;
@@ -17,10 +18,13 @@ import com.veloverse.service.ComponentService;
  * Checks against the real PostgreSQL database that the component tables were created and filled,
  * and that the relationships (system -> components, component <-> materials) are mapped correctly.
  * Like the other database tests, this needs DB_PASSWORD to be set. It only reads data.
+ * @SpringBootTest starts the whole application against the separate veloverse_test database
+ * (see src/test/resources/config/application.properties), so nothing is mocked here.
  */
 @SpringBootTest
 class ComponentRepositoryTest {
 
+    // @Autowired: Spring puts its real service and repository objects into these fields before the tests run
     @Autowired
     private ComponentService componentService;
 
@@ -43,6 +47,8 @@ class ComponentRepositoryTest {
                 .contains("Crankset", "Chain", "Cassette", "Rear Derailleur");
     }
 
+    // Arrange: find the Cassette ID first (IDs are not hard-coded). Act: load it through the service.
+    // Assert: its system, texts and materials (from the component_materials link table) are loaded.
     @Test
     void componentDetailsIncludeSystemAndMaterials() {
         Component cassette = componentRepository.findAll().stream()
@@ -59,6 +65,7 @@ class ComponentRepositoryTest {
                 .contains("Steel", "Aluminium");
     }
 
+    // findSystemComponents returns every component in the same system, including the one passed in
     @Test
     void systemComponentsIncludeTheComponentItself() {
         Component chain = componentRepository.findAll().stream()

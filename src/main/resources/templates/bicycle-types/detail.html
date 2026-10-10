@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The page title is the type name, passed into the shared head fragment as a ${...} expression. */-->
 <head th:replace="~{fragments/layout :: head(${type.name})}"></head>
 <body>
 
@@ -21,6 +22,7 @@
                 <h1 th:text="${type.name}">Road Bike</h1>
                 <p class="lead" th:text="${type.description}">Description</p>
 
+                <!--/* Shown only when bestUse is not null. */-->
                 <div class="info-chip" th:if="${type.bestUse}">
                     <span class="eyebrow">Typical use</span>
                     <strong th:text="${type.bestUse}">Best use</strong>
@@ -42,6 +44,7 @@
             <div class="pros-cons">
                 <div class="pros-cons-panel">
                     <h3>Advantages</h3>
+                    <!--/* advantageList comes from getAdvantageList(), which splits the stored text into one item per line; th:each makes one <li> per item. */-->
                     <ul class="pc-list pc-list-pro" th:if="${!type.advantageList.isEmpty()}">
                         <li th:each="item : ${type.advantageList}" th:text="${item}">Advantage</li>
                     </ul>
@@ -58,7 +61,7 @@
         </div>
     </section>
 
-    <!-- Example models: filled in once the bicycles table is built -->
+    <!-- Example models: not yet linked to the bicycles table, so this section always shows the message below -->
     <section class="section">
         <div class="container">
             <h2 class="section-title" th:text="'Example ' + ${type.name} + ' Models'">Example Models</h2>
@@ -75,6 +78,7 @@
                 <p class="section-subtitle">Compare with other bicycle categories.</p>
             </div>
             <div class="related-list">
+                <!--/* One link card per related type; th:each and th:href on the same tag repeat the whole link. */-->
                 <a class="related-card" th:each="other : ${relatedTypes}"
                    th:href="@{/bicycle-types/{id}(id=${other.id})}">
                     <strong th:text="${other.name}">Gravel Bike</strong>

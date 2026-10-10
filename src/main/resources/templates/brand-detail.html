@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The page title is the brand name, passed into the shared head fragment as a ${...} expression. */-->
 <head th:replace="~{fragments/layout :: head(${brand.name})}"></head>
 <body>
 
@@ -19,14 +20,17 @@
                 </nav>
                 <p class="eyebrow eyebrow-accent">Bicycle brand</p>
                 <h1 th:text="${brand.name}">Giant</h1>
+                <!--/* th:if and th:unless with the same condition form an if/else: exactly one of these two paragraphs is shown. */-->
                 <p class="lead" th:if="${brand.description}" th:text="${brand.description}">Description</p>
                 <p class="lead" th:unless="${brand.description}">No description has been added for this brand yet.</p>
 
                 <div class="brand-facts">
                     <div class="info-chip">
                         <span class="eyebrow">Country</span>
+                        <!--/* ?: is the Elvis operator: use the value on the left, or the text on the right when the left side is null. */-->
                         <strong th:text="${brand.country} ?: 'Not stated by the brand'">Taiwan</strong>
                     </div>
+                    <!--/* External link: rel="noopener noreferrer" stops the other site from controlling this page or seeing where the visitor came from. */-->
                     <a class="btn btn-outline" th:if="${brand.website}" th:href="${brand.website}"
                        rel="noopener noreferrer">Official website<span class="visually-hidden"
                        th:text="' of ' + ${brand.name}"></span> <span aria-hidden="true">&nearr;</span></a>
@@ -49,6 +53,7 @@
             <h2 class="section-title">Known For</h2>
             <p class="section-subtitle" th:text="'The kinds of bicycles and products ' + ${brand.name} + ' specialises in.'">Specialities.</p>
             <ul class="chip-list speciality-list">
+                <!--/* specialityList is a Java getter on Brand; Thymeleaf calls getSpecialityList() when the template says brand.specialityList. */-->
                 <li th:each="speciality : ${brand.specialityList}"><span class="chip" th:text="${speciality}">Road bikes</span></li>
             </ul>
         </div>
@@ -60,6 +65,7 @@
             <h2 class="section-title" th:text="${brand.name} + ' Models'">Models</h2>
 
             <div class="card-grid card-grid-3" th:if="${!bicycles.isEmpty()}">
+                <!--/* One card per bicycle model of this brand (the list comes from BrandController). */-->
                 <article class="type-tile" th:each="bike : ${bicycles}">
                     <figure th:replace="~{fragments/photos :: bikePhoto(${brand.name}, ${bike.name},
                         '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>

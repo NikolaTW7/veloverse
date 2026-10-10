@@ -14,16 +14,25 @@
 --     bicycles first and then the brands keeps every foreign key valid. Bicycle types,
 --     materials and components are not touched.
 
+-- BEGIN starts a transaction. Nothing below is saved for good until COMMIT. If any statement
+-- fails, PostgreSQL cancels the whole transaction and the database stays as it was.
 BEGIN;
 
+-- CREATE TABLE ... AS TABLE brands makes a new table with the same columns and a copy of
+-- every row. IF NOT EXISTS skips this when the backup is already there.
 CREATE TABLE IF NOT EXISTS backup_2026_10_brands AS TABLE brands;
 CREATE TABLE IF NOT EXISTS backup_2026_10_bicycles AS TABLE bicycles;
 
+-- DELETE FROM with no WHERE removes every row but keeps the table itself.
+-- Bicycles go first because each bicycle points to a brand through a foreign key.
 DELETE FROM bicycles;
 DELETE FROM brands;
 
 COMMIT;
 
+-- The undo steps below are comments, so they never run with this script. To use them, copy
+-- them into psql without the leading dashes. OVERRIDING SYSTEM VALUE lets the INSERT put the
+-- old ID numbers back into the identity columns instead of letting PostgreSQL pick new ones.
 -- To undo (restores the old brands and models exactly, with their original IDs):
 --   BEGIN;
 --   DELETE FROM bicycles;

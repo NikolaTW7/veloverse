@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* xmlns:th above enables the th: attributes. th:replace copies the shared <head> from fragments/layout.html and passes the page title as a parameter. */-->
 <head th:replace="~{fragments/layout :: head('Understand Your Bike')}"></head>
 <body>
 
+<!--/* The 'home' argument tells the header which navigation link to highlight. */-->
 <header th:replace="~{fragments/layout :: header('home')}"></header>
 
 <main id="main">
-    <!-- Cinematic hero: headline on the left, large bicycle illustration on the right -->
+    <!-- Cinematic hero: headline on the left, large bicycle photo on the right -->
     <section class="home-hero" aria-labelledby="hero-title">
         <!-- Licensed photograph (credits in IMAGE-CREDITS.md) -->
+        <!--/* The arguments match the photo(...) parameters in fragments/photos.html; the last one, true, also offers the 1920 px version for large screens. */-->
         <figure th:replace="~{fragments/photos :: photo('hero', 1280, 905,
             'Black-and-white close-up of a road bike frame and drop handlebars against a black background',
             'Josh Nuttall', 'https://unsplash.com/photos/grayscale-photography-of-road-bicycle-pIwu5XNvXpk', 'Unsplash',
@@ -92,12 +95,16 @@
                 <a class="text-link" th:href="@{/bicycle-types}">View all bicycle types <span class="arrow" aria-hidden="true">&rarr;</span></a>
             </div>
 
+            <!--/* th:if shows the grid only when the list is not empty; the empty-state message below uses the opposite condition. */-->
             <div class="card-grid card-grid-4" th:if="${!featuredTypes.isEmpty()}">
+                <!--/* th:each repeats this <article> once for every item in featuredTypes, with the current item available as "type". */-->
                 <article class="type-card" th:each="type : ${featuredTypes}">
                     <figure th:replace="~{fragments/photos :: typePhoto(${type.name},
                         '(max-width: 720px) 100vw, (max-width: 1024px) 50vw, 300px', '', 'lazy')}"></figure>
                     <h3 th:text="${type.name}">Road Bike</h3>
                     <p class="clamp-3" th:text="${type.description}">Description</p>
+                    <!--/* {id} in the URL is a path variable filled in from (id=...), giving links like /bicycle-types/3. */-->
+                    <!--/* The visually-hidden span is read by screen readers only, so each "Learn more" link says which item it is about. */-->
                     <a class="text-link" th:href="@{/bicycle-types/{id}(id=${type.id})}">Learn more<span class="visually-hidden" th:text="' about ' + ${type.name}"></span> <span class="arrow" aria-hidden="true">&rarr;</span></a>
                 </article>
             </div>
@@ -145,7 +152,7 @@
     </section>
 
     <!-- Featured Models: the first bicycles stored in the database.
-         Neutral placeholders only, so no photo can be mistaken for the real model. -->
+         Each card shows the licensed photo of that exact model, or a neutral placeholder if there is none. -->
     <section class="section section-light">
         <div class="container">
             <div class="section-head">
@@ -163,6 +170,7 @@
                         '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <p class="eyebrow" th:text="${bike.brand.name}">Brand</p>
                     <h3 th:text="${bike.name}">Model</h3>
+                    <!--/* Builds "Type · Frame · Year" text: the conditions (cond ? a : b) show a fallback when the frame material is unknown and skip the year when it is missing. */-->
                     <p th:text="${bike.type.name} + ' · ' + (${bike.frameMaterial != null} ? ${bike.frameMaterial.name} : 'Frame not confirmed') + (${bike.year} != null ? ' · ' + ${bike.year} : '')">Type &middot; Frame &middot; Year</p>
                     <a class="text-link" th:href="@{/bicycles/{id}(id=${bike.id})}">
                         Learn more<span class="visually-hidden" th:text="' about the ' + ${bike.brand.name} + ' ' + ${bike.name}"></span>
@@ -186,6 +194,7 @@
                         drivetrain and gears in one table. A neutral comparison: no scores and no winner.</p>
                     <a class="btn btn-dark" th:href="@{/compare}">Compare Bicycles</a>
                 </div>
+                <!--/* Purely decorative shapes, hidden from screen readers with aria-hidden. */-->
                 <div class="promo-visual" aria-hidden="true">
                     <div><span></span><span></span><span></span><span></span></div>
                     <div><span></span><span></span><span></span><span></span></div>

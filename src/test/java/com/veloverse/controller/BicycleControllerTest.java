@@ -1,5 +1,9 @@
 package com.veloverse.controller;
 
+// Static imports let the tests call these methods without their class name:
+// get builds a fake GET request, status / view / content check the response,
+// containsString (Hamcrest) checks the page text, and when (Mockito) sets what a mock returns.
+// not(...) turns a check around, e.g. the page must NOT contain some text.
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
 import static org.mockito.Mockito.when;
@@ -26,18 +30,27 @@ import com.veloverse.model.Material;
 import com.veloverse.service.BicycleService;
 
 /**
- * Web-layer tests for the Bicycles list (including search and filters) and detail pages, with the services mocked.
+ * Web-layer tests for the Bicycles list (including search and filters) and detail pages, with the service mocked.
+ * @WebMvcTest starts only the web layer (this controller plus Thymeleaf), not the services or the database.
+ * Each test follows arrange (tell the mock service what to return), act (send a fake request with
+ * MockMvc) and assert (check the status, the template name and the rendered HTML).
  */
 @WebMvcTest(BicycleController.class)
 class BicycleControllerTest {
 
+    // MockMvc sends fake HTTP requests to the controller without starting a real web server.
+    // @Autowired asks Spring to put its MockMvc object into this field.
     @Autowired
     private MockMvc mockMvc;
 
+    // @MockitoBean: Spring gives the controller a Mockito mock in place of the real service.
+    // A mock returns only what a test sets with when(...), otherwise an empty list, an empty Optional or null.
     @MockitoBean
     private BicycleService bicycleService;
 
-    // A bicycle with only the required fields and a description, so other specifications are missing
+    // A bicycle with only the required fields and a description, so other specifications are missing.
+    // The entities have no setters (the database normally sets these values), so ReflectionTestUtils.setField
+    // writes the private fields such as "id" and "description" directly.
     private static Bicycle brompton() {
         Brand brand = new Brand("Brompton", "United Kingdom", "A folding bike maker.");
         ReflectionTestUtils.setField(brand, "id", 5);
@@ -72,6 +85,7 @@ class BicycleControllerTest {
         return bike;
     }
 
+    // With no parameters the controller calls search(null, null, null, null), so that exact call is stubbed
     @Test
     void listPageShowsBrandModelYearTypeMaterialDescriptionAndLearnMoreLink() throws Exception {
         when(bicycleService.search(null, null, null, null)).thenReturn(List.of(brompton()));
@@ -124,6 +138,7 @@ class BicycleControllerTest {
                 .andExpect(content().string(not(containsString("No bicycles have been added yet."))));
     }
 
+    // Security check: the search text is shown back on the page, so it must appear as &lt;b&gt; text, not as a real <b> tag
     @Test
     void searchTextIsEscapedSoItCannotInjectHtml() throws Exception {
         when(bicycleService.search("<b>x</b>", null, null, null)).thenReturn(List.of());
@@ -169,6 +184,7 @@ class BicycleControllerTest {
                 .andExpect(content().string(containsString("Not specified")));
     }
 
+    // The service finds nothing (empty Optional), so the controller answers 404 Not Found
     @Test
     void unknownBicycleIdReturnsNotFound() throws Exception {
         when(bicycleService.findById(999)).thenReturn(Optional.empty());
@@ -177,6 +193,7 @@ class BicycleControllerTest {
                 .andExpect(status().isNotFound());
     }
 
+    // The URL pattern only accepts digits, so "abc" matches no controller method and gives 404 instead of a crash
     @Test
     void nonNumericBicycleIdReturnsNotFound() throws Exception {
         mockMvc.perform(get("/bicycles/abc"))
@@ -185,6 +202,7 @@ class BicycleControllerTest {
 
     // ---------- Filters ----------
 
+    /** Arrange helper: makes the mock return the options for the Type, Brand and Material dropdowns. */
     private void stubDropdownOptions() {
         BicycleType folding = new BicycleType("Folding Bike", "Folds down small.", null, null, null);
         ReflectionTestUtils.setField(folding, "id", 9);
@@ -220,6 +238,8 @@ class BicycleControllerTest {
                 .andExpect(content().string(not(containsString("Clear filters"))));
     }
 
+    // The text parameters "9", "5" and "1" must reach the service as the numbers 9, 5 and 1;
+    // the stub only answers that exact call, so a wrong value would leave the list empty
     @Test
     void filtersArePassedToTheServiceAndStaySelected() throws Exception {
         stubDropdownOptions();
@@ -262,6 +282,7 @@ class BicycleControllerTest {
                 .andExpect(content().string(not(containsString("No bicycles have been added yet."))));
     }
 
+    // "abc", "-1" and "" are not valid IDs, so the controller treats each one as "All" (null)
     @Test
     void invalidFilterValuesAreIgnoredInsteadOfCausingAnError() throws Exception {
         when(bicycleService.search(null, null, null, null)).thenReturn(List.of(brompton()));
@@ -271,6 +292,8 @@ class BicycleControllerTest {
                 .andExpect(content().string(containsString("C Line Explore")));
     }
 
+    // Features, advantages and disadvantages are stored as text with one item per line ("\n") and shown as list items.
+    // "&amp;" is how the HTML writes the "&" in "Pros & Cons".
     @Test
     void detailPageShowsIntendedUseFeaturesProsConsAndSource() throws Exception {
         Brand tsunami = new Brand("Tsunami", null, null);
@@ -322,6 +345,7 @@ class BicycleControllerTest {
         return bike;
     }
 
+    // The Canyon Speedmax CFR, which has an approved CC BY-SA photo
     private static Bicycle speedmax() {
         Brand canyon = new Brand("Canyon", "Germany", "A German bicycle company.");
         ReflectionTestUtils.setField(canyon, "id", 30);
@@ -350,6 +374,7 @@ class BicycleControllerTest {
                 .andExpect(content().string(not(containsString("href=\"/materials/"))));
     }
 
+    // A CC BY-SA licence requires the author, a source link, a licence link and a note that the photo was changed
     @Test
     void ccBySaPhotoShowsAuthorSourceLicenceAndChanges() throws Exception {
         when(bicycleService.findById(21)).thenReturn(Optional.of(speedmax()));
@@ -364,6 +389,7 @@ class BicycleControllerTest {
                 .andExpect(content().string(not(containsString("Placeholder image"))));
     }
 
+    // The list card for the Cervélo S5 shows its CC BY photo credit, and the page has a trademark notice
     @Test
     void ccByPhotoShowsLicenceAndChangesOnTheList() throws Exception {
         Brand cervelo = new Brand("Cervélo", "Canada", null);

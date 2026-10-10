@@ -1,5 +1,9 @@
 package com.veloverse.controller;
 
+// Static imports let the tests call these methods without their class name:
+// get builds a fake GET request, status / view / content check the response,
+// containsString (Hamcrest) checks the page text, and when (Mockito) sets what a mock returns.
+// not(...) turns a check around, and assertThat (AssertJ) checks plain Java values such as the HTML string.
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.not;
@@ -29,24 +33,39 @@ import com.veloverse.service.BicycleService;
 
 /**
  * Web-layer tests for the Compare Bicycles page, with the service mocked.
+ * @WebMvcTest starts only the web layer (this controller plus Thymeleaf), not the services or the database.
+ * Each test follows arrange (tell the mock service what to return), act (send a fake request with
+ * MockMvc) and assert (check the status, the template name and the rendered HTML).
  */
 @WebMvcTest(CompareController.class)
 class CompareControllerTest {
 
+    // MockMvc sends fake HTTP requests to the controller without starting a real web server.
+    // @Autowired asks Spring to put its MockMvc object into this field.
     @Autowired
     private MockMvc mockMvc;
 
+    // @MockitoBean: Spring gives the controller a Mockito mock in place of the real service.
+    // A mock returns only what a test sets with when(...), otherwise an empty list, an empty Optional or null.
     @MockitoBean
     private BicycleService bicycleService;
 
+    // The two test bicycles, filled in by setUp() before every test
     private Bicycle touring;
     private Bicycle road;
 
+    /**
+     * Gives a test entity an ID and returns it.
+     * The entities have no setters (the database normally sets the ID), so ReflectionTestUtils.setField
+     * writes the private field directly; setUp() uses it the same way for the other specifications.
+     */
     private static <T> T withId(T entity, int id) {
         ReflectionTestUtils.setField(entity, "id", id);
         return entity;
     }
 
+    // @BeforeEach runs before every @Test: it builds the two Trek bicycles and tells the mock service about them.
+    // Not every test uses every stub; that is fine here because @MockitoBean mocks do not report unused stubs.
     @BeforeEach
     void setUp() {
         Brand trek = withId(new Brand("Trek", "United States", null), 1);
@@ -75,6 +94,7 @@ class CompareControllerTest {
         when(bicycleService.findById(999)).thenReturn(Optional.empty());
     }
 
+    // With no a and b parameters, both dropdowns are listed but there is no warning and no comparison table yet
     @Test
     void firstVisitShowsTwoDropdownsAndNoValidationMessage() throws Exception {
         mockMvc.perform(get("/compare"))
@@ -104,6 +124,8 @@ class CompareControllerTest {
 
     @Test
     void twoDifferentBicyclesAreShownSideBySide() throws Exception {
+        // param("a", "1") adds ?a=1 to the request URL.
+        // andReturn().getResponse().getContentAsString() gives back the whole HTML so it can be checked further below.
         String html = mockMvc.perform(get("/compare").param("a", "1").param("b", "6"))
                 .andExpect(status().isOk())
                 .andExpect(content().string(containsString("Specification</th>")))
@@ -121,7 +143,7 @@ class CompareControllerTest {
                 .andExpect(content().string(containsString("<td>27</td>")))
                 .andExpect(content().string(containsString("<td>24</td>")))
                 // The touring bike has no stored weight
-                .andExpect(content().string(containsString("<td>Not specified</td>")))
+                .andExpect(content().string(containsString("<td class=\"value-missing\">Not specified</td>")))
                 // Links to both existing detail pages
                 .andExpect(content().string(containsString("href=\"/bicycles/1\"")))
                 .andExpect(content().string(containsString("href=\"/bicycles/6\"")))
@@ -137,6 +159,7 @@ class CompareControllerTest {
                 .contains("<option value=\"1\">Trek 520 Disc (2023)</option>");
     }
 
+    // The expected messages are the controller's own constants, so the test does not repeat their text
     @Test
     void choosingOnlyOneBicycleAsksForTwo() throws Exception {
         mockMvc.perform(get("/compare").param("a", "1").param("b", ""))
@@ -160,6 +183,7 @@ class CompareControllerTest {
                 .andExpect(content().string(not(containsString("Specification</th>"))));
     }
 
+    // Unlike the detail pages, the Compare page does not answer 404: it stays at 200 and shows a message
     @Test
     void unknownBicycleIdShowsNotFoundMessage() throws Exception {
         mockMvc.perform(get("/compare").param("a", "1").param("b", "999"))
@@ -193,7 +217,58 @@ class CompareControllerTest {
 
         mockMvc.perform(get("/compare").param("a", "20").param("b", "6"))
                 .andExpect(status().isOk())
-                .andExpect(content().string(containsString("<td>Not confirmed</td>")))
+                .andExpect(content().string(containsString("<td class=\"value-missing\">Not confirmed</td>")))
                 .andExpect(content().string(containsString("<td>Carbon Fibre</td>")));
+    }
+
+    @Test
+    void differingSpecificationsAreMarkedAndCounted() throws Exception {
+        // touring vs road: brand and wheel size are the same, the touring weight is missing,
+        // and the other seven specifications differ
+        String html = mockMvc.perform(get("/compare").param("a", "1").param("b", "6"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("7 of 10")))
+                .andExpect(content().string(containsString("1 row cannot be compared because a detail is missing.")))
+                .andReturn().getResponse().getContentAsString();
+
+        // Counting trick: splitting a text on a marker that appears N times gives N + 1 pieces
+        // (-1 keeps empty pieces at the end), so this checks that exactly 7 rows are marked as different
+        assertThat(html.split("class=\"row-different\"", -1)).hasSize(7 + 1);
+        // The "Differs" label is text, so the difference is not shown by colour alone
+        assertThat(html.split("<span class=\"diff-badge\">Differs</span>", -1)).hasSize(7 + 1 + 1); // + legend
+    }
+
+    // Photos are chosen from the brand and model name in templates/fragments/photos.html, so the names matter here
+    @Test
+    void comparisonCardsShowEachBicyclesPhotoWithItsCredit() throws Exception {
+        Brand cervelo = withId(new Brand("Cervélo", "Canada", null), 26);
+        Bicycle s5 = withId(new Bicycle(cervelo, withId(new BicycleType("Road Bike", "x", null, null, null), 1),
+                null, "S5", 2019), 17);
+        ReflectionTestUtils.setField(s5, "intendedUse", "Road racing and fast rides on smooth roads.");
+        Brand brompton = withId(new Brand("Brompton", "United Kingdom", null), 27);
+        Bicycle folding = withId(new Bicycle(brompton, withId(new BicycleType("Folding Bike", "x", null, null, null), 9),
+                null, "Folding Bicycle", null), 18);
+        when(bicycleService.findById(17)).thenReturn(Optional.of(s5));
+        when(bicycleService.findById(18)).thenReturn(Optional.of(folding));
+
+        mockMvc.perform(get("/compare").param("a", "18").param("b", "17"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("/images/photos/bike-brompton-folding-1280.webp")))
+                .andExpect(content().string(containsString("/images/photos/bike-cervelo-s5-1280.webp")))
+                // Attribution stays with each photo
+                .andExpect(content().string(containsString("Alicjajoanna")))
+                .andExpect(content().string(containsString("This adapted version is licensed under CC BY-SA 4.0.")))
+                .andExpect(content().string(containsString("Glory Cycles")))
+                .andExpect(content().string(containsString("href=\"https://creativecommons.org/licenses/by/2.0/\"")))
+                .andExpect(content().string(containsString("Road racing and fast rides on smooth roads.")))
+                .andExpect(content().string(not(containsString("placeholder-bike.svg"))));
+    }
+
+    @Test
+    void bicyclesWithoutAPhotoKeepThePlaceholderInTheirCard() throws Exception {
+        // The Trek test bicycles have no approved photo
+        mockMvc.perform(get("/compare").param("a", "1").param("b", "6"))
+                .andExpect(status().isOk())
+                .andExpect(content().string(containsString("placeholder-bike.svg")));
     }
 }

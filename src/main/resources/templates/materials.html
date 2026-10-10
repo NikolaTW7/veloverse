@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+<!--/* The shared <head>, header and footer come from fragments/layout.html via th:replace. */-->
 <head th:replace="~{fragments/layout :: head('Bicycle Materials')}"></head>
 <body>
 
@@ -30,15 +31,16 @@
     <!-- All materials from the database -->
     <section class="section section-light">
         <div class="container">
+            <!--/* th:if shows the cards only when there are materials; th:each then repeats the <article> once per material. */-->
             <div class="card-grid card-grid-3" th:if="${!materials.isEmpty()}">
                 <article class="type-tile" th:each="material : ${materials}">
-                    <figure class="placeholder-image">
-                        <img th:src="@{/images/placeholder-bike.svg}" alt="">
-                        <figcaption>Placeholder image</figcaption>
-                    </figure>
+                    <!--/* materialPhoto chooses the right photo for this material by its name (see fragments/photos.html). */-->
+                    <figure th:replace="~{fragments/photos :: materialPhoto(${material.name},
+                        '(max-width: 720px) 100vw, (max-width: 1100px) 50vw, 380px', '', 'lazy')}"></figure>
                     <div class="type-tile-body">
                         <h2 th:text="${material.name}">Aluminium</h2>
                         <p class="clamp-3" th:text="${material.description}">Description</p>
+                        <!--/* {id} is a path variable filled in from (id=...), giving links like /materials/1. The visually-hidden span is read only by screen readers. */-->
                         <a class="btn btn-light" th:href="@{/materials/{id}(id=${material.id})}">
                             Learn more<span class="visually-hidden" th:text="' about ' + ${material.name}"></span>
                         </a>
