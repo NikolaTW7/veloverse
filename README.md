@@ -116,67 +116,6 @@ To run the tests on Windows:
 .\mvnw.cmd test
 ```
 
-## Installation and Setup
-
-### Prerequisites
-
-Before running VeloVerse, install:
-
-- Java 21
-- PostgreSQL
-- Git
-
-The project includes a Maven Wrapper, so a separate Maven installation is not required.
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/NikolaTW7/veloverse.git
-cd veloverse
-```
-
-### 2. Configure the Database
-
-Create a PostgreSQL database named `veloverse`.
-
-The default local connection settings are:
-
-| Setting | Value |
-|---|---|
-| Host | `localhost` |
-| Port | `5432` |
-| Database | `veloverse` |
-| Username | `postgres` |
-| Password | Provided through the `DB_PASSWORD` environment variable |
-
-The application reads the database password from an environment variable rather than storing it directly in `application.properties`.
-
-For Windows PowerShell, set the environment variable:
-
-```powershell
-$env:DB_PASSWORD = "YOUR_LOCAL_PASSWORD"
-```
-
-Replace `YOUR_LOCAL_PASSWORD` with your own PostgreSQL password. Do not commit real passwords or other credentials to GitHub.
-
-The application uses `schema.sql` to create the required database tables and `data.sql` to initialise starter data.
-
-### 3. Run the Application
-
-On Windows, open a terminal in the project folder and run:
-
-```powershell
-.\mvnw.cmd spring-boot:run
-```
-
-### 4. Open the Website
-
-Once the application starts successfully, open:
-
-http://localhost:8080
-
-**Note:** This is a local development address. It does not represent a publicly deployed website.
-
 ## Project Documentation
 
 The following documents describe VeloVerse's final design and implementation:
