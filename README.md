@@ -157,6 +157,7 @@ Developed as a personal software engineering and web development project.
 
 Explore VeloVerse online:
 
-🌐 https://veloverse.site
+https://veloverse.site
+veloverse.up.railway.app
 
 
